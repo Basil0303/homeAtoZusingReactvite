@@ -2,7 +2,7 @@ import axios from "axios";
 import { baseUrl } from "./baseUrl";
 import { ShowToast } from "../utils/Toast";
 
-export const apiCall = async (method, url,{ data, params, isFormdata} ={}) => {
+export const apiCall = async (method, url, data, params, isFormdata) => {
   var headers = {
     "Content-Type": isFormdata ? "multipart/form-data" : "application/json",
     Authorization: "Bearer " + localStorage.getItem("token"),
