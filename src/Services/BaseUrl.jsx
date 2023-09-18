@@ -19,3 +19,5 @@ export const FeedbackUrl="feedback"
 
 export const SettingsUrl="settings"
 export const AddSettingsUrl="settings/create"
+
+export const loanUrl = "loans"
