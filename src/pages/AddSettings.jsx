@@ -25,7 +25,6 @@ function AddSettings() {
       sunday: {},
     },
   });
- 
 
   const handleChange = (html) => {
     setSettings({ ...settings,privacy_policy: html });
@@ -37,7 +36,7 @@ function AddSettings() {
   const handleChangeTerms=(html)=>{
     setSettings({...settings,terms_and_conditions:html})
   };
-
+  
 
 
   const getSettings = async () => {
@@ -78,13 +77,11 @@ function AddSettings() {
 
   const AddSettingsDetails = async () => {
     try {
-      console.log("working......");
       const data = await apiCall("post", AddSettingsUrl, settings);
       console.log(data, "data to add");
       if (data.status === true) {
         navigate("/Settings");
       }
-      console.log(data, "data to add");
     } catch (error) {
       console.log(error);
     }
@@ -97,7 +94,6 @@ function AddSettings() {
         if (updatedata.status === true) {
           navigate("/Settings");
         }
-        console.log(data, "data to add");
       } catch (error) {
         console.log(error);
 
@@ -304,9 +300,7 @@ function AddSettings() {
                         }))
                       }
                     >
-                      <option selected disabled value="">
-                        Select One
-                      </option>
+                    
                       <option value="open">Open</option>
                       <option value="close">Close</option>
                     </select>

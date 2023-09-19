@@ -1,21 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { apiCall } from "../Services/ApiCall";
 import { SettingsUrl } from "../Services/baseUrl";
+import moment from "moment";
 
 import { useNavigate } from "react-router-dom";
 function SettingsPage() {
   const navigate = useNavigate();
   const [settingDetails, setSettingDetails] = useState([]);
+
   useEffect(() => {
     getSettings();
   }, []);
+  
   const getSettings = async () => {
     try {
       const response = await apiCall("get", SettingsUrl);
       setSettingDetails(response.data.docs);
     } catch (error) {}
   };
-
+  function convertTo12HourFormat(timeString) {
+    const formattedTime = moment(timeString, 'HH:mm').format('h:mm A');
+    return formattedTime;
+  }
 
 
   return (
@@ -164,19 +170,13 @@ function SettingsPage() {
                                         <hr />
                                         <h4>Monday to Friday:</h4>
                                         <h6>
-                                          {value?.business_hours
-                                            ?.monday_to_friday?.from ?? ""}{" "}
-                                          To{" "}
-                                          {value?.business_hours
-                                            ?.monday_to_friday?.to ?? ""}
+                                        {value?.business_hours?.monday_to_friday?.from ? convertTo12HourFormat(value.business_hours.monday_to_friday.from) : ""} To {value?.business_hours?.monday_to_friday?.to ? convertTo12HourFormat(value.business_hours.monday_to_friday.to) : ""}
+
                                         </h6>
                                         <h4>Saturday:</h4>
                                         <h6>
-                                          {value?.business_hours?.saturday
-                                            ?.from ?? ""}{" "}
-                                          To{" "}
-                                          {value?.business_hours?.saturday
-                                            ?.to ?? ""}
+                                        {value?.business_hours?.saturday?.from ? convertTo12HourFormat(value.business_hours.saturday.from) : ""} To {value?.business_hours?.saturday?.to ? convertTo12HourFormat(value.business_hours.saturday.to) : ""}
+
                                         </h6>
                                         <h4>Sunday:</h4>
                                         <h6>
@@ -237,7 +237,6 @@ function SettingsPage() {
                                     marginBottom: "20px",
                                   }}
                                 >
-                                
                                   {privacy?.privacy_policy ?? ""}
                                 </p>
                               </div>
@@ -276,7 +275,6 @@ function SettingsPage() {
                                     marginBottom: "20px",
                                   }}
                                 >
-                               
                                   {faq?.faq ?? ""}
                                 </p>
                               </div>
@@ -317,8 +315,7 @@ function SettingsPage() {
                                     marginBottom: "20px",
                                   }}
                                 >
-                                 
-                                  { terms?.terms_and_conditions ?? ""}
+                                  {terms?.terms_and_conditions ?? ""}
                                 </p>
                               </div>
                             </div>
@@ -341,7 +338,6 @@ function SettingsPage() {
                 </div>
               </div>
             </div>
-
           </div>{" "}
         </div>
       </div>
