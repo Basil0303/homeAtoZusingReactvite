@@ -12,6 +12,7 @@ import LoginPage from "./pages/LoginPage";
 import Hometype from "./pages/Package/Hometype";
 import Packages from "./pages/Package/Packages";
 import AddSettings from "./pages/AddSettings";
+import CustomerPackage from "./pages/CustomerPackage";
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route path="/hometype" element={<Hometype />} />
           <Route path="/packages" element={<Packages />} />
           <Route path="/addsettings" element={<AddSettings/>}/>
+          <Route path="/customer-package/:userId" element={<CustomerPackage/>}/>
         </Route>
           <Route path="/login" element={<LoginPage />} />
 

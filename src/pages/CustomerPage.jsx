@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { apiCall } from "../Services/ApiCall";
 import { userUrl } from "../Services/baseUrl";
+import { useNavigate } from "react-router-dom";
 
 function CustomerPage () {
+  const navigate = useNavigate()
   const [list, setlist] = useState();
-
   const [params, setparams] = useState({
     page: 1,
     limit: 10,
@@ -24,7 +25,6 @@ function CustomerPage () {
   const getCustomers = async () => {
     const response = await apiCall("get", userUrl, { params });
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
-
     setlist(docs ?? []);
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
   };
@@ -105,6 +105,7 @@ function CustomerPage () {
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Place</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -139,13 +140,15 @@ function CustomerPage () {
                                 {item?.district}
                                 {item?.state},{item?.pincode}
                               </td>
+                           
+                              <td><button className="btn btn-primary" onClick={()=>{navigate(`/customer-package/${item._id}`)}}>packages</button></td>
                             </tr>
                           ))}
                         </>
                       ) : (
                         <tr>
                           <td
-                            colSpan={5}
+                            colSpan={6}
                             className="text-center py-4 text-primary"
                           >
                             <b>No data</b>
