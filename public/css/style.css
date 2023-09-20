@@ -9833,6 +9833,7 @@ svg.pulse-svg {
 [data-header-position="fixed"] .header {
   position: fixed;
   top: 0;
+  z-index: 999;
   width: 100%; }
 
 [data-header-position="fixed"] .content-body {
@@ -36550,4 +36551,12 @@ font-weight: 500;
 .check-nav-icon {
   color: white; /* Set the color to black or your desired color */
   font-size: 24px; /* Adjust the font size as needed */
+}
+
+
+.btn-color a{
+  color: #452B90;
+}
+.btn-color a:hover{
+  color: #fff;
 }
