@@ -227,10 +227,11 @@ function LoanApplicationPage() {
                                   )}
                                 </td>
                                 <td>
+                               
                                   {item?.status === "submitted" && (
                                     <span
-                                      className="badge badge-success border-0 px-2"
-                                      style={{ fontSize: "11px" }}
+                                      className="badge rounded-pill bg-primary px-2"
+                                      style={{ fontSize: "9px" }}
                                     >
                                       Submitted
                                     </span>
@@ -238,38 +239,31 @@ function LoanApplicationPage() {
 
                                   {item?.status === "review" && (
                                     <span
-                                      className="badge badge-warning border-0 px-2"
-                                      style={{ fontSize: "11px" }}
+                                      className="badge rounded-pill bg-info px-2"
+                                      style={{ fontSize: "9px" }}
                                     >
                                       Review
                                     </span>
                                   )}
 
                                   {item?.status === "processing" && (
-                                    <span
-                                      className="badge badge-secondary border-0 px-2"
-                                      style={{ fontSize: "11px" }}
-                                    >
-                                      Processing
-                                    </span>
+                                       <span className="badge rounded-pill bg-warning px-2" style={{ fontSize: '9px', }}>
+                                       Processing
+                                     </span>
                                   )}
 
                                   {item?.status === "rejected" && (
-                                    <span
-                                      className="badge badge-danger border-0 px-2"
-                                      style={{ fontSize: "11px" }}
-                                    >
-                                      Rejected
-                                    </span>
+                                  <span className="badge rounded-pill bg-danger px-2" style={{ fontSize: '9px', }}>
+                                  Rejected
+                                </span>
+                                
                                   )}
 
                                   {item?.status === "eligible" && (
-                                    <span
-                                      className="badge badge-info border-0 px-2"
-                                      style={{ fontSize: "11px" }}
-                                    >
-                                      Eligible
-                                    </span>
+                                   <span className="badge rounded-pill bg-success px-2" style={{ fontSize: '9px', }}>
+                                   Eligible
+                                 </span>
+                                 
                                   )}
                                 </td>
                                 <td>
@@ -489,8 +483,8 @@ function LoanApplicationPage() {
                           >
                             {loanData?.user_status === "new" && (
                               <span
-                                className="badge badge-primary border-0 px-2"
-                                style={{ fontSize: "12px" }}
+                              className="badge rounded-pill bg-primary px-2"
+                              style={{ fontSize: "9px" }}
                               >
                                 New
                               </span>
@@ -498,8 +492,8 @@ function LoanApplicationPage() {
 
                             {loanData?.user_status === "submitted" && (
                               <span
-                                className="badge badge-success border-0 px-2"
-                                style={{ fontSize: "12px" }}
+                              className="badge rounded-pill bg-primary px-2"
+                              style={{ fontSize: "9px" }}
                               >
                                 Submitted
                               </span>
@@ -507,38 +501,30 @@ function LoanApplicationPage() {
 
                             {loanData?.user_status === "review" && (
                               <span
-                                className="badge badge-warning border-0 px-2"
-                                style={{ fontSize: "12px" }}
+                              className="badge rounded-pill bg-info px-2"
+                              style={{ fontSize: "9px" }}
                               >
                                 Review
                               </span>
                             )}
 
                             {loanData?.user_status === "processing" && (
-                              <span
-                                className="badge badge-secondary border-0 px-2"
-                                style={{ fontSize: "12px" }}
-                              >
-                                Processing
-                              </span>
+                               <span className="badge rounded-pill bg-warning px-2" style={{ fontSize: '9px', }}>
+                               Processing
+                             </span>
                             )}
 
                             {loanData?.user_status === "rejected" && (
-                              <span
-                                className="badge badge-danger border-0 px-2"
-                                style={{ fontSize: "12px" }}
-                              >
-                                Rejected
-                              </span>
+                              <span className="badge rounded-pill bg-danger px-2" style={{ fontSize: '9px', }}>
+                              Rejected
+                            </span>
+                            
                             )}
 
                             {loanData?.user_status === "eligible" && (
-                              <span
-                                className="badge badge-info border-0 px-2"
-                                style={{ fontSize: "12px" }}
-                              >
-                                Eligible
-                              </span>
+                               <span className="badge rounded-pill bg-success px-2" style={{ fontSize: '9px', }}>
+                               Eligible
+                             </span>
                             )}
 
                             {loanData?.user_status === "updating" && (
@@ -743,10 +729,10 @@ function LoanApplicationPage() {
                             type="button"
                             className="btn btn-outline-primary btn-color"
                             style={{
-                              width: "150px",
+                              width: "140px",
                               height: "30px",
                               float: "left",
-                              fontSize: "13px",
+                              fontSize: "12px",
                               lineHeight: "10px",
                             }}
                           >
@@ -781,47 +767,38 @@ function LoanApplicationPage() {
 
                           {loanData?.status === "submitted" && (
                             <span
-                              className="badge badge-success border-0 px-2"
-                              style={{ fontSize: "12px" }}
-                            >
-                              Submitted
-                            </span>
+                            className="badge rounded-pill bg-primary px-2"
+                            style={{ fontSize: "9px" }}
+                          >
+                            Submitted
+                          </span>
                           )}
 
                           {loanData?.status === "review" && (
-                            <span
-                              className="badge badge-warning border-0 px-2"
-                              style={{ fontSize: "12px" }}
-                            >
-                              Review
-                            </span>
+                             <span
+                             className="badge rounded-pill bg-info px-2"
+                             style={{ fontSize: "9px" }}
+                           >
+                             Review
+                           </span>
                           )}
 
                           {loanData?.status === "processing" && (
-                            <span
-                              className="badge badge-secondary border-0 px-2"
-                              style={{ fontSize: "12px" }}
-                            >
-                              Processing
-                            </span>
+                            <span className="badge rounded-pill bg-warning px-2" style={{ fontSize: '9px', }}>
+                            Processing
+                          </span>
                           )}
 
                           {loanData?.status === "rejected" && (
-                            <span
-                              className="badge badge-danger border-0 px-2"
-                              style={{ fontSize: "12px" }}
-                            >
-                              Rejected
-                            </span>
+                            <span className="badge rounded-pill bg-danger px-2" style={{ fontSize: '9px', }}>
+                            Rejected
+                          </span>
                           )}
 
                           {loanData?.status === "eligible" && (
-                            <span
-                              className="badge badge-info border-0 px-2"
-                              style={{ fontSize: "12px" }}
-                            >
-                              Eligible
-                            </span>
+                             <span className="badge rounded-pill bg-success px-2" style={{ fontSize: '9px', }}>
+                             Eligible
+                           </span>
                           )}
 
                           {loanData?.status === "rejected" ? (
@@ -832,10 +809,10 @@ function LoanApplicationPage() {
                                 data-bs-dismiss="modal"
                                 onClick={rejectionModal}
                                 style={{
-                                  width: "150px",
+                                  width: "120px",
                                   height: "30px",
                                   float: "right",
-                                  fontSize: "13px",
+                                  fontSize: "12px",
                                   lineHeight: "10px",
                                 }}
                               >
@@ -947,7 +924,7 @@ function LoanApplicationPage() {
               />
               <button
                 type="button"
-                className="btn btn-outline-primary mx"
+                className="btn btn-success waves-effect waves-light ms-2"
                 data-bs-dismiss="modal"
                 onClick={updateStatus}
                 style={{
@@ -962,7 +939,7 @@ function LoanApplicationPage() {
               </button>
               <button
                 type="button"
-                className="btn btn-outline-secondary mx-2"
+                className="btn btn-waves-effect waves-light"
                 onClick={() => setShowRejectionForm(false)}
                 data-bs-dismiss="modal"
                 style={{
@@ -971,6 +948,8 @@ function LoanApplicationPage() {
                   marginTop: "15px",
                   float: "right",
                   marginBottom: "10px",
+                  backgroundColor: "grey", 
+                  color: "white"
                 }}
               >
                 Close

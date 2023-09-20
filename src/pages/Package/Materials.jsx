@@ -1,6 +1,6 @@
 import React from "react";
 import { apiCall } from "../../Services/ApiCall";
-import { homeUrl } from "../../Services/baseUrl";
+import { materialsUrl } from "../../Services/baseUrl";
 import { useState, useEffect } from "react";
 import moment from "moment/moment";
 import Modal from "react-bootstrap/Modal";
@@ -10,49 +10,23 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import { handleSubmit } from "../../utils/Fns";
 
-function Hometype() {
+function Materials() {
   const [validated, setValidated] = useState(false);
 
   const [data, setData] = useState({
     name: "",
-    image: "",
-    createdAt: "",
-    updatedAt: "",
+    description: "",
+    createdAt:"",
+    updatedAt:"",
   });
 
   const [list, setlist] = useState();
 
-  //file stack
-  const client = filestack.init("AaRWObgSHSuGtGR3HqMYBz");
-  const openFilePicker = () => {
-    const options = {
-      fromSources: ["local_file_system", "instagram", "facebook"],
-      accept: ["image/*"],
-      transformations: {
-        crop: {
-          aspectRatio: 1 / 1,
-          force: true,
-        },
-      },
-      maxFiles: 3,
-      minFiles: 1,
-      uploadInBackground: false,
-      onUploadDone: (res) => {
-        console.log(res);
-        setData({ ...data, image: res.filesUploaded[0].url });
-        setEditedItem({ ...editedItem, image: res.filesUploaded[0].url });
-      },
-    };
-    client.picker(options).open();
-  };
-
   const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
 
   //add data
   const home = async () => {
-    const response = await apiCall("post", homeUrl, { data });
+    const response = await apiCall("post", materialsUrl, { data });
     console.log(response.data);
     getHome();
     setShow(false);
@@ -74,11 +48,9 @@ function Hometype() {
   };
 
   const handleEdit = async () => {
-    const editedData = {
-      ...editedItem,
-      updatedAt: editedItem.updatedAt || new Date(),
-    };
-    await apiCall("put", `${homeUrl}/${editedItem.id}`, { data: editedData });
+    console.log(editedItem);
+    var data = editedItem;
+    await apiCall("put", `${materialsUrl}/${editedItem.id}`, { data });
     handleClose();
     getHome();
   };
@@ -86,7 +58,7 @@ function Hometype() {
   //delete data from hometype
   const handleDelete = async () => {
     // console.log (remove.id)
-    const response = await apiCall("delete", `${homeUrl}/${remove.id}`, {
+    const response = await apiCall("delete", `${materialsUrl}/${remove.id}`, {
       data,
     });
     console.log("Item deleted:", response);
@@ -112,28 +84,24 @@ function Hometype() {
 
   const EditData = (item) => {
     console.log(item);
-    setEditedItem({
-      id: item._id,
-      name: item.name,
-      image: item.image, // Include the existing image URL
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
-    });
+    setEditedItem({ id: item._id, name: item.name, description: item.description,createdAt:item.createdAt,updatedAt:item.updatedAt });
     setEdit(true);
   };
-
+  
   const getHome = async () => {
-    const response = await apiCall("get", homeUrl, { params });
+    const response = await apiCall("get", materialsUrl, { params });
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
 
     setlist(docs ?? []);
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
   };
 
-  function formatUpdateTime(updateTime) {
-    // Use Moment.js to format the timestamp as desired
-    return moment(updateTime).format("MMMM Do YYYY, h:mm:ss a");
-  }
+  const currentDate = moment();
+
+  // Format the date using Moment.js methods
+  const formattedDate = currentDate.format("MMMM Do YYYY, h:mm:ss a");
+
+  const handleClose = () => setShow(false);
 
   const [remove, setRemove] = useState({
     show: false,
@@ -149,16 +117,16 @@ function Hometype() {
         <div className="card dz-card" id="bootstrap-table11">
           <div className="card-header flex-wrap d-flex justify-content-between">
             <div>
-              <h4 className="card-title">Home Table</h4>
+              <h4 className="card-title">Materials Table</h4>
             </div>
 
-            <div
-              className="nav nav-tabs dzm-tabs d-flex align-items-center"
+            <ul
+              className="nav nav-tabs dzm-tabs"
               id="myTab-8"
               role="tablist"
               style={{ backgroundColor: "white" }}
             >
-              <li className="nav-item me-1">
+              <li className="nav-item me-1" role="presentation">
                 <div className="input-group search-area">
                   <input
                     type="text"
@@ -171,7 +139,7 @@ function Hometype() {
                   />
 
                   <span className="input-group-text">
-                    <a href={undefined}>
+                    <a href="javascript:void(0)">
                       <svg
                         width={24}
                         height={24}
@@ -212,7 +180,7 @@ function Hometype() {
                   <i className="fa fa-plus" aria-hidden="true" />
                 </button>
               </li>
-            </div>
+            </ul>
           </div>
 
           <div className="tab-content" id="myTabContent-8">
@@ -230,7 +198,7 @@ function Hometype() {
                         <th>#</th>
                         <th></th>
                         <th>Name</th>
-                        <th>updatedAt</th>
+                        <th>description</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -261,20 +229,11 @@ function Hometype() {
                                 </ul>
                               </td>
 
-                              <td style={{ width: "2%" }}>
-                                <img
-                                  src={item?.image ?? "images/user.webp"}
-                                  width={32}
-                                  height={32}
-                                  style={{
-                                    objectFit: "cover",
-                                    borderRadius: "4px",
-                                    backgroundColor: "#eee",
-                                  }}
-                                />
-                              </td>
+                              <td></td>
                               <td>{item?.name}</td>
-                              <td>{formatUpdateTime(item.updatedAt)}</td>
+                              <td>{item?.description}</td>
+                              {/* <td>{item?.createdAt}</td>
+                              <td>{item?.updatedAt}</td> */}
 
                               <td>
                                 <div className="dropdown">
@@ -389,7 +348,8 @@ function Hometype() {
           </div>
         </div>
       </div>
-      {/*Add data in home */}
+
+ {/*Add data in form */ }
       <Modal show={show} onHide={handleClose}>
         <div className="card">
           <div className="card-header">
@@ -403,7 +363,7 @@ function Hometype() {
                 onSubmit={(e) => handleSubmit(e, setValidated, home)} // Pass just the event to handleSubmit
               >
                 <Form.Group as={Col} controlId="validationCustom01">
-                  <Form.Label className="mb-1 m-2">Type a name</Form.Label>
+                  <Form.Label className="mb-1">Type a name</Form.Label>
                   <InputGroup hasValidation>
                     <Form.Control
                       required
@@ -418,23 +378,30 @@ function Hometype() {
                   </InputGroup>
                 </Form.Group>
                 <Form.Group
-                  className="mb-3"
+                  className="mb-3 my-2"
                   as={Col}
                   controlId="validationCustom02"
                 >
-                  <Button
-                    className="btn-sm bg-warning text-white my-2 border-0"
-                    onClick={openFilePicker}
-                  >
-                    Choose Cover Image
-                  </Button>
+                  <Form.Label className="mb-1">Description</Form.Label>
+                  <InputGroup hasValidation>
+                    <Form.Control
+                      required
+                      type="text"
+                      placeholder="Description"
+                      name="description" // Ensure that the name attribute matches the property name
+                      value={data.description}
+                      onChange={(e) =>
+                        setData({ ...data, description: e.target.value })
+                      }
+                      aria-describedby="inputGroupPrepend"
+                    />
+                  </InputGroup>
                 </Form.Group>
-
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
                     Close
                   </Button>
-                  <Button variant="primary" type="submit" onClick={handleClos}>
+                  <Button variant="primary" type="submit">
                     Submit
                   </Button>
                 </Modal.Footer>
@@ -443,7 +410,7 @@ function Hometype() {
           </div>
         </div>
       </Modal>
-      {/*Delete data in home */}
+
       <Modal show={remove.show} onHide={handleClose}>
         <Modal.Body>
           <p>Are you sure to delete </p>
@@ -457,7 +424,7 @@ function Hometype() {
           </Button>
         </Modal.Footer>
       </Modal>
-      {/*Edit data in home */}
+{/*Edit data in  form */}
       <Modal show={edit} onHide={handleClos}>
         <div className="card">
           <div className="card-header">
@@ -488,32 +455,19 @@ function Hometype() {
                   as={Col}
                   controlId="validationCustom02"
                 >
-                  <img
-                    src={
-                      editedItem.image ? editedItem.image : "images/user.webp"
-                    }
-                    width={64}
-                    height={64}
-                    alt="Cover Image"
-                  />
+                  <Form.Label className="mb-1">Description</Form.Label>
+                  <InputGroup hasValidation>
+                    <Form.Control
+                      type="text"
+                      placeholder="Description"
+                      name="description"
+                      value={editedItem.description}
+                      onChange={handleFieldChange}
+                      aria-describedby="inputGroupPrepend"
+                    />
+                  </InputGroup>
                 </Form.Group>
-                <Form.Group
-                  className="mb-3"
-                  as={Col}
-                  controlId="validationCustom02"
-                >
-                  <Button
-                    className="btn-sm bg-warning text-white my-2 border-0"
-                    onClick={openFilePicker}
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                  >
-                    Choose New Cover Image
-                  </Button>
-                </Form.Group>
-
-                <Modal.Footer>
+                  <Modal.Footer>
                   <Button variant="secondary" onClick={handleClos}>
                     Close
                   </Button>
@@ -530,4 +484,4 @@ function Hometype() {
   );
 }
 
-export default Hometype;
+export default Materials;

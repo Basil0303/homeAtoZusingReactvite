@@ -395,15 +395,17 @@ function AddSettings() {
             </div>
            
    <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
-  <button 
-    className="btn btn-success waves-effect waves-light"
-    style={{ marginTop: "50px" }}
-    onClick={() => {
-      navigate("/settings");
-    }}
-  >
-    Back
-  </button>
+   <button 
+  className="btn btn-waves-effect waves-light"
+  style={{ marginTop: "50px", backgroundColor: "grey", color: "white" }} 
+  onClick={() => {
+    navigate("/settings");
+  }}
+>
+  Back
+</button>
+
+
   <button
     className="btn btn-success waves-effect waves-light ms-2"
     onClick={id ? updateDetails : AddSettingsDetails}

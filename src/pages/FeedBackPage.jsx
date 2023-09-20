@@ -93,8 +93,9 @@ function FeedBackPage() {
                                 <td>{value.feedback_type}</td>
                                 <td>{value.feedback}</td>
                                 <td className="text-center">
-                                  <button
-                                    className="btn btn-outline-secondary btn-sm edit  "
+                                  <i
+                                    className="fa fa-trash"
+                                    style={{ color: "red" }}
                                     title="Delete"
                                     onClick={(e) => {
                                       e.preventDefault();
@@ -105,8 +106,8 @@ function FeedBackPage() {
                                       });
                                     }}
                                   >
-                                    <i className="fa fa-trash" />
-                                  </button>
+                                   
+                                  </i>
                                 </td>
                               </tr>
                             );

@@ -154,6 +154,11 @@ function Sidebar() {
                     Packages
                   </a>
                 </li>
+                <li>
+                  <a onClick={() => navigate("/materials")} href={undefined}>
+                  Materials
+                  </a>
+                </li>
               </ul>
             </ul>
           </li>

@@ -105,7 +105,7 @@ function CustomerPage () {
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Place</th>
-                        <th></th>
+                        <th>Package</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -140,8 +140,12 @@ function CustomerPage () {
                                 {item?.district}
                                 {item?.state},{item?.pincode}
                               </td>
-                           
-                              <td><button className="btn btn-primary" onClick={()=>{navigate(`/customer-package/${item._id}`)}}>packages</button></td>
+                              <td>
+  <i  className="fas fa-eye"style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} onClick={() => { navigate(`/customer-package/${item._id}`) }}>
+    
+  </i>
+</td>
+
                             </tr>
                           ))}
                         </>
