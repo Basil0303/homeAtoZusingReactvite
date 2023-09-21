@@ -416,10 +416,10 @@ function Materials() {
           <p>Are you sure to delete </p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleDelete}>
+          <Button variant="danger" onClick={handleDelete}>
             Yes
           </Button>
-          <Button variant="primary" onClick={handleCloses}>
+          <Button style={{background:"grey"}} onClick={handleCloses}>
             No
           </Button>
         </Modal.Footer>
@@ -468,10 +468,10 @@ function Materials() {
                   </InputGroup>
                 </Form.Group>
                   <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClos}>
+                  <Button  style={{background:"grey"}}onClick={handleClos}>
                     Close
                   </Button>
-                  <Button variant="primary" type="submit" onClick={handleClos}>
+                  <Button variant="success" type="submit" onClick={handleClos}>
                     Save Changes
                   </Button>
                 </Modal.Footer>

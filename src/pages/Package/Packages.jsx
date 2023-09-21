@@ -692,10 +692,10 @@ function Packages() {
           <p>Are you sure to delete </p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleDelete}>
+          <Button variant="danger" onClick={handleDelete}>
             Yes
           </Button>
-          <Button variant="primary" onClick={handleCloses}>
+          <Button variant="success" onClick={handleCloses}>
             No
           </Button>
         </Modal.Footer>
@@ -791,7 +791,7 @@ function Packages() {
                   controlId="validationCustom02"
                 >
                   <Button
-                    className="btn-sm bg-warning text-white my-1 border-0"
+                    className="btn-sm bg-info text-white my-1 border-0"
                     onClick={openFilePicker}
                     type="file"
                     name="image"
@@ -844,7 +844,7 @@ function Packages() {
                   controlId="validationCustom02"
                 >
                   <Button
-                    className="btn-sm bg-warning text-white my-1 border-0"
+                    className="btn-sm bg-info text-white my-1 border-0"
                     onClick={openGalleryFilePicker}
                     type="file"
                     name="gallery_imgs"
@@ -855,10 +855,10 @@ function Packages() {
                 </Form.Group>
 
                 <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClos}>
+                  <Button style={{backgroundColor: "grey", color: "white"}}onClick={handleClos}>
                     Close
                   </Button>
-                  <Button variant="primary" type="submit">
+                  <Button variant="success" type="submit">
                     Save Changes
                   </Button>
                 </Modal.Footer>
@@ -1008,10 +1008,10 @@ function Packages() {
                 </Form.Group>
 
                 <Modal.Footer>
-                  <Button variant="secondary" onClick={close}>
+                  <Button  style={{  backgroundColor: "grey", color: "white" }}onClick={close}>
                     Close
                   </Button>
-                  <Button variant="primary" type="submit" onClick={close}>
+                  <Button variant="success" type="submit" onClick={close}>
                     Done
                   </Button>
                 </Modal.Footer>

@@ -449,10 +449,10 @@ function Hometype() {
           <p>Are you sure to delete </p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleDelete}>
+          <Button variant="danger" onClick={handleDelete}>
             Yes
           </Button>
-          <Button variant="primary" onClick={handleCloses}>
+          <Button style={{ backgroundColor: "grey", color: "white" }} onClick={handleCloses}>
             No
           </Button>
         </Modal.Footer>
@@ -503,7 +503,7 @@ function Hometype() {
                   controlId="validationCustom02"
                 >
                   <Button
-                    className="btn-sm bg-warning text-white my-2 border-0"
+                    className="btn-sm bg-info text-white my-2 border-0"
                     onClick={openFilePicker}
                     type="file"
                     name="image"
@@ -514,10 +514,10 @@ function Hometype() {
                 </Form.Group>
 
                 <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClos}>
+                  <Button style={{ backgroundColor: "grey" }}onClick={handleClos}>
                     Close
                   </Button>
-                  <Button variant="primary" type="submit" onClick={handleClos}>
+                  <Button variant="success" type="submit" onClick={handleClos}>
                     Save Changes
                   </Button>
                 </Modal.Footer>
