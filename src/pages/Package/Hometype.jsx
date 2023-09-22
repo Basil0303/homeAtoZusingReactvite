@@ -55,6 +55,12 @@ function Hometype() {
     const response = await apiCall("post", homeUrl,  data );
     console.log(response.data);
     getHome();
+    setData({
+      name: ""
+    })
+    setValidated(
+      false
+    );
     setShow(false);
   };
 

@@ -124,6 +124,8 @@ function Packages() {
     
     console.log(response);
     getHome();
+    setData({})
+    setValidated(false);
     setShow(false);
   };
 

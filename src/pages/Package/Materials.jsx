@@ -29,7 +29,12 @@ function Materials() {
     const response = await apiCall("post", materialsUrl,  data );
     console.log(response.data);
     getHome();
+    setData({
+      name: "",
+    description: ""
+    })
     setShow(false);
+    setValidated(false);
   };
 
   //edit data

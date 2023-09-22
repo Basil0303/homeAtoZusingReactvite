@@ -72,6 +72,19 @@ function ProjectsPage() {
       const response = await apiCall("post", ProjectUrl, dataToAdd);
       console.log(response);
       getProject();
+      setData({
+        name: "",
+        location: "",
+        description: "",
+        amnities: {
+          bed: "",
+          kitchen: "",
+          shower: "",
+          storage_space: "",
+          total_Sqft: "",
+        },
+      })
+      setValidated(false);
       setShow(false);
     };
 
