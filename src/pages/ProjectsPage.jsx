@@ -28,12 +28,21 @@ function ProjectsPage() {
     const [data, setData] = useState({
       name: "",
       location: "",
-      featured: "",
-      popular: "",
+      featured: false,
+      popular: false,
       description: "",
-      amnities: "",
+      amnities: {
+        bed: "",
+        kitchen: "",
+        shower: "",
+        storage_space: "",
+        total_Sqft: "",
+      },
+      gallery: "",
+      plan: ["", ""],
     });
-
+    
+    console.log(data,"..................data")
     const [list, setlist] = useState();
 
     useEffect(() => {
@@ -54,9 +63,28 @@ function ProjectsPage() {
 
     //add data
     const project = async () => {
-      const response = await apiCall("post", ProjectUrl, { data });
+      const dataToAdd = {
+        ...data,
+        gallery: data.gallery,
+        plan: data.plan,
+      };
+    console.log(dataToAdd,"fdghjkl;';lkjhgfd")
+      const response = await apiCall("post", ProjectUrl, dataToAdd);
       console.log(response);
       getProject();
+      setData({
+        name: "",
+        location: "",
+        description: "",
+        amnities: {
+          bed: "",
+          kitchen: "",
+          shower: "",
+          storage_space: "",
+          total_Sqft: "",
+        },
+      })
+      setValidated(false);
       setShow(false);
     };
 
@@ -70,26 +98,61 @@ function ProjectsPage() {
       id: "",
       name: "",
       location: "",
-      featured: false, // Initialize as false
-      popular: false, // Initialize as false
+      description: "",
+      amnities: {
+        bed: "",
+        kitchen: "",
+        shower: "",
+        storage_space: "",
+        total_sqft: "",
+      },
+      featured: false,
+      popular: false,
+      gallery: "",
+      plan: "",
     });
+    const handleFieldChange = (event, fieldName,) => {
+      if (!event) return;
 
-    const handleFieldChange = (event) => {
-      const { name, value, type, checked } = event.target;
+      const { name, value, type, checked } = event.target || {};
+      
 
-      // Check if the input is a checkbox
+      if (!name) return;
+
       if (type === "checkbox") {
         setEditedItem((prevItem) => ({
           ...prevItem,
-          [name]: checked, // Update with the checked value
+          [name]: checked,
         }));
       } else {
-        // For non-checkbox inputs (e.g., text inputs)
-        setEditedItem((prevItem) => ({
-          ...prevItem,
-          [name]: value,
-        }));
+        if (fieldName === "amnities") {
+          // Handle amenities fields separately
+          setEditedItem((prevItem) => ({
+            ...prevItem,
+            amnities: {
+              ...prevItem.amnities,
+              [name]: value,
+            },
+          }));
+        } else {
+          // For other fields, update as before
+          setEditedItem((prevItem) => ({
+            ...prevItem,
+            [name]: value,
+          }));
+          
+        }
       }
+    };
+
+    const handleAmenityChange = (key, value) => {
+      setData((prevData) => ({
+        ...prevData,
+        amnities: {
+          ...prevData.amnities,
+          [key]: value,
+        },
+      }));
     };
 
     const EditData = (item) => {
@@ -97,30 +160,28 @@ function ProjectsPage() {
         id: item._id,
         name: item.name,
         location: item.location,
-        featured: item.featured, // Initialize with the project's value
-        popular: item.popular, // Initialize with the project's value
+        description: item.description,
+        amnities: item.amnities,
+        featured: item.featured,
+        popular: item.popular,
+        gallery: item.gallery,
+        plan: item.plan,
       });
       setEdit(true);
     };
 
     const handleEdit = async () => {
-      await apiCall("put", `${ProjectUrl}/${editedItem.id}`, {
-        data: editedItem,
-      });
+      const completeEditedItem = {
+        ...editedItem,
+        gallery: editedItem.gallery,
+        plan: editedItem.plan,
+      };
 
-      // Find the index of the edited item in the list
-      const editedItemIndex = list.findIndex(
-        (item) => item._id === editedItem.id
+      await apiCall("put", `${ProjectUrl}/${editedItem.id}`, 
+        completeEditedItem,
       );
-
-      // Create a copy of the list with the edited item replaced
-      const updatedList = [...list];
-      updatedList[editedItemIndex] = editedItem;
-
-      // Update the list state with the updated list
-      setlist(updatedList);
-
       handleClose();
+      getPackages();
     };
 
     //delete data from table
@@ -151,12 +212,56 @@ function ProjectsPage() {
 
     const handleCloses = () => setRemove(false);
 
-    //amnities option
-    const amnities = [
-      { value: "option1", label: "Option 1" },
-      { value: "option2", label: "Option 2" },
-      // Add more options as needed
-    ];
+    //gallery images using file stack
+    const client = filestack.init("AaRWObgSHSuGtGR3HqMYBz");
+    const openGalleryFilePicker = () => {
+      const options = {
+        fromSources: ["local_file_system", "instagram", "facebook"],
+        accept: ["image/*"],
+        transformations: {
+          crop: {
+            aspectRatio: 1 / 1,
+            force: true,
+          },
+        },
+        maxFiles: 3,
+        minFiles: 1,
+        uploadInBackground: false,
+        onUploadDone: (res) => {
+          console.log(res);
+          const uploadedImages = res.filesUploaded.map((file) => file.url);
+          setData({ ...data, gallery: uploadedImages });
+          setEditedItem({ ...editedItem, gallery: uploadedImages });
+        },
+      };
+      client.picker(options).open();
+    };
+
+    //file stack usnig plan
+
+    // const clients = filestack.init("AaRWObgSHSuGtGR3HqMYBz");
+    const openFilePicker = () => {
+      const options = {
+        fromSources: ["local_file_system", "instagram", "facebook"],
+        accept: ["image/*"],
+        transformations: {
+          crop: {
+            aspectRatio: 1 / 1,
+            force: true,
+          },
+        },
+        maxFiles: 3,
+        minFiles: 1,
+        uploadInBackground: false,
+        onUploadDone: (res) => {
+          console.log(res);
+          const uploadedImages = res.filesUploaded.map((file) => file.url);
+          setData({ ...data, plan: uploadedImages });
+          setEditedItem({ ...editedItem, plan: uploadedImages });
+        },
+      };
+      client.picker(options).open();
+    };
 
     return (
       <div>
@@ -246,6 +351,7 @@ function ProjectsPage() {
                           <th>Name</th>
                           <th>Location</th>
                           <th></th>
+                          
                         </tr>
                       </thead>
                       <tbody>
@@ -280,7 +386,7 @@ function ProjectsPage() {
                                 <td>
                                   {item?.featured && (
                                     <span
-                                      class="badge badge-primary border-0 px-2"
+                                      class="badge rounded-pill bg-primary px-2"
                                       style={{ fontSize: "9px" }}
                                     >
                                       Feactured
@@ -289,13 +395,26 @@ function ProjectsPage() {
 
                                   {item?.popular && (
                                     <span
-                                      class="badge badge-success border-0 px-2 mx-1"
+                                      class="badge rounded-pill bg-success px-2 mx-1"
                                       style={{ fontSize: "9px" }}
                                     >
                                       Popular
                                     </span>
                                   )}
                                 </td>
+
+                                {/* <td style={{ width: "2%" }}>
+                                <img
+                                  src={item?.gallery ?? "images/user.webp"}
+                                  width={32}
+                                  height={32}
+                                  style={{
+                                    objectFit: "cover",
+                                    borderRadius: "4px",
+                                    backgroundColor: "#eee",
+                                  }}
+                                />
+                              </td> */}
 
                                 <td>
                                   <div className="dropdown">
@@ -459,7 +578,9 @@ function ProjectsPage() {
                     />
                   </Form.Group>
                   <Form.Group>
-                    <Form.Label className="mb-1">Description</Form.Label>
+                    <Form.Label className="mb-1">
+                      Enter a Description
+                    </Form.Label>
                     <Form.Control
                       rows={3}
                       placeholder="Enter description"
@@ -470,9 +591,84 @@ function ProjectsPage() {
                       required // Add the required attribute
                     />
                   </Form.Group>
+
+                  <Form.Group>
+                    <Form.Label className="mb-1 my-2">Amenities</Form.Label>
+                    <div className="row">
+                      <div className="col-md-2">
+                        <label>Bed</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          value={data?.amnities?.bed}
+                          onChange={(e) =>
+                            handleAmenityChange("bed", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="col-md-2">
+                        <label>Kitchen</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          value={data?.amnities?.kitchen}
+                          onChange={(e) =>
+                            handleAmenityChange("kitchen", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="col-md-2">
+                        <label>Shower</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          value={data?.amnities?.shower}
+                          onChange={(e) =>
+                            handleAmenityChange("shower", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <label>Storage Space</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          value={data?.amnities?.storage_space}
+                          onChange={(e) =>
+                            handleAmenityChange("storage_space", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <label>Total Sqft</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          value={data?.amnities?.total_Sqft}
+                          onChange={(e) =>
+                            handleAmenityChange("total_Sqft", e.target.value)
+                          }
+                        />
+                      </div>
+                    </div>
+                  </Form.Group>
+
+                  <Form.Group>
+                    <Button
+                      className="btn-sm bg-info my-2 border-0 text-white "
+                      multiple // Allow multiple file selection
+                      onClick={openGalleryFilePicker}
+                      onChange={(e) =>
+                        setData({ ...data, gallery: e.target.value })
+                      }
+                    >
+                      Choose Gallery Image
+                    </Button>
+                  </Form.Group>
                   <Form.Group>
                     <InputGroup hasValidation>
                       <Form.Check
+                      
                         type="checkbox"
                         id="featuredCheckbox"
                         checked={data.featured}
@@ -487,6 +683,7 @@ function ProjectsPage() {
                   <Form.Group>
                     <InputGroup hasValidation>
                       <Form.Check
+                 
                         type="checkbox"
                         id="popularCheckbox"
                         checked={data.popular}
@@ -498,29 +695,42 @@ function ProjectsPage() {
                     </InputGroup>
                   </Form.Group>
 
-                  <div className="text-center mt-4 my-2">
+                  <Form.Group>
                     <Button
-                      type="submit"
-                      className="btn btn-primary btn-block my-2"
+                      className="btn-sm bg-info my-2 border-0 text-white "
+                      multiple // Allow multiple file selection
+                      onClick={openFilePicker}
+                      onChange={(e) =>
+                        setData({ ...data, plan: e.target.value })
+                      }
                     >
+                      Choose plan Image
+                    </Button>
+                  </Form.Group>
+
+                  <Modal.Footer>
+                    <Button style={{backgroundColor:"gray"}} onClick={handleClose}>
+                      Close
+                    </Button>
+                    <Button variant="success" type="submit">
                       Submit
                     </Button>
-                  </div>
+                  </Modal.Footer>
                 </Form>
               </div>
             </div>
           </div>
         </Modal>
-
+        {/* delete data */}
         <Modal show={remove.show} onHide={handleClose}>
           <Modal.Body>
             <p>Are you sure to delete </p>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleDelete}>
+            <Button variant="danger" onClick={handleDelete}>
               Yes
             </Button>
-            <Button variant="primary" onClick={handleCloses}>
+            <Button style={{background:"grey"}} onClick={handleCloses}>
               No
             </Button>
           </Modal.Footer>
@@ -545,7 +755,6 @@ function ProjectsPage() {
                         placeholder="Name"
                         value={editedItem.name}
                         onChange={handleFieldChange}
-                        aria-describedby="inputGroupPrepend"
                       />
                     </InputGroup>
                   </Form.Group>
@@ -555,15 +764,109 @@ function ProjectsPage() {
                       Enter a Location
                     </Form.Label>
                     <Form.Control
-                      required
                       type="text"
+                      name="location"
                       placeholder="location"
-                      value={editedItem.location} // Use the value from the data state
+                      value={editedItem.location}
                       onChange={handleFieldChange}
-                      describedby="inputGroupPrepend"
+                    />
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.Label className="mb-1">
+                      Enter a Description
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="description"
+                      placeholder="description"
+                      value={editedItem.description}
+                      onChange={handleFieldChange}
                     />
                   </Form.Group>
 
+                  <Form.Group>
+                    <Form.Label className="mb-1 my-2">Amenities</Form.Label>
+                    <div className="row">
+                      <div className="col-md-2">
+                        <label>Bed</label>
+                        <input
+                          className="form-control"
+                          type="number"
+                          value={editedItem.amnities.bed}
+                          onChange={(e) => handleFieldChange(e, "amnities")}
+                          name="bed"
+                        />
+                      </div>
+                      <div className="col-md-2">
+                        <label>Kitchen</label>
+                        <input
+                          className="form-control"
+                          type="number"
+                          value={editedItem.amnities.kitchen}
+                          onChange={(e) => handleFieldChange(e, "amnities")}
+                          name="kitchen"
+                        />
+                      </div>
+                      <div className="col-md-2">
+                        <label>Shower</label>
+                        <input
+                          className="form-control"
+                          type="number"
+                          value={editedItem.amnities.shower}
+                          onChange={(e) => handleFieldChange(e, "amnities")}
+                          name="shower"
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <label>Storage Space</label>
+                        <input
+                          className="form-control"
+                          type="number"
+                          value={editedItem.amnities.storage_space}
+                          onChange={(e) => handleFieldChange(e, "amnities")}
+                          name="storage_space"
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <label>Total Sqft</label>
+                        <input
+                          className="form-control"
+                          type="number"
+                          value={editedItem.amnities.total_Sqft}
+                          onChange={(e) => handleFieldChange(e, "amnities")}
+                          name="total_Sqft"
+                        />
+                      </div>
+                    </div>
+                  </Form.Group>
+                  <Form.Group
+                    className="mb-3 my-2"
+                    as={Col}
+                    controlId="galleryImage"
+                  >
+                    <img
+                      src={
+                        editedItem.gallery
+                          ? editedItem.gallery
+                          : "images/user.webp"
+                      }
+                      width={64}
+                      height={64}
+                      alt="Gallery"
+                    />
+                  </Form.Group>
+                  <Form.Group>
+                    <Button
+                      className="btn-sm bg-info my-2 border-0 text-white"
+                      multiple
+                      type="file"
+                      name="image"
+                      accept="image/*"
+                      onClick={openGalleryFilePicker}
+                    >
+                      Choose Gallery Image
+                    </Button>
+                  </Form.Group>
                   <Form.Group>
                     <InputGroup hasValidation>
                       <Form.Check
@@ -590,12 +893,39 @@ function ProjectsPage() {
                     </InputGroup>
                   </Form.Group>
 
+                  <Form.Group
+                    className="mb-3 my-2"
+                    as={Col}
+                    controlId="planImage"
+                  >
+                    <img
+                      src={
+                        editedItem.plan ? editedItem.plan : "images/user.webp"
+                      }
+                      width={64}
+                      height={64}
+                      alt="Plan"
+                    />
+                  </Form.Group>
+                  <Form.Group>
+                    <Button
+                      className="btn-sm bg-info my-2 border-0 text-white"
+                      multiple
+                      type="file"
+                      name="image"
+                      accept="image/*"
+                      onClick={openFilePicker}
+                    >
+                      Choose New Plan Image
+                    </Button>
+                  </Form.Group>
+
                   <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClos}>
+                    <Button style={{background:"grey"}} onClick={handleClos}>
                       Close
                     </Button>
                     <Button
-                      variant="primary"
+                      variant="success"
                       type="submit"
                       onClick={handleClos}
                     >

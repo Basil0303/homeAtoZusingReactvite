@@ -13,6 +13,7 @@ import Hometype from "./pages/Package/Hometype";
 import Packages from "./pages/Package/Packages";
 import AddSettings from "./pages/AddSettings";
 import CustomerPackage from "./pages/CustomerPackage";
+import Materials from "./pages/Package/Materials";
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <Route path="/packages" element={<Packages />} />
           <Route path="/addsettings" element={<AddSettings/>}/>
           <Route path="/customer-package/:userId" element={<CustomerPackage/>}/>
+        <Route path="/materials" element={<Materials/>}/>
         </Route>
           <Route path="/login" element={<LoginPage />} />
 

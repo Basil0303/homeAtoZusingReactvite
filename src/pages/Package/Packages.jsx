@@ -31,14 +31,18 @@ function Packages() {
     price_per_sqft: "",
     cover_image: "",
     description: "",
-    gallery_imgs: [],
+    gallery_imgs: "",
     materials: ["", "", ""],
+    createdAt: "",
+    updatedAt: "",
   });
+  console.log(data,"data")
 
   ////drop down  materials and select hometypes
   const [hometypes, setHometypes] = useState([]);
   const [materials, setMaterials] = useState([]);
   const [list, setlist] = useState();
+  const [selectedOptions, setselectedOptions] = useState([]);
 
   useEffect(() => {
     initApis();
@@ -95,10 +99,6 @@ function Packages() {
       uploadInBackground: false,
       onUploadDone: (res) => {
         console.log(res);
-        let coverImage = "default_image_url_here"; // Replace with your default image URL
-        if (res.filesUploaded.length > 0) {
-          coverImage = res.filesUploaded[0].url;
-        }
         setData({ ...data, cover_image: res.filesUploaded[0].url });
         setEditedItem({ ...editedItem, cover_image: res.filesUploaded[0].url });
       },
@@ -110,14 +110,22 @@ function Packages() {
 
   //add data
   const home = async () => {
-    const response = await apiCall("post", PackageUrl, {
-      data: {
-        ...data,
-        gallery_imgs: data.gallery_imgs,
-      },
-    });
+    const dataToAdd={
+      ...data,
+      gallery_imgs: data.gallery_imgs,
+      cover_image: data.cover_image,
+
+    };
+    console.log(dataToAdd,"data to addd")
+        const response = await apiCall("post", PackageUrl, 
+         dataToAdd
+    );
+  
+    
     console.log(response);
     getHome();
+    setData({})
+    setValidated(false);
     setShow(false);
   };
 
@@ -132,7 +140,7 @@ function Packages() {
     const { name, value } = event.target;
     setEditedItem((prevItem) => ({
       ...prevItem,
-      [name]: value,
+      [name]: value === null ? "" : value,
       cover_image: data.cover_image,
     }));
   };
@@ -141,15 +149,61 @@ function Packages() {
     const completeEditedItem = {
       ...editedItem,
       cover_image: editedItem.cover_image,
+      gallery_imgs: editedItem.gallery_imgs,
     };
-    await apiCall("put", `${PackageUrl}/${editedItem.id}`, {
-      data: completeEditedItem,
-    });
+
+    await apiCall("put", `${PackageUrl}/${editedItem.id}`, 
+      completeEditedItem
+    );
     handleClose();
     getHome();
   };
 
-  //delete data from hometype
+  // const EditData = (item) => {
+  //   console.log(item);
+  //   setEditedItem({
+  //     id: item._id,
+  //     name: item.name,
+  //     cover_image: item.cover_image,
+  //     gallery_imgs: item.gallery_imgs,
+  //     home_type_id: item.home_type_id,
+  //     price_per_sqft: item.price_per_sqft,
+  //     description: item.description,
+  //     materials: item.materials,
+  //   });
+  //   setEdit(true);
+  // };
+
+
+  const EditData = (item) => {
+    var data = [];
+    item.materials.forEach((element) => {
+      data.push({
+        label: element.name,
+        value: element._id,
+      });
+    });
+    setselectedOptions(data);
+
+    setEditedItem({
+      id: item._id,
+      name: item.name,
+      cover_image: item.cover_image,
+      gallery_imgs: item.gallery_imgs,
+      home_type_id: item.home_type_id._id,
+      price_per_sqft: item.price_per_sqft,
+      description: item.description,
+      materials: item.materials.map(
+        (element) => {
+          element._id, element.name;
+        }
+        // label: element.name,
+      ),
+    });
+    setEdit(true);
+  };
+
+  //delete data from package
   const handleDelete = async () => {
     // console.log (remove.id)
     const response = await apiCall("delete", `${PackageUrl}/${remove.id}`, {
@@ -160,15 +214,6 @@ function Packages() {
     getHome();
   };
 
-  const EditData = (item) => {
-    console.log(item);
-    setEditedItem({
-      id: item._id,
-      name: item.name,
-      image: item.image,
-    });
-    setEdit(true);
-  };
   //get data
   const getHome = async () => {
     const response = await apiCall("get", PackageUrl, { params });
@@ -187,6 +232,25 @@ function Packages() {
 
   const handleCloses = () => setRemove(false);
   const handleShow = () => setRemove(true);
+
+  //view more
+  const [viewed, setViewed] = useState();
+  const close = () => setViewed(false);
+  const Viewmore = (item) => {
+    console.log(item);
+    setData({
+      id: item._id,
+      name: item.name,
+      home_type_id: item.home_type_id.name,
+      price_per_sqft: item.price_per_sqft,
+      cover_image: item.cover_image,
+      gallery_imgs: item.gallery_imgs,
+      average_rating: item.average_rating,
+      description: item.description,
+      materials: item.materials,
+    });
+    setViewed(true);
+  };
 
   //gallery images using file stack
   const openGalleryFilePicker = () => {
@@ -225,7 +289,7 @@ function Packages() {
               role="tablist"
               style={{ backgroundColor: "white" }}
             >
-              <li className="nav-item me-1">
+              <li className="nav-item me-1" role="presentation">
                 <div className="input-group search-area">
                   <input
                     type="text"
@@ -238,7 +302,7 @@ function Packages() {
                   />
 
                   <span className="input-group-text">
-                    <a href={undefined}>
+                    <a href="javascript:void(0)">
                       <svg
                         width={24}
                         height={24}
@@ -372,6 +436,8 @@ function Packages() {
 
                               <td>{item?.description}</td>
                               <td>{item?.materials?.name}</td>
+                              {/* <td>{formatUpdateTime(item?.createdAt)}</td>
+                              <td>{formatUpdateTime(item.updatedAt)}</td> */}
                               <td>
                                 <div className="dropdown">
                                   <button
@@ -443,6 +509,16 @@ function Packages() {
                                     >
                                       Delete
                                     </a>
+                                    <a
+                                      className="dropdown-item"
+                                      href="#"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        Viewmore(item);
+                                      }}
+                                    >
+                                      View more
+                                    </a>
                                   </div>
                                 </div>
                               </td>
@@ -485,9 +561,7 @@ function Packages() {
           </div>
         </div>
       </div>
-
       {/* ADD PACKAGE POPUP */}
-
       <Modal show={show} onHide={handleClose}>
         <div className="card">
           <div className="card-header">
@@ -519,7 +593,7 @@ function Packages() {
                   </InputGroup>
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label className="mb-1 my-2">Type a Hometype</Form.Label>
+                  <Form.Label className="mb-1 my-2">Choose a Hometype</Form.Label>
                   <Select
                     options={hometypes}
                     onChange={(homeType) => {
@@ -529,7 +603,7 @@ function Packages() {
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label className="mb-1 my-3">Price per sqft</Form.Label>
+                  <Form.Label className="mb-1 my-3">Price Per Sqft</Form.Label>
                   <InputGroup hasValidation>
                     <Form.Control
                       required
@@ -538,7 +612,7 @@ function Packages() {
                       value={data.price_per_sqft} // Use inputValue for name input
                       onChange={(e) => {
                         const enteredValue = parseFloat(e.target.value);
-                        if (enteredValue !== 0 || e.target.value === "") {
+                        if (!isNaN(enteredValue) && enteredValue >= 0) {
                           setData({ ...data, price_per_sqft: enteredValue });
                         }
                       }}
@@ -546,13 +620,29 @@ function Packages() {
                     />
                   </InputGroup>
                 </Form.Group>
+                <Form.Group
+                  className="mb-3 my-2"
+                  as={Col}
+                  controlId="validationCustom02"
+                >
+                  <img
+                    src={
+                      editedItem.cover_image
+                        ? editedItem.cover_image
+                        : "images/user.webp"
+                    }
+                    width={64}
+                    height={64}
+                    alt="Cover Image"
+                  />
+                </Form.Group>
                 <Form.Group>
                   <Button
-                    className="btn-sm bg-warning text-white my-2 border-0"
+                    className="btn-sm bg-info text-white my-2 border-0"
                     onClick={openFilePicker}
-                    onChange={(e) =>
-                      setData({ ...data, cover_image: e.target.value })
-                    }
+                    type="file"
+                    name="image"
+                    accept="image/*"
                   >
                     Choose Cover Image
                   </Button>
@@ -574,7 +664,8 @@ function Packages() {
                 </Form.Group>
                 <Form.Group>
                   <Button
-                    className="btn-sm bg-warning my-2 border-0 text-white "
+                    required
+                    className="btn-sm bg-info my-2 border-0 text-white "
                     multiple // Allow multiple file selection
                     onClick={openGalleryFilePicker}
                     onChange={(e) =>
@@ -584,6 +675,25 @@ function Packages() {
                     Choose Gallery Image
                   </Button>
                 </Form.Group>
+                {/* <Form.Group>
+                  <InputGroup hasValidation>
+
+                    <Form.Control
+                      type="number"
+                      placeholder="average_rating"
+                      name="rating"
+                      value={data.average_rating}
+                      onChange={(e) => {
+                        const enteredValue = parseFloat(e.target.value);
+                        if (!isNaN(enteredValue) && enteredValue >= 0) {
+                          setData({ ...data, average_rating: enteredValue });
+                        }
+                      }}
+                      aria-describedby="inputGroupPrepend"
+                      min="0" // Add this attribute to prevent negative values
+                    />
+                  </InputGroup>
+                </Form.Group> */}
                 <Form.Group>
                   <Select
                     className="my-2"
@@ -600,34 +710,33 @@ function Packages() {
                     }}
                   />
                 </Form.Group>
-                <div className="text-center mt-4 my-2">
-                  <Button
-                    type="submit"
-                    className="btn btn-primary btn-block my-2"
-                  >
+                <Modal.Footer>
+                  <Button  style={{backgroundColor:"grey"}}onClick={handleClose}>
+                    Close
+                  </Button>
+                  <Button variant="success" type="submit">
                     Submit
                   </Button>
-                </div>
+                </Modal.Footer>
               </Form>
             </div>
           </div>
         </div>
-      </Modal>
-
+      </Modal>{" "}
+      {/* delete  data in modal*/}
       <Modal show={remove.show} onHide={handleClose}>
         <Modal.Body>
           <p>Are you sure to delete </p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleDelete}>
+          <Button variant="danger" onClick={handleDelete}>
             Yes
           </Button>
-          <Button variant="primary" onClick={handleCloses}>
+          <Button style={{backgroundColor:"grey"}} onClick={handleCloses}>
             No
           </Button>
         </Modal.Footer>
       </Modal>
-
       {/* edit data in modal*/}
       <Modal show={edit} onHide={handleClos}>
         <div className="card">
@@ -680,7 +789,7 @@ function Packages() {
                   </InputGroup>
                 </Form.Group>
                 <Form.Group
-                  className="mb-3 my-2"
+                  className="mb-3 my-1"
                   as={Col}
                   controlId="validationCustom02"
                 >
@@ -698,26 +807,240 @@ function Packages() {
                 </Form.Group>
 
                 <Form.Group
-                  className="mb-3"
+                  className="mb-3 my-1"
+                  as={Col}
+                  controlId="validationCustom02"
+                >
+                  <img
+                    src={
+                      editedItem.cover_image
+                        ? editedItem.cover_image
+                        : "images/user.webp"
+                    }
+                    width={64}
+                    height={64}
+                    alt="Cover Image"
+                  />
+                </Form.Group>
+                <Form.Group
+                  className="mb-3 my-1"
                   as={Col}
                   controlId="validationCustom02"
                 >
                   <Button
-                    className="btn-sm bg-warning text-white my-2 border-0"
+                    className="btn-sm bg-info text-white my-1 border-0"
                     onClick={openFilePicker}
                     type="file"
                     name="image"
                     accept="image/*"
                   >
-                    Choose Cover Image
+                    Choose New Cover Image
                   </Button>
                 </Form.Group>
+                <Form.Group>
+                <Select
+                    className="my-2"
+                    placeholder="materials"
+                    isMulti
+                    options={materials}
+                    value={selectedOptions}
+                    onChange={(selectedMaterials) =>
+                      setselectedOptions(selectedMaterials)
+                    }
+                  />
+                </Form.Group>
+
+                <Form.Group
+                  className="mb-3 my-1"
+                  as={Col}
+                  controlId="validationCustom02"
+                >
+                  <img
+                    src={
+                      editedItem.gallery_imgs
+                        ? editedItem.gallery_imgs
+                        : "images/user.webp"
+                    }
+                    width={64}
+                    height={64}
+                    alt="gallery Image"
+                  />
+                </Form.Group>
+                <Form.Group
+                  className="mb-3"
+                  as={Col}
+                  controlId="validationCustom02"
+                >
+                  <Button
+                    className="btn-sm bg-info text-white my-1 border-0"
+                    onClick={openGalleryFilePicker}
+                    type="file"
+                    name="gallery_imgs"
+                    accept="image/*"
+                  >
+                    Choose New Gallery Images
+                  </Button>
+                </Form.Group>
+
                 <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClos}>
+                  <Button style={{backgroundColor: "grey", color: "white"}}onClick={handleClos}>
                     Close
                   </Button>
-                  <Button variant="primary" type="submit" onClick={handleClos}>
+                  <Button variant="success" type="submit">
                     Save Changes
+                  </Button>
+                </Modal.Footer>
+              </Form>
+            </div>
+          </div>
+        </div>
+      </Modal>
+      {/* view more data in modal*/}
+      <Modal show={viewed} onHide={close}>
+        <div className="card">
+          <div className="modal-header">
+            <button
+              type="button"
+              onClick={close}
+              className="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            />
+          </div>
+          <div className="card-body">
+            <div className="basic-form">
+              <Form onSubmit={(e) => handleSubmit(e, setValidated, handleEdit)}>
+                <Form.Group as={Col} controlId="validationCustom01" />
+                <Form.Label className="mb-1">View Details</Form.Label>
+                <Form.Group>
+                  <InputGroup hasValidation>
+                    <Form.Control
+                      type="text"
+                      name="name"
+                      placeholder="Name"
+                      value={data.name}
+                      onChange={handleFieldChange}
+                      aria-describedby="inputGroupPrepend"
+                    />
+                  </InputGroup>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label className="mb-1">Choose a Hometype</Form.Label>
+                  <Select
+                    options={hometypes}
+                    value={hometypes.find(
+                      (option) => option.value === data.home_type_id
+                    )}
+                    onChange={(homeType) => {
+                      setEditedItem({
+                        ...data,
+                        home_type_id: homeType.value,
+                      });
+                    }}
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label className="mb-1">Enter Price Sqft</Form.Label>
+                  <InputGroup hasValidation>
+                    <Form.Control
+                      type="number"
+                      placeholder="Price Per Sqft"
+                      name="price_per_sqft" // Ensure that the name attribute matches the property name
+                      value={data.price_per_sqft}
+                      onChange={handleFieldChange}
+                      aria-describedby="inputGroupPrepend"
+                    />
+                  </InputGroup>
+                </Form.Group>
+                <Form.Group
+                  className="mb-3 my-1"
+                  as={Col}
+                  controlId="validationCustom02"
+                >
+                  <Form.Label className="mb-1">Description</Form.Label>
+                  <InputGroup hasValidation>
+                    <Form.Control
+                      type="text"
+                      placeholder="Description"
+                      name="description" // Ensure that the name attribute matches the property name
+                      value={data.description}
+                      onChange={handleFieldChange}
+                      aria-describedby="inputGroupPrepend"
+                    />
+                  </InputGroup>
+                </Form.Group>
+                <Form.Label className="mb-1"> Cover Image</Form.Label>
+                <Form.Group
+                  className="mb-3 my-2"
+                  as={Col}
+                  controlId="validationCustom02"
+                >
+                  <img
+                    src={
+                      editedItem.cover_image
+                        ? editedItem.cover_image
+                        : "images/user.webp"
+                    }
+                    width={64}
+                    height={64}
+                    alt="Cover Image"
+                  />
+                </Form.Group>
+                <Form.Label className="mb-1">gallery image</Form.Label>
+                <Form.Group
+                  className="mb-3 my-1"
+                  as={Col}
+                  controlId="validationCustom02"
+                >
+                  <img
+                    src={
+                      editedItem.gallery_imgs
+                        ? editedItem.gallery_imgs
+                        : "images/user.webp"
+                    }
+                    width={64}
+                    height={64}
+                    alt="Cover Image"
+                  />
+                </Form.Group>
+                {/* <Form.Label className="mb-1">Average Rating</Form.Label>
+                <Form.Group>
+                  <InputGroup hasValidation>
+                    <Form.Control
+                      className="my-1"
+                      type="number"
+                      placeholder="average_rating"
+                      name="rating"
+                      value={data.average_rating}
+                      onChange={handleFieldChange}
+                      aria-describedby="inputGroupPrepend"
+                    />
+                  </InputGroup>
+                </Form.Group> */}
+                <Form.Label className="mb-1">Choose Materials</Form.Label>
+                <Form.Group>
+                  <Select
+                    className="my-1"
+                    placeholder="materials"
+                    isMulti
+                    options={materials}
+                    onChange={(selectedMaterials) => {
+                      // selectedMaterials will be an array of selected values
+                      const materialValues = selectedMaterials.map(
+                        (material) => material.value
+                      );
+                      setData({ ...data, materials: materialValues });
+                      console.log(materialValues);
+                    }}
+                  />
+                </Form.Group>
+
+                <Modal.Footer>
+                  <Button  style={{  backgroundColor: "grey", color: "white" }}onClick={close}>
+                    Close
+                  </Button>
+                  <Button variant="success" type="submit" onClick={close}>
+                    Done
                   </Button>
                 </Modal.Footer>
               </Form>
