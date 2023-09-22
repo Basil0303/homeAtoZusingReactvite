@@ -587,7 +587,7 @@ function ProjectsPage() {
                         <input
                           className="form-control"
                           type="text"
-                          value={data.amnities.bed}
+                          value={data?.amnities?.bed}
                           onChange={(e) =>
                             handleAmenityChange("bed", e.target.value)
                           }
@@ -598,7 +598,7 @@ function ProjectsPage() {
                         <input
                           className="form-control"
                           type="text"
-                          value={data.amnities.kitchen}
+                          value={data?.amnities?.kitchen}
                           onChange={(e) =>
                             handleAmenityChange("kitchen", e.target.value)
                           }
@@ -609,7 +609,7 @@ function ProjectsPage() {
                         <input
                           className="form-control"
                           type="text"
-                          value={data.amnities.shower}
+                          value={data?.amnities?.shower}
                           onChange={(e) =>
                             handleAmenityChange("shower", e.target.value)
                           }
@@ -620,7 +620,7 @@ function ProjectsPage() {
                         <input
                           className="form-control"
                           type="text"
-                          value={data.amnities.storage_space}
+                          value={data?.amnities?.storage_space}
                           onChange={(e) =>
                             handleAmenityChange("storage_space", e.target.value)
                           }
@@ -631,7 +631,7 @@ function ProjectsPage() {
                         <input
                           className="form-control"
                           type="text"
-                          value={data.amnities.total_Sqft}
+                          value={data?.amnities?.total_Sqft}
                           onChange={(e) =>
                             handleAmenityChange("total_Sqft", e.target.value)
                           }
