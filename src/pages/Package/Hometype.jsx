@@ -52,7 +52,7 @@ function Hometype() {
 
   //add data
   const home = async () => {
-    const response = await apiCall("post", homeUrl, { data });
+    const response = await apiCall("post", homeUrl,  data );
     console.log(response.data);
     getHome();
     setShow(false);
@@ -78,7 +78,7 @@ function Hometype() {
       ...editedItem,
       updatedAt: editedItem.updatedAt || new Date(),
     };
-    await apiCall("put", `${homeUrl}/${editedItem.id}`, { data: editedData });
+    await apiCall("put", `${homeUrl}/${editedItem.id}`,  editedData );
     handleClose();
     getHome();
   };
@@ -423,7 +423,7 @@ function Hometype() {
                   controlId="validationCustom02"
                 >
                   <Button
-                    className="btn-sm bg-warning text-white my-2 border-0"
+                    className="btn-sm bg-info text-white my-2 border-0"
                     onClick={openFilePicker}
                   >
                     Choose Cover Image
@@ -431,10 +431,10 @@ function Hometype() {
                 </Form.Group>
 
                 <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
+                  <Button style ={{backgroundColor:"grey"}} onClick={handleClose}>
                     Close
                   </Button>
-                  <Button variant="primary" type="submit" onClick={handleClos}>
+                  <Button variant="success" type="submit" onClick={handleClos}>
                     Submit
                   </Button>
                 </Modal.Footer>

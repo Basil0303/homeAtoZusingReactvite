@@ -8,7 +8,7 @@ function Sidebar() {
     <div className="deznav">
       <div className="deznav-scroll">
         <ul className="metismenu" id="menu">
-          <li>
+          {/* <li>
             <a
               onClick={() => navigate("/")}
               href={undefined}
@@ -30,7 +30,7 @@ function Sidebar() {
               </div>
               <span className="nav-text">Dashboard</span>
             </a>
-          </li>
+          </li> */}
           <li>
             <a
               onClick={() => navigate("/customer")}

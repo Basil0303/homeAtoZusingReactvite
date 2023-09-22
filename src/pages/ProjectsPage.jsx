@@ -28,8 +28,8 @@ function ProjectsPage() {
     const [data, setData] = useState({
       name: "",
       location: "",
-      featured: "",
-      popular: "",
+      featured: false,
+      popular: false,
       description: "",
       amnities: {
         bed: "",
@@ -41,7 +41,8 @@ function ProjectsPage() {
       gallery: "",
       plan: ["", ""],
     });
-
+    
+    console.log(data,"..................data")
     const [list, setlist] = useState();
 
     useEffect(() => {
@@ -62,13 +63,13 @@ function ProjectsPage() {
 
     //add data
     const project = async () => {
-      const response = await apiCall("post", ProjectUrl, {
-        data: {
-          ...data,
-          gallery: data.gallery,
-          plan: data.plan,
-        },
-      });
+      const dataToAdd = {
+        ...data,
+        gallery: data.gallery,
+        plan: data.plan,
+      };
+    console.log(dataToAdd,"fdghjkl;';lkjhgfd")
+      const response = await apiCall("post", ProjectUrl, dataToAdd);
       console.log(response);
       getProject();
       setShow(false);
@@ -163,9 +164,9 @@ function ProjectsPage() {
         plan: editedItem.plan,
       };
 
-      await apiCall("put", `${ProjectUrl}/${editedItem.id}`, {
-        data: completeEditedItem,
-      });
+      await apiCall("put", `${ProjectUrl}/${editedItem.id}`, 
+        completeEditedItem,
+      );
       handleClose();
       getPackages();
     };
@@ -585,7 +586,7 @@ function ProjectsPage() {
                         <label>Bed</label>
                         <input
                           className="form-control"
-                          type="number"
+                          type="text"
                           value={data.amnities.bed}
                           onChange={(e) =>
                             handleAmenityChange("bed", e.target.value)
@@ -596,7 +597,7 @@ function ProjectsPage() {
                         <label>Kitchen</label>
                         <input
                           className="form-control"
-                          type="number"
+                          type="text"
                           value={data.amnities.kitchen}
                           onChange={(e) =>
                             handleAmenityChange("kitchen", e.target.value)
@@ -607,7 +608,7 @@ function ProjectsPage() {
                         <label>Shower</label>
                         <input
                           className="form-control"
-                          type="number"
+                          type="text"
                           value={data.amnities.shower}
                           onChange={(e) =>
                             handleAmenityChange("shower", e.target.value)
@@ -618,7 +619,7 @@ function ProjectsPage() {
                         <label>Storage Space</label>
                         <input
                           className="form-control"
-                          type="number"
+                          type="text"
                           value={data.amnities.storage_space}
                           onChange={(e) =>
                             handleAmenityChange("storage_space", e.target.value)
@@ -629,7 +630,7 @@ function ProjectsPage() {
                         <label>Total Sqft</label>
                         <input
                           className="form-control"
-                          type="number"
+                          type="text"
                           value={data.amnities.total_Sqft}
                           onChange={(e) =>
                             handleAmenityChange("total_Sqft", e.target.value)
@@ -641,7 +642,7 @@ function ProjectsPage() {
 
                   <Form.Group>
                     <Button
-                      className="btn-sm bg-warning my-2 border-0 text-white "
+                      className="btn-sm bg-info my-2 border-0 text-white "
                       multiple // Allow multiple file selection
                       onClick={openGalleryFilePicker}
                       onChange={(e) =>
@@ -654,6 +655,7 @@ function ProjectsPage() {
                   <Form.Group>
                     <InputGroup hasValidation>
                       <Form.Check
+                      
                         type="checkbox"
                         id="featuredCheckbox"
                         checked={data.featured}
@@ -668,6 +670,7 @@ function ProjectsPage() {
                   <Form.Group>
                     <InputGroup hasValidation>
                       <Form.Check
+                 
                         type="checkbox"
                         id="popularCheckbox"
                         checked={data.popular}
@@ -681,7 +684,7 @@ function ProjectsPage() {
 
                   <Form.Group>
                     <Button
-                      className="btn-sm bg-warning my-2 border-0 text-white "
+                      className="btn-sm bg-info my-2 border-0 text-white "
                       multiple // Allow multiple file selection
                       onClick={openFilePicker}
                       onChange={(e) =>
@@ -693,10 +696,10 @@ function ProjectsPage() {
                   </Form.Group>
 
                   <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
+                    <Button style={{backgroundColor:"gray"}} onClick={handleClose}>
                       Close
                     </Button>
-                    <Button variant="primary" type="submit">
+                    <Button variant="success" type="submit">
                       Submit
                     </Button>
                   </Modal.Footer>

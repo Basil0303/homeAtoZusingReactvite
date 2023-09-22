@@ -112,7 +112,7 @@ function LoanApplicationPage() {
     var response = await apiCall(
       "put",
       `${loanUrl}/${updatedLoanData?.loan_id ?? ""}`,
-      { data: updatedLoanData }
+       updatedLoanData 
     );
     if (response.status) {
       ShowToast("Updated Successfully", true);
@@ -219,7 +219,7 @@ function LoanApplicationPage() {
                                     </li>
                                   </ul>
                                 </td>
-                                <td>{item?.user_id.fullName ?? ""}</td>
+                                <td>{item?.user_id?.fullName ?? ""}</td>
                                 <td>{item?.user_id?.mobile ?? ""}</td>
                                 <td>
                                   {moment(item?.createdAt ?? "").format(

@@ -33,15 +33,16 @@ function Packages() {
     description: "",
     gallery_imgs: "",
     materials: ["", "", ""],
-    average_rating: "",
     createdAt: "",
     updatedAt: "",
   });
+  console.log(data,"data")
 
   ////drop down  materials and select hometypes
   const [hometypes, setHometypes] = useState([]);
   const [materials, setMaterials] = useState([]);
   const [list, setlist] = useState();
+  const [selectedOptions, setselectedOptions] = useState([]);
 
   useEffect(() => {
     initApis();
@@ -109,13 +110,18 @@ function Packages() {
 
   //add data
   const home = async () => {
-    const response = await apiCall("post", PackageUrl, {
-      data: {
-        ...data,
-        gallery_imgs: data.gallery_imgs,
-        cover_image: data.cover_image,
-      },
-    });
+    const dataToAdd={
+      ...data,
+      gallery_imgs: data.gallery_imgs,
+      cover_image: data.cover_image,
+
+    };
+    console.log(dataToAdd,"data to addd")
+        const response = await apiCall("post", PackageUrl, 
+         dataToAdd
+    );
+  
+    
     console.log(response);
     getHome();
     setShow(false);
@@ -144,24 +150,53 @@ function Packages() {
       gallery_imgs: editedItem.gallery_imgs,
     };
 
-    await apiCall("put", `${PackageUrl}/${editedItem.id}`, {
-      data: completeEditedItem,
-    });
+    await apiCall("put", `${PackageUrl}/${editedItem.id}`, 
+      completeEditedItem
+    );
     handleClose();
     getHome();
   };
 
+  // const EditData = (item) => {
+  //   console.log(item);
+  //   setEditedItem({
+  //     id: item._id,
+  //     name: item.name,
+  //     cover_image: item.cover_image,
+  //     gallery_imgs: item.gallery_imgs,
+  //     home_type_id: item.home_type_id,
+  //     price_per_sqft: item.price_per_sqft,
+  //     description: item.description,
+  //     materials: item.materials,
+  //   });
+  //   setEdit(true);
+  // };
+
+
   const EditData = (item) => {
-    console.log(item);
+    var data = [];
+    item.materials.forEach((element) => {
+      data.push({
+        label: element.name,
+        value: element._id,
+      });
+    });
+    setselectedOptions(data);
+
     setEditedItem({
       id: item._id,
       name: item.name,
       cover_image: item.cover_image,
       gallery_imgs: item.gallery_imgs,
-      home_type_id: item.home_type_id,
+      home_type_id: item.home_type_id._id,
       price_per_sqft: item.price_per_sqft,
       description: item.description,
-      materials: item.materials,
+      materials: item.materials.map(
+        (element) => {
+          element._id, element.name;
+        }
+        // label: element.name,
+      ),
     });
     setEdit(true);
   };
@@ -601,7 +636,7 @@ function Packages() {
                 </Form.Group>
                 <Form.Group>
                   <Button
-                    className="btn-sm bg-warning text-white my-2 border-0"
+                    className="btn-sm bg-info text-white my-2 border-0"
                     onClick={openFilePicker}
                     type="file"
                     name="image"
@@ -628,7 +663,7 @@ function Packages() {
                 <Form.Group>
                   <Button
                     required
-                    className="btn-sm bg-warning my-2 border-0 text-white "
+                    className="btn-sm bg-info my-2 border-0 text-white "
                     multiple // Allow multiple file selection
                     onClick={openGalleryFilePicker}
                     onChange={(e) =>
@@ -674,10 +709,10 @@ function Packages() {
                   />
                 </Form.Group>
                 <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
+                  <Button  style={{backgroundColor:"grey"}}onClick={handleClose}>
                     Close
                   </Button>
-                  <Button variant="primary" type="submit">
+                  <Button variant="success" type="submit">
                     Submit
                   </Button>
                 </Modal.Footer>
@@ -695,7 +730,7 @@ function Packages() {
           <Button variant="danger" onClick={handleDelete}>
             Yes
           </Button>
-          <Button variant="success" onClick={handleCloses}>
+          <Button style={{backgroundColor:"grey"}} onClick={handleCloses}>
             No
           </Button>
         </Modal.Footer>
@@ -801,24 +836,15 @@ function Packages() {
                   </Button>
                 </Form.Group>
                 <Form.Group>
-                  <Select
+                <Select
                     className="my-2"
                     placeholder="materials"
                     isMulti
                     options={materials}
-                    onChange={(selectedMaterials) => {
-                      // selectedMaterials will be an array of selected values
-                      const materialValues = selectedMaterials.map(
-                        (material) => material.value
-                      );
-                      setData({ ...data, materials: materialValues });
-                      const { name, value } = event.target;
-                      setEditedItem((prevItem) => ({
-                        ...prevItem,
-                        [name]: value === null ? "" : value,
-                      }));
-                      console.log(materialValues);
-                    }}
+                    value={selectedOptions}
+                    onChange={(selectedMaterials) =>
+                      setselectedOptions(selectedMaterials)
+                    }
                   />
                 </Form.Group>
 

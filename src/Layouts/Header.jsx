@@ -7,10 +7,14 @@ function Header() {
 
   const { user } = useContext(ContextDatas);
 
-  const handleLogout = () => {
+ 
+  
+
+  const handleLogout=()=>{
     localStorage.clear();
-    window.location.href = "/login";
-  };
+    navigate("/login");
+   };
+
   return (
     <>
       <div className="nav-header">
@@ -57,7 +61,7 @@ function Header() {
                       >
                         <div className="header-info2 d-flex align-items-center">
                           <div className="header-media">
-                            <img src="images/user.webp" alt />
+                            <img src="images\icons8-admin-48.png" alt />
                           </div>
                         </div>
                       </a>
@@ -69,7 +73,7 @@ function Header() {
                           <div className="card-header py-2">
                             <div className="products">
                               <img
-                                src="images/user.webp"
+                                src="images\icons8-admin-48.png"
                                 className="avatar avatar-md"
                                 alt
                               />
@@ -114,7 +118,7 @@ function Header() {
                               <span className="ms-2">Settings </span>
                             </a>
                             <a
-                              onClick={() => navigate("/login")}
+                            onClick={handleLogout}
                               href={undefined}
                               className="dropdown-item ai-icon"
                             >
@@ -133,7 +137,9 @@ function Header() {
                                 <polyline points="16 17 21 12 16 7" />
                                 <line x1={21} y1={12} x2={9} y2={12} />
                               </svg>
-                              <span className="ms-2" onClick={handleLogout}>
+                              <span className="ms-2"
+                            
+                            >
                                 Logout{" "}
                               </span>
                             </a>

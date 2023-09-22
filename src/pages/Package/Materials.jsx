@@ -26,7 +26,7 @@ function Materials() {
 
   //add data
   const home = async () => {
-    const response = await apiCall("post", materialsUrl, { data });
+    const response = await apiCall("post", materialsUrl,  data );
     console.log(response.data);
     getHome();
     setShow(false);
@@ -50,7 +50,7 @@ function Materials() {
   const handleEdit = async () => {
     console.log(editedItem);
     var data = editedItem;
-    await apiCall("put", `${materialsUrl}/${editedItem.id}`, { data });
+    await apiCall("put", `${materialsUrl}/${editedItem.id}`,  data );
     handleClose();
     getHome();
   };
@@ -398,10 +398,10 @@ function Materials() {
                   </InputGroup>
                 </Form.Group>
                 <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
+                  <Button style={{backgroundColor:"grey"}} onClick={handleClose}>
                     Close
                   </Button>
-                  <Button variant="primary" type="submit">
+                  <Button variant="success" type="submit">
                     Submit
                   </Button>
                 </Modal.Footer>
