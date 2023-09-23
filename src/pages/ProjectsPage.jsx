@@ -85,6 +85,7 @@ function ProjectsPage() {
         },
       })
       setValidated(false);
+      ShowToast("Updated Successfully", true);
       setShow(false);
     };
 
@@ -181,6 +182,7 @@ function ProjectsPage() {
         completeEditedItem,
       );
       handleClose();
+      ShowToast("Updated Successfully", true);
       getPackages();
     };
 
@@ -927,7 +929,6 @@ function ProjectsPage() {
                     <Button
                       variant="success"
                       type="submit"
-                      onClick={handleClos}
                     >
                       Save Changes
                     </Button>
