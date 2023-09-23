@@ -7,7 +7,9 @@ import { useNavigate } from "react-router-dom";
 function SettingsPage() {
   const navigate = useNavigate();
   const [settingDetails, setSettingDetails] = useState([]);
-
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  
   useEffect(() => {
     getSettings();
   }, []);
@@ -18,10 +20,10 @@ function SettingsPage() {
       setSettingDetails(response.data.docs);
     } catch (error) {}
   };
-  function convertTo12HourFormat(timeString) {
-    const formattedTime = moment(timeString, 'HH:mm').format('h:mm A');
-    return formattedTime;
-  }
+  // function convertTo12HourFormat(timeString) {
+  //   const formattedTime = moment(timeString, 'HH:mm').format('h:mm A');
+  //   return formattedTime;
+  // }
 
 
   return (
@@ -170,12 +172,11 @@ function SettingsPage() {
                                         <hr />
                                         <h4>Monday to Friday:</h4>
                                         <h6>
-                                        {value?.business_hours?.monday_to_friday?.from ? convertTo12HourFormat(value.business_hours.monday_to_friday.from) : ""} To {value?.business_hours?.monday_to_friday?.to ? convertTo12HourFormat(value.business_hours.monday_to_friday.to) : ""}
-
+                                        {value.business_hours.monday_to_friday.from.toUpperCase()} To {value.business_hours.monday_to_friday.to.toUpperCase()}
                                         </h6>
                                         <h4>Saturday:</h4>
                                         <h6>
-                                        {value?.business_hours?.saturday?.from ? convertTo12HourFormat(value.business_hours.saturday.from) : ""} To {value?.business_hours?.saturday?.to ? convertTo12HourFormat(value.business_hours.saturday.to) : ""}
+                                        {value?.business_hours?.saturday?.from.toUpperCase()} To {value?.business_hours?.saturday?.to.toUpperCase()}
 
                                         </h6>
                                         <h4>Sunday:</h4>
