@@ -17,8 +17,8 @@ function Materials() {
   const [data, setData] = useState({
     name: "",
     description: "",
-    createdAt: "",
-    updatedAt: "",
+    createdAt:"",
+    updatedAt:"",
   });
 
   const [list, setlist] = useState();
@@ -27,14 +27,14 @@ function Materials() {
 
   //add data
   const home = async () => {
-    const response = await apiCall("post", materialsUrl, data);
+    const response = await apiCall("post", materialsUrl,  data );
     console.log(response.data);
     getHome();
     ShowToast("Updated Successfully", true);
     setData({
       name: "",
-      description: "",
-    });
+    description: ""
+    })
     setShow(false);
     setValidated(false);
   };
@@ -57,7 +57,7 @@ function Materials() {
   const handleEdit = async () => {
     console.log(editedItem);
     var data = editedItem;
-    await apiCall("put", `${materialsUrl}/${editedItem.id}`, data);
+    await apiCall("put", `${materialsUrl}/${editedItem.id}`,  data );
     handleClose();
     ShowToast("Updated Successfully", true);
     getHome();
@@ -92,16 +92,10 @@ function Materials() {
 
   const EditData = (item) => {
     console.log(item);
-    setEditedItem({
-      id: item._id,
-      name: item.name,
-      description: item.description,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
-    });
+    setEditedItem({ id: item._id, name: item.name, description: item.description,createdAt:item.createdAt,updatedAt:item.updatedAt });
     setEdit(true);
   };
-
+  
   const getHome = async () => {
     const response = await apiCall("get", materialsUrl, { params });
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
@@ -147,9 +141,9 @@ function Materials() {
                     className="form-control"
                     placeholder="Search here..."
                     value={params.query}
-                    onChange={(e) => {
-                      setparams({ ...params, query: e.target.value });
-                    }}
+                    onChange={(e) =>
+                      setparams({ ...params, query: e.target.value })
+                    }
                   />
 
                   <span className="input-group-text">
@@ -363,7 +357,7 @@ function Materials() {
         </div>
       </div>
 
-      {/*Add data in form */}
+ {/*Add data in form */ }
       <Modal show={show} onHide={handleClose}>
         <div className="card">
           <div className="card-header">
@@ -412,10 +406,7 @@ function Materials() {
                   </InputGroup>
                 </Form.Group>
                 <Modal.Footer>
-                  <Button
-                    style={{ backgroundColor: "grey" }}
-                    onClick={handleClose}
-                  >
+                  <Button style={{backgroundColor:"grey"}} onClick={handleClose}>
                     Close
                   </Button>
                   <Button variant="success" type="submit">
@@ -436,12 +427,12 @@ function Materials() {
           <Button variant="danger" onClick={handleDelete}>
             Yes
           </Button>
-          <Button style={{ background: "grey" }} onClick={handleCloses}>
+          <Button style={{background:"grey"}} onClick={handleCloses}>
             No
           </Button>
         </Modal.Footer>
       </Modal>
-      {/*Edit data in  form */}
+{/*Edit data in  form */}
       <Modal show={edit} onHide={handleClos}>
         <div className="card">
           <div className="card-header">
@@ -484,8 +475,8 @@ function Materials() {
                     />
                   </InputGroup>
                 </Form.Group>
-                <Modal.Footer>
-                  <Button style={{ background: "grey" }} onClick={handleClos}>
+                  <Modal.Footer>
+                  <Button  style={{background:"grey"}}onClick={handleClos}>
                     Close
                   </Button>
                   <Button variant="success" type="submit" onClick={handleClos}>

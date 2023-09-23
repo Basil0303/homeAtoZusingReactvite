@@ -34,6 +34,7 @@ function ProjectsPage() {
       amnities: {
         bed: "",
         kitchen: "",
+        sofa:"",
         shower: "",
         storage_space: "",
         total_Sqft: "",
@@ -42,7 +43,7 @@ function ProjectsPage() {
       plan: ["", ""],
     });
     
-    console.log(data,"..................data")
+    
     const [list, setlist] = useState();
 
     useEffect(() => {
@@ -68,9 +69,9 @@ function ProjectsPage() {
         gallery: data.gallery,
         plan: data.plan,
       };
-    console.log(dataToAdd,"fdghjkl;';lkjhgfd")
+
       const response = await apiCall("post", ProjectUrl, dataToAdd);
-      console.log(response);
+     
       getProject();
       setData({
         name: "",
@@ -79,6 +80,7 @@ function ProjectsPage() {
         amnities: {
           bed: "",
           kitchen: "",
+          sofa:"",
           shower: "",
           storage_space: "",
           total_Sqft: "",
@@ -103,6 +105,7 @@ function ProjectsPage() {
       amnities: {
         bed: "",
         kitchen: "",
+        sofa:"",
         shower: "",
         storage_space: "",
         total_sqft: "",
@@ -191,7 +194,6 @@ function ProjectsPage() {
       const response = await apiCall("delete", `${ProjectUrl}/${remove.id}`, {
         data,
       });
-      console.log("Item deleted:", response);
       setRemove({ show: false, id: null });
       getProject();
     };
@@ -202,7 +204,7 @@ function ProjectsPage() {
       const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
       setlist(docs ?? []);
       setpagination({ hasNextPage, hasPreviousPage, totalDocs });
-      console.log(response);
+    
     };
 
     const handleClose = () => setShow(false);
@@ -230,7 +232,6 @@ function ProjectsPage() {
         minFiles: 1,
         uploadInBackground: false,
         onUploadDone: (res) => {
-          console.log(res);
           const uploadedImages = res.filesUploaded.map((file) => file.url);
           setData({ ...data, gallery: uploadedImages });
           setEditedItem({ ...editedItem, gallery: uploadedImages });
@@ -256,7 +257,6 @@ function ProjectsPage() {
         minFiles: 1,
         uploadInBackground: false,
         onUploadDone: (res) => {
-          console.log(res);
           const uploadedImages = res.filesUploaded.map((file) => file.url);
           setData({ ...data, plan: uploadedImages });
           setEditedItem({ ...editedItem, plan: uploadedImages });
@@ -537,7 +537,6 @@ function ProjectsPage() {
         <Modal show={show} onHide={handleClose}>
           <div className="card">
             <div className="card-header">
-              {/* <h4 className="card-title ">Enter Details</h4> */}
             </div>
             <div className="card-body">
               <div className="basic-form">
@@ -595,10 +594,10 @@ function ProjectsPage() {
                   </Form.Group>
 
                   <Form.Group>
-                    <Form.Label className="mb-1 my-2">Amenities</Form.Label>
+                    <Form.Label className=" my-2">Amenities</Form.Label>
                     <div className="row">
-                      <div className="col-md-2">
-                        <label>Bed</label>
+                      <div className="col-md-4">
+                        <label className="">Bed</label>
                         <input
                           className="form-control"
                           type="text"
@@ -608,7 +607,7 @@ function ProjectsPage() {
                           }
                         />
                       </div>
-                      <div className="col-md-2">
+                      <div className="col-md-4">
                         <label>Kitchen</label>
                         <input
                           className="form-control"
@@ -619,7 +618,18 @@ function ProjectsPage() {
                           }
                         />
                       </div>
-                      <div className="col-md-2">
+                      <div className="col-md-4">
+                        <label>Sofa</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          value={data?.amnities?.sofa}
+                          onChange={(e) =>
+                            handleAmenityChange("sofa", e.target.value)
+                          }
+                        /> 
+                      </div>
+                      <div className="col-md-4">
                         <label>Shower</label>
                         <input
                           className="form-control"
@@ -630,7 +640,7 @@ function ProjectsPage() {
                           }
                         />
                       </div>
-                      <div className="col-md-3">
+                      <div className="col-md-4">
                         <label>Storage Space</label>
                         <input
                           className="form-control"
@@ -641,7 +651,7 @@ function ProjectsPage() {
                           }
                         />
                       </div>
-                      <div className="col-md-3">
+                      <div className="col-md-4">
                         <label>Total Sqft</label>
                         <input
                           className="form-control"
@@ -789,7 +799,7 @@ function ProjectsPage() {
                   <Form.Group>
                     <Form.Label className="mb-1 my-2">Amenities</Form.Label>
                     <div className="row">
-                      <div className="col-md-2">
+                      <div className="col-md-4">
                         <label>Bed</label>
                         <input
                           className="form-control"
@@ -799,7 +809,7 @@ function ProjectsPage() {
                           name="bed"
                         />
                       </div>
-                      <div className="col-md-2">
+                      <div className="col-md-4">
                         <label>Kitchen</label>
                         <input
                           className="form-control"
@@ -809,7 +819,17 @@ function ProjectsPage() {
                           name="kitchen"
                         />
                       </div>
-                      <div className="col-md-2">
+                      <div className="col-md-4">
+                        <label>Sofa</label>
+                        <input
+                          className="form-control"
+                          type="number"
+                          value={editedItem.amnities.sofa}
+                          onChange={(e) => handleFieldChange(e, "amnities")}
+                          name="sofa"
+                        />
+                      </div>
+                      <div className="col-md-4">
                         <label>Shower</label>
                         <input
                           className="form-control"
@@ -819,7 +839,7 @@ function ProjectsPage() {
                           name="shower"
                         />
                       </div>
-                      <div className="col-md-3">
+                      <div className="col-md-4">
                         <label>Storage Space</label>
                         <input
                           className="form-control"
@@ -829,7 +849,7 @@ function ProjectsPage() {
                           name="storage_space"
                         />
                       </div>
-                      <div className="col-md-3">
+                      <div className="col-md-4">
                         <label>Total Sqft</label>
                         <input
                           className="form-control"
