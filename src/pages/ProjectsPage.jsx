@@ -8,6 +8,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import { handleSubmit } from "../utils/Fns";
 import { ProjectUrl } from "../Services/baseUrl";
+import { ShowToast } from "../utils/Toast";
 
 function ProjectsPage() {
   {
@@ -34,7 +35,7 @@ function ProjectsPage() {
       amnities: {
         bed: "",
         kitchen: "",
-        sofa:"",
+        sofa: "",
         shower: "",
         storage_space: "",
         total_Sqft: "",
@@ -42,8 +43,7 @@ function ProjectsPage() {
       gallery: "",
       plan: ["", ""],
     });
-    
-    
+
     const [list, setlist] = useState();
 
     useEffect(() => {
@@ -71,8 +71,9 @@ function ProjectsPage() {
       };
 
       const response = await apiCall("post", ProjectUrl, dataToAdd);
-     
+
       getProject();
+      ShowToast("Updated Successfully", true);
       setData({
         name: "",
         location: "",
@@ -80,14 +81,13 @@ function ProjectsPage() {
         amnities: {
           bed: "",
           kitchen: "",
-          sofa:"",
+          sofa: "",
           shower: "",
           storage_space: "",
           total_Sqft: "",
         },
-      })
+      });
       setValidated(false);
-      ShowToast("Updated Successfully", true);
       setShow(false);
     };
 
@@ -105,7 +105,7 @@ function ProjectsPage() {
       amnities: {
         bed: "",
         kitchen: "",
-        sofa:"",
+        sofa: "",
         shower: "",
         storage_space: "",
         total_sqft: "",
@@ -115,11 +115,10 @@ function ProjectsPage() {
       gallery: "",
       plan: "",
     });
-    const handleFieldChange = (event, fieldName,) => {
+    const handleFieldChange = (event, fieldName) => {
       if (!event) return;
 
       const { name, value, type, checked } = event.target || {};
-      
 
       if (!name) return;
 
@@ -144,7 +143,6 @@ function ProjectsPage() {
             ...prevItem,
             [name]: value,
           }));
-          
         }
       }
     };
@@ -181,8 +179,10 @@ function ProjectsPage() {
         plan: editedItem.plan,
       };
 
-      await apiCall("put", `${ProjectUrl}/${editedItem.id}`, 
-        completeEditedItem,
+      await apiCall(
+        "put",
+        `${ProjectUrl}/${editedItem.id}`,
+        completeEditedItem
       );
       handleClose();
       ShowToast("Updated Successfully", true);
@@ -204,7 +204,6 @@ function ProjectsPage() {
       const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
       setlist(docs ?? []);
       setpagination({ hasNextPage, hasPreviousPage, totalDocs });
-    
     };
 
     const handleClose = () => setShow(false);
@@ -353,7 +352,6 @@ function ProjectsPage() {
                           <th>Name</th>
                           <th>Location</th>
                           <th></th>
-                          
                         </tr>
                       </thead>
                       <tbody>
@@ -536,14 +534,13 @@ function ProjectsPage() {
 
         <Modal show={show} onHide={handleClose}>
           <div className="card">
-            <div className="card-header">
-            </div>
+            <div className="card-header"></div>
             <div className="card-body">
               <div className="basic-form">
                 <Form
                   noValidate
                   validated={validated}
-                  onSubmit={(e) => handleSubmit(e, setValidated, project)}
+                  onSubmit={(e) => handleSubmit(e, setValidated, project)} // Pass just the event to handleSubmit
                 >
                   <Form.Group>
                     <Form.Label className="mb-1 my-2">
@@ -599,6 +596,7 @@ function ProjectsPage() {
                       <div className="col-md-4">
                         <label className="">Bed</label>
                         <input
+                          required
                           className="form-control"
                           type="text"
                           value={data?.amnities?.bed}
@@ -610,6 +608,7 @@ function ProjectsPage() {
                       <div className="col-md-4">
                         <label>Kitchen</label>
                         <input
+                          required
                           className="form-control"
                           type="text"
                           value={data?.amnities?.kitchen}
@@ -621,17 +620,19 @@ function ProjectsPage() {
                       <div className="col-md-4">
                         <label>Sofa</label>
                         <input
+                          required
                           className="form-control"
                           type="text"
                           value={data?.amnities?.sofa}
                           onChange={(e) =>
                             handleAmenityChange("sofa", e.target.value)
                           }
-                        /> 
+                        />
                       </div>
                       <div className="col-md-4">
                         <label>Shower</label>
                         <input
+                          required
                           className="form-control"
                           type="text"
                           value={data?.amnities?.shower}
@@ -643,6 +644,7 @@ function ProjectsPage() {
                       <div className="col-md-4">
                         <label>Storage Space</label>
                         <input
+                          required
                           className="form-control"
                           type="text"
                           value={data?.amnities?.storage_space}
@@ -654,6 +656,7 @@ function ProjectsPage() {
                       <div className="col-md-4">
                         <label>Total Sqft</label>
                         <input
+                          required
                           className="form-control"
                           type="text"
                           value={data?.amnities?.total_Sqft}
@@ -680,7 +683,7 @@ function ProjectsPage() {
                   <Form.Group>
                     <InputGroup hasValidation>
                       <Form.Check
-                      
+                        required
                         type="checkbox"
                         id="featuredCheckbox"
                         checked={data.featured}
@@ -695,7 +698,7 @@ function ProjectsPage() {
                   <Form.Group>
                     <InputGroup hasValidation>
                       <Form.Check
-                 
+                        required
                         type="checkbox"
                         id="popularCheckbox"
                         checked={data.popular}
@@ -721,7 +724,10 @@ function ProjectsPage() {
                   </Form.Group>
 
                   <Modal.Footer>
-                    <Button style={{backgroundColor:"gray"}} onClick={handleClose}>
+                    <Button
+                      style={{ backgroundColor: "grey" }}
+                      onClick={handleClose}
+                    >
                       Close
                     </Button>
                     <Button variant="success" type="submit">
@@ -742,7 +748,7 @@ function ProjectsPage() {
             <Button variant="danger" onClick={handleDelete}>
               Yes
             </Button>
-            <Button style={{background:"grey"}} onClick={handleCloses}>
+            <Button style={{ background: "grey" }} onClick={handleCloses}>
               No
             </Button>
           </Modal.Footer>
@@ -755,6 +761,8 @@ function ProjectsPage() {
             <div className="card-body">
               <div className="basic-form">
                 <Form
+                  noValidate
+                  validated={validated}
                   onSubmit={(e) => handleSubmit(e, setValidated, handleEdit)}
                 >
                   <Form.Group as={Col} controlId="validationCustom01" />
@@ -943,13 +951,10 @@ function ProjectsPage() {
                   </Form.Group>
 
                   <Modal.Footer>
-                    <Button style={{background:"grey"}} onClick={handleClos}>
+                    <Button style={{ background: "grey" }} onClick={handleClos}>
                       Close
                     </Button>
-                    <Button
-                      variant="success"
-                      type="submit"
-                    >
+                    <Button variant="success" type="submit" onClick={handleClos}>
                       Save Changes
                     </Button>
                   </Modal.Footer>
