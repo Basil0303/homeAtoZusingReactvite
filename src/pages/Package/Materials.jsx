@@ -9,6 +9,7 @@ import Col from "react-bootstrap/Col";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import { handleSubmit } from "../../utils/Fns";
+import { ShowToast } from "../../utils/Toast";
 
 function Materials() {
   const [validated, setValidated] = useState(false);
@@ -29,6 +30,7 @@ function Materials() {
     const response = await apiCall("post", materialsUrl,  data );
     console.log(response.data);
     getHome();
+    ShowToast("Updated Successfully", true);
     setData({
       name: "",
     description: ""
@@ -57,6 +59,7 @@ function Materials() {
     var data = editedItem;
     await apiCall("put", `${materialsUrl}/${editedItem.id}`,  data );
     handleClose();
+    ShowToast("Updated Successfully", true);
     getHome();
   };
 

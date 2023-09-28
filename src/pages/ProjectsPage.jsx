@@ -8,6 +8,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import { handleSubmit } from "../utils/Fns";
 import { ProjectUrl } from "../Services/baseUrl";
+import { ShowToast } from "../utils/Toast";
 
 function ProjectsPage() {
   {
@@ -34,15 +35,15 @@ function ProjectsPage() {
       amnities: {
         bed: "",
         kitchen: "",
+        sofa: "",
         shower: "",
         storage_space: "",
         total_Sqft: "",
       },
       gallery: "",
-      plan: ["", ""],
+      plan: "",
     });
-    
-    console.log(data,"..................data")
+
     const [list, setlist] = useState();
 
     useEffect(() => {
@@ -68,10 +69,11 @@ function ProjectsPage() {
         gallery: data.gallery,
         plan: data.plan,
       };
-    console.log(dataToAdd,"fdghjkl;';lkjhgfd")
+
       const response = await apiCall("post", ProjectUrl, dataToAdd);
-      console.log(response);
+
       getProject();
+      ShowToast("Updated Successfully", true);
       setData({
         name: "",
         location: "",
@@ -79,11 +81,12 @@ function ProjectsPage() {
         amnities: {
           bed: "",
           kitchen: "",
+          sofa: "",
           shower: "",
           storage_space: "",
           total_Sqft: "",
         },
-      })
+      });
       setValidated(false);
       setShow(false);
     };
@@ -102,6 +105,7 @@ function ProjectsPage() {
       amnities: {
         bed: "",
         kitchen: "",
+        sofa: "",
         shower: "",
         storage_space: "",
         total_sqft: "",
@@ -111,11 +115,10 @@ function ProjectsPage() {
       gallery: "",
       plan: "",
     });
-    const handleFieldChange = (event, fieldName,) => {
+    const handleFieldChange = (event, fieldName) => {
       if (!event) return;
 
       const { name, value, type, checked } = event.target || {};
-      
 
       if (!name) return;
 
@@ -140,7 +143,6 @@ function ProjectsPage() {
             ...prevItem,
             [name]: value,
           }));
-          
         }
       }
     };
@@ -177,10 +179,13 @@ function ProjectsPage() {
         plan: editedItem.plan,
       };
 
-      await apiCall("put", `${ProjectUrl}/${editedItem.id}`, 
-        completeEditedItem,
+      await apiCall(
+        "put",
+        `${ProjectUrl}/${editedItem.id}`,
+        completeEditedItem
       );
       handleClose();
+      ShowToast("Updated Successfully", true);
       getPackages();
     };
 
@@ -189,7 +194,6 @@ function ProjectsPage() {
       const response = await apiCall("delete", `${ProjectUrl}/${remove.id}`, {
         data,
       });
-      console.log("Item deleted:", response);
       setRemove({ show: false, id: null });
       getProject();
     };
@@ -200,7 +204,6 @@ function ProjectsPage() {
       const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
       setlist(docs ?? []);
       setpagination({ hasNextPage, hasPreviousPage, totalDocs });
-      console.log(response);
     };
 
     const handleClose = () => setShow(false);
@@ -228,7 +231,6 @@ function ProjectsPage() {
         minFiles: 1,
         uploadInBackground: false,
         onUploadDone: (res) => {
-          console.log(res);
           const uploadedImages = res.filesUploaded.map((file) => file.url);
           setData({ ...data, gallery: uploadedImages });
           setEditedItem({ ...editedItem, gallery: uploadedImages });
@@ -254,7 +256,6 @@ function ProjectsPage() {
         minFiles: 1,
         uploadInBackground: false,
         onUploadDone: (res) => {
-          console.log(res);
           const uploadedImages = res.filesUploaded.map((file) => file.url);
           setData({ ...data, plan: uploadedImages });
           setEditedItem({ ...editedItem, plan: uploadedImages });
@@ -351,7 +352,6 @@ function ProjectsPage() {
                           <th>Name</th>
                           <th>Location</th>
                           <th></th>
-                          
                         </tr>
                       </thead>
                       <tbody>
@@ -534,15 +534,13 @@ function ProjectsPage() {
 
         <Modal show={show} onHide={handleClose}>
           <div className="card">
-            <div className="card-header">
-              {/* <h4 className="card-title ">Enter Details</h4> */}
-            </div>
+            <div className="card-header"></div>
             <div className="card-body">
               <div className="basic-form">
                 <Form
                   noValidate
                   validated={validated}
-                  onSubmit={(e) => handleSubmit(e, setValidated, project)}
+                  onSubmit={(e) => handleSubmit(e, setValidated, project)} // Pass just the event to handleSubmit
                 >
                   <Form.Group>
                     <Form.Label className="mb-1 my-2">
@@ -593,11 +591,12 @@ function ProjectsPage() {
                   </Form.Group>
 
                   <Form.Group>
-                    <Form.Label className="mb-1 my-2">Amenities</Form.Label>
+                    <Form.Label className=" my-2">Amenities</Form.Label>
                     <div className="row">
-                      <div className="col-md-2">
-                        <label>Bed</label>
+                      <div className="col-md-4">
+                        <label className="">Bed</label>
                         <input
+                          required
                           className="form-control"
                           type="text"
                           value={data?.amnities?.bed}
@@ -606,9 +605,10 @@ function ProjectsPage() {
                           }
                         />
                       </div>
-                      <div className="col-md-2">
+                      <div className="col-md-4">
                         <label>Kitchen</label>
                         <input
+                          required
                           className="form-control"
                           type="text"
                           value={data?.amnities?.kitchen}
@@ -617,9 +617,22 @@ function ProjectsPage() {
                           }
                         />
                       </div>
-                      <div className="col-md-2">
+                      <div className="col-md-4">
+                        <label>Sofa</label>
+                        <input
+                          required
+                          className="form-control"
+                          type="text"
+                          value={data?.amnities?.sofa}
+                          onChange={(e) =>
+                            handleAmenityChange("sofa", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="col-md-4">
                         <label>Shower</label>
                         <input
+                          required
                           className="form-control"
                           type="text"
                           value={data?.amnities?.shower}
@@ -628,9 +641,10 @@ function ProjectsPage() {
                           }
                         />
                       </div>
-                      <div className="col-md-3">
+                      <div className="col-md-4">
                         <label>Storage Space</label>
                         <input
+                          required
                           className="form-control"
                           type="text"
                           value={data?.amnities?.storage_space}
@@ -639,9 +653,10 @@ function ProjectsPage() {
                           }
                         />
                       </div>
-                      <div className="col-md-3">
+                      <div className="col-md-4">
                         <label>Total Sqft</label>
                         <input
+                          required
                           className="form-control"
                           type="text"
                           value={data?.amnities?.total_Sqft}
@@ -655,6 +670,7 @@ function ProjectsPage() {
 
                   <Form.Group>
                     <Button
+                      required
                       className="btn-sm bg-info my-2 border-0 text-white "
                       multiple // Allow multiple file selection
                       onClick={openGalleryFilePicker}
@@ -668,7 +684,6 @@ function ProjectsPage() {
                   <Form.Group>
                     <InputGroup hasValidation>
                       <Form.Check
-                      
                         type="checkbox"
                         id="featuredCheckbox"
                         checked={data.featured}
@@ -683,7 +698,6 @@ function ProjectsPage() {
                   <Form.Group>
                     <InputGroup hasValidation>
                       <Form.Check
-                 
                         type="checkbox"
                         id="popularCheckbox"
                         checked={data.popular}
@@ -697,6 +711,7 @@ function ProjectsPage() {
 
                   <Form.Group>
                     <Button
+                      required
                       className="btn-sm bg-info my-2 border-0 text-white "
                       multiple // Allow multiple file selection
                       onClick={openFilePicker}
@@ -709,7 +724,10 @@ function ProjectsPage() {
                   </Form.Group>
 
                   <Modal.Footer>
-                    <Button style={{backgroundColor:"gray"}} onClick={handleClose}>
+                    <Button
+                      style={{ backgroundColor: "grey" }}
+                      onClick={handleClose}
+                    >
                       Close
                     </Button>
                     <Button variant="success" type="submit">
@@ -730,7 +748,7 @@ function ProjectsPage() {
             <Button variant="danger" onClick={handleDelete}>
               Yes
             </Button>
-            <Button style={{background:"grey"}} onClick={handleCloses}>
+            <Button style={{ background: "grey" }} onClick={handleCloses}>
               No
             </Button>
           </Modal.Footer>
@@ -743,6 +761,8 @@ function ProjectsPage() {
             <div className="card-body">
               <div className="basic-form">
                 <Form
+                  noValidate
+                  validated={validated}
                   onSubmit={(e) => handleSubmit(e, setValidated, handleEdit)}
                 >
                   <Form.Group as={Col} controlId="validationCustom01" />
@@ -787,7 +807,7 @@ function ProjectsPage() {
                   <Form.Group>
                     <Form.Label className="mb-1 my-2">Amenities</Form.Label>
                     <div className="row">
-                      <div className="col-md-2">
+                      <div className="col-md-4">
                         <label>Bed</label>
                         <input
                           className="form-control"
@@ -797,7 +817,7 @@ function ProjectsPage() {
                           name="bed"
                         />
                       </div>
-                      <div className="col-md-2">
+                      <div className="col-md-4">
                         <label>Kitchen</label>
                         <input
                           className="form-control"
@@ -807,7 +827,17 @@ function ProjectsPage() {
                           name="kitchen"
                         />
                       </div>
-                      <div className="col-md-2">
+                      <div className="col-md-4">
+                        <label>Sofa</label>
+                        <input
+                          className="form-control"
+                          type="number"
+                          value={editedItem.amnities.sofa}
+                          onChange={(e) => handleFieldChange(e, "amnities")}
+                          name="sofa"
+                        />
+                      </div>
+                      <div className="col-md-4">
                         <label>Shower</label>
                         <input
                           className="form-control"
@@ -817,7 +847,7 @@ function ProjectsPage() {
                           name="shower"
                         />
                       </div>
-                      <div className="col-md-3">
+                      <div className="col-md-4">
                         <label>Storage Space</label>
                         <input
                           className="form-control"
@@ -827,7 +857,7 @@ function ProjectsPage() {
                           name="storage_space"
                         />
                       </div>
-                      <div className="col-md-3">
+                      <div className="col-md-4">
                         <label>Total Sqft</label>
                         <input
                           className="form-control"
@@ -921,7 +951,7 @@ function ProjectsPage() {
                   </Form.Group>
 
                   <Modal.Footer>
-                    <Button style={{background:"grey"}} onClick={handleClos}>
+                    <Button style={{ background: "grey" }} onClick={handleClos}>
                       Close
                     </Button>
                     <Button
