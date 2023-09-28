@@ -41,7 +41,7 @@ function ProjectsPage() {
         total_Sqft: "",
       },
       gallery: "",
-      plan: ["", ""],
+      plan: "",
     });
 
     const [list, setlist] = useState();
@@ -670,6 +670,7 @@ function ProjectsPage() {
 
                   <Form.Group>
                     <Button
+                      required
                       className="btn-sm bg-info my-2 border-0 text-white "
                       multiple // Allow multiple file selection
                       onClick={openGalleryFilePicker}
@@ -712,6 +713,7 @@ function ProjectsPage() {
 
                   <Form.Group>
                     <Button
+                      required
                       className="btn-sm bg-info my-2 border-0 text-white "
                       multiple // Allow multiple file selection
                       onClick={openFilePicker}
@@ -954,7 +956,11 @@ function ProjectsPage() {
                     <Button style={{ background: "grey" }} onClick={handleClos}>
                       Close
                     </Button>
-                    <Button variant="success" type="submit" onClick={handleClos}>
+                    <Button
+                      variant="success"
+                      type="submit"
+                      onClick={handleClos}
+                    >
                       Save Changes
                     </Button>
                   </Modal.Footer>
