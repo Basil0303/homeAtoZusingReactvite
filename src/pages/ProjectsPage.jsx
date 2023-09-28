@@ -684,7 +684,6 @@ function ProjectsPage() {
                   <Form.Group>
                     <InputGroup hasValidation>
                       <Form.Check
-                        required
                         type="checkbox"
                         id="featuredCheckbox"
                         checked={data.featured}
@@ -699,7 +698,6 @@ function ProjectsPage() {
                   <Form.Group>
                     <InputGroup hasValidation>
                       <Form.Check
-                        required
                         type="checkbox"
                         id="popularCheckbox"
                         checked={data.popular}
