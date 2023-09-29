@@ -97,7 +97,7 @@ function Materials() {
   };
   
   const getHome = async () => {
-    const response = await apiCall("get", materialsUrl, { params });
+    const response = await apiCall("get", materialsUrl, {}, params );
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
 
     setlist(docs ?? []);
@@ -406,7 +406,7 @@ function Materials() {
                   </InputGroup>
                 </Form.Group>
                 <Modal.Footer>
-                  <Button style={{backgroundColor:"grey"}} onClick={handleClose}>
+                  <Button variant="primary" onClick={handleClose}>
                     Close
                   </Button>
                   <Button variant="success" type="submit">
@@ -427,7 +427,7 @@ function Materials() {
           <Button variant="danger" onClick={handleDelete}>
             Yes
           </Button>
-          <Button style={{background:"grey"}} onClick={handleCloses}>
+          <Button variant="primary" onClick={handleCloses}>
             No
           </Button>
         </Modal.Footer>
@@ -476,7 +476,7 @@ function Materials() {
                   </InputGroup>
                 </Form.Group>
                   <Modal.Footer>
-                  <Button  style={{background:"grey"}}onClick={handleClos}>
+                  <Button variant="primary" onClick={handleClos}>
                     Close
                   </Button>
                   <Button variant="success" type="submit" onClick={handleClos}>

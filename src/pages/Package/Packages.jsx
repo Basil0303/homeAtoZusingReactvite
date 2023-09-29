@@ -33,7 +33,7 @@ function Packages() {
     cover_image: "",
     description: "",
     gallery_imgs: "",
-    materials: ["", "", ""],
+    materials: "",
     createdAt: "",
     updatedAt: "",
   });
@@ -41,7 +41,9 @@ function Packages() {
 
   ////drop down  materials and select hometypes
   const [hometypes, setHometypes] = useState([]);
+  console.log(hometypes,"hometypes")
   const [materials, setMaterials] = useState([]);
+  console.log(materials,"materials")
   const [list, setlist] = useState();
   const [selectedOptions, setselectedOptions] = useState([]);
 
@@ -55,9 +57,9 @@ function Packages() {
   };
 
   const getPopupdata = async () => {
-    if (hometypes?.length && materials?.length) {
-      return;
-    }
+    // if (hometypes?.length && materials?.length) {
+    //   return;
+    // }
     const homeTypeResponse = await apiCall("get", homeUrl);
     const homeTypeList = homeTypeResponse?.data?.docs ?? [];
     const modifiedhomeTypeList = homeTypeList.map(({ _id, name }) => ({
@@ -77,7 +79,7 @@ function Packages() {
   };
 
   const getPackages = async () => {
-    const response = await apiCall("get", PackageUrl, { params });
+    const response = await apiCall("get", PackageUrl, {}, params );
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
     setlist(docs ?? []);
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
@@ -111,21 +113,33 @@ function Packages() {
 
   //add data
   const home = async () => {
-    const dataToAdd={
-      ...data,
-      gallery_imgs: data.gallery_imgs,
-      cover_image: data.cover_image,
-  };
-    console.log(dataToAdd,"data to addd")
-        const response = await apiCall("post", PackageUrl, 
-         dataToAdd
-    );
-    console.log(response);
-    getHome();
-    ShowToast("Updated Successfully", true);
-    setData({})
-    setValidated(false);
-    setShow(false);
+
+    console.log("data.home_type_id.",data.home_type_id)
+    console.log("data.materials",data.materials)
+    
+    if (data.home_type_id.length > 0 && data.materials.length > 0) {
+      const dataToAdd = {
+        ...data,
+        gallery_imgs: data.gallery_imgs,
+        cover_image: data.cover_image,
+      };
+      console.log(dataToAdd, "data to add");
+      const response = await apiCall("post", PackageUrl, dataToAdd);
+      console.log(response);
+      getHome();
+      ShowToast("Updated Successfully", true);
+      setData({});
+      setValidated(false);
+      setShow(false);
+    } else {
+      ShowToast("Please select home type and materials", false);
+      console.log('required');
+      return;
+    }
+  // if (!hometypes.length){
+  //     ShowToast("rew",false)
+  //     return
+  // }
   };
 
   //edit data
@@ -200,7 +214,7 @@ function Packages() {
 
   //get data
   const getHome = async () => {
-    const response = await apiCall("get", PackageUrl, { params });
+    const response = await apiCall("get", PackageUrl, {}, params );
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
     setlist(docs ?? []);
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
@@ -349,6 +363,8 @@ function Packages() {
                         <th>Price Per Sqft</th>
 
                         <th>Description</th>
+                        <th/>
+                          <th/>
                       </tr>
                     </thead>
                     <tbody>
@@ -579,6 +595,7 @@ function Packages() {
                 <Form.Group>
                   <Form.Label className="mb-1 my-2">Choose a Hometype</Form.Label>
                   <Select
+                  required
                     options={hometypes}
                     onChange={(homeType) => {
                       setData({ ...data, home_type_id: homeType.value });
@@ -602,22 +619,6 @@ function Packages() {
                       aria-describedby="inputGroupPrepend"
                     />
                   </InputGroup>
-                </Form.Group>
-                <Form.Group
-                  className="mb-3 my-2"
-                  as={Col}
-                  controlId="validationCustom02"
-                >
-                  <img
-                    src={
-                      editedItem.cover_image
-                        ? editedItem.cover_image
-                        : "images/user.webp"
-                    }
-                    width={64}
-                    height={64}
-                    alt="Cover Image"
-                  />
                 </Form.Group>
                 <Form.Group>
                   <Button
@@ -694,7 +695,7 @@ function Packages() {
                   />
                 </Form.Group>
                 <Modal.Footer>
-                  <Button  style={{backgroundColor:"grey"}}onClick={handleClose}>
+                  <Button variant="primary" onClick={handleClose}>
                     Close
                   </Button>
                   <Button variant="success" type="submit">
@@ -715,7 +716,7 @@ function Packages() {
           <Button variant="danger" onClick={handleDelete}>
             Yes
           </Button>
-          <Button style={{backgroundColor:"grey"}} onClick={handleCloses}>
+          <Button variant="primary" onClick={handleCloses}>
             No
           </Button>
         </Modal.Footer>
@@ -822,6 +823,7 @@ function Packages() {
                 </Form.Group>
                 <Form.Group>
                 <Select
+                required
                     className="my-2"
                     placeholder="materials"
                     isMulti
@@ -866,7 +868,7 @@ function Packages() {
                 </Form.Group>
 
                 <Modal.Footer>
-                  <Button style={{backgroundColor: "grey", color: "white"}}onClick={handleClos}>
+                  <Button variant="primary" onClick={handleClos}>
                     Close
                   </Button>
                   <Button variant="success" type="submit">
@@ -1002,7 +1004,7 @@ function Packages() {
                 </Form.Group>
 
                 <Modal.Footer>
-                  <Button  style={{  backgroundColor: "grey", color: "white" }}onClick={close}>
+                  <Button  variant="primary" onClick={close}>
                     Close
                   </Button>
                   <Button variant="success" type="submit" onClick={close}>

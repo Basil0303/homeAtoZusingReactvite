@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { apiCall } from "../Services/ApiCall";
-import { userUrl } from "../Services/baseUrl";
 import { useNavigate } from "react-router-dom";
+import { userUrl } from "../Services/baseUrl";
 
-function CustomerPage () {
+function CustomerPage() {
+
   const navigate = useNavigate()
+ 
   const [list, setlist] = useState();
+
   const [params, setparams] = useState({
     page: 1,
     limit: 10,
@@ -23,12 +26,13 @@ function CustomerPage () {
   }, [params]);
 
   const getCustomers = async () => {
-    const response = await apiCall("get", userUrl, { params });
+    const response = await apiCall("get", userUrl,{},  params );
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
+
     setlist(docs ?? []);
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
   };
-
+ 
   return (
     <div>
       <div className="col-xl-12">
@@ -105,7 +109,6 @@ function CustomerPage () {
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Place</th>
-                        <th>Package</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -141,18 +144,25 @@ function CustomerPage () {
                                 {item?.state},{item?.pincode}
                               </td>
                               <td>
-  <i  className="fas fa-eye"style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} onClick={() => { navigate(`/customer-package/${item._id}`) }}>
-    
-  </i>
-</td>
-
+                                <i
+                                  className="fas fa-eye"
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                  }}
+                                  onClick={() => {
+                                    navigate(`/customer-package/${item._id}`);
+                                  }}
+                                ></i>
+                              </td>
                             </tr>
                           ))}
                         </>
                       ) : (
                         <tr>
                           <td
-                            colSpan={6}
+                            colSpan={5}
                             className="text-center py-4 text-primary"
                           >
                             <b>No data</b>
