@@ -9,7 +9,7 @@ function FeedBackPage() {
   const [list, setList] = useState("");
   const [params, setParams] = useState({
     page: 1,
-    limit: 2,
+    limit: 10
   });
   const [pagination, setPagination] = useState({
     hasNextPage: false,
@@ -25,7 +25,7 @@ function FeedBackPage() {
 
   //----------------------------get list------------------------------
   const getList = async () => {
-    const response = await apiCall("get", FeedbackUrl, { params });
+    const response = await apiCall("get", FeedbackUrl,{},params);
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
     setList(docs ?? []);
     setPagination({ hasNextPage, hasPreviousPage, totalDocs });
