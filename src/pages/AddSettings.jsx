@@ -27,7 +27,11 @@ function AddSettings() {
       },
       sunday: {},
     },
+    privacy_policy: '' ,
+    faq:'',
+    terms_and_conditions:'',
   });
+  console.log(settings,"settings")
   const handleChange = (html) => {
     setSettings({ ...settings,privacy_policy: html });
   };
@@ -71,7 +75,8 @@ function AddSettings() {
         settingDetail.faq = settingDetail[0]?.faq;
         settingDetail.terms_and_conditions =
           settingDetail[0]?.terms_and_conditions;
-        setSettings(settingDetail);
+          console.log(settingDetail,'settingDetails')
+        setSettings( ...settingDetail);
         setId(settingDetail[0]._id)
       }
     } catch (error) {
@@ -145,7 +150,7 @@ function AddSettings() {
                         setSettings((prevSettings) => ({
                           ...prevSettings,
                           customer_support: {
-                            ...prevSettings.customer_support,
+                            ...prevSettings?.customer_support,
                             email: e.target.value,
                           },
                         }))
@@ -164,7 +169,7 @@ function AddSettings() {
                         setSettings((prevSettings) => ({
                           ...prevSettings,
                           customer_support: {
-                            ...prevSettings.customer_support,
+                            ...prevSettings?.customer_support,
                             phone: e.target.value,
                           },
                         }))
@@ -199,9 +204,9 @@ function AddSettings() {
                         setSettings((prevSettings) => ({
                           ...prevSettings,
                           business_hours: {
-                            ...prevSettings.business_hours,
+                            ...prevSettings?.business_hours,
                             monday_to_friday: {
-                              ...prevSettings.business_hours.monday_to_friday,
+                              ...prevSettings?.business_hours?.monday_to_friday,
                               from: e.target.value,
                             },
                           },
@@ -227,9 +232,9 @@ function AddSettings() {
                         setSettings((prevSettings) => ({
                           ...prevSettings,
                           business_hours: {
-                            ...prevSettings.business_hours,
+                            ...prevSettings?.business_hours,
                             monday_to_friday: {
-                              ...prevSettings.business_hours.monday_to_friday,
+                              ...prevSettings?.business_hours?.monday_to_friday,
                               to: e.target.value,
                             },
                           },
@@ -255,9 +260,9 @@ function AddSettings() {
                         setSettings((prevSettings) => ({
                           ...prevSettings,
                           business_hours: {
-                            ...prevSettings.business_hours,
+                            ...prevSettings?.business_hours,
                             saturday: {
-                              ...prevSettings.business_hours.saturday,
+                              ...prevSettings?.business_hours?.saturday,
                               from: e.target.value,
                             },
                           },
@@ -281,9 +286,9 @@ function AddSettings() {
                         setSettings((prevSettings) => ({
                           ...prevSettings,
                           business_hours: {
-                            ...prevSettings.business_hours,
+                            ...prevSettings?.business_hours,
                             saturday: {
-                              ...prevSettings.business_hours.saturday,
+                              ...prevSettings?.business_hours?.saturday,
                               to: e.target.value,
                             },
                           },
@@ -301,16 +306,18 @@ function AddSettings() {
                         setSettings((prevSettings) => ({
                           ...prevSettings,
                           business_hours: {
-                            ...prevSettings.business_hours,
+                            ...prevSettings?.business_hours,
                             sunday: e.target.value,
                           },
                         }))
                       }
                     >
-                    
-                      <option value="open">Open</option>
-                      <option value="close">Close</option>
-                    </select>
+                 
+  <option value="open">Open</option>
+  <option value="close">Close</option>
+</select>
+
+                  
                   </div>
                 </div>
                 <div className="row">
