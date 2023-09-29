@@ -31,7 +31,6 @@ function AddSettings() {
     faq:'',
     terms_and_conditions:'',
   });
-  console.log(settings,"settings")
   const handleChange = (html) => {
     setSettings({ ...settings,privacy_policy: html });
   };
@@ -75,7 +74,6 @@ function AddSettings() {
         settingDetail.faq = settingDetail[0]?.faq;
         settingDetail.terms_and_conditions =
           settingDetail[0]?.terms_and_conditions;
-          console.log(settingDetail,'settingDetails')
         setSettings( ...settingDetail);
         setId(settingDetail[0]._id)
       }

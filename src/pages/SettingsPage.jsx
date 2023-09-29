@@ -7,10 +7,7 @@ import { useNavigate } from "react-router-dom";
 function SettingsPage() {
   const navigate = useNavigate();
   const [settingDetails, setSettingDetails] = useState([]);
-  console.log(settingDetails, "settingDetails");
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-
+ 
   useEffect(() => {
     getSettings();
   }, []);
