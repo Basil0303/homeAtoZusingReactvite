@@ -113,10 +113,6 @@ function Packages() {
 
   //add data
   const home = async () => {
-
-    console.log("data.home_type_id.",data.home_type_id)
-    console.log("data.materials",data.materials)
-    
     if (data.home_type_id.length > 0 && data.materials.length > 0) {
       const dataToAdd = {
         ...data,
@@ -132,7 +128,7 @@ function Packages() {
       setValidated(false);
       setShow(false);
     } else {
-      ShowToast("Please select home type and materials", false);
+      ShowToast("Please select materials", false);
       console.log('required');
       return;
     }
@@ -154,7 +150,7 @@ function Packages() {
     setEditedItem((prevItem) => ({
       ...prevItem,
       [name]: value === null ? "" : value,
-      cover_image: data.cover_image,
+      // cover_image: data.cover_image,
     }));
   };
 
@@ -361,7 +357,6 @@ function Packages() {
                         <th>Name</th>
                         <th>Home Type Id</th>
                         <th>Price Per Sqft</th>
-
                         <th>Description</th>
                         <th/>
                           <th/>
@@ -564,15 +559,12 @@ function Packages() {
       {/* ADD PACKAGE POPUP */}
       <Modal show={show} onHide={handleClose}>
         <div className="card">
-          <div className="card-header">
-            {/* <h4 className="card-title ">Enter Details</h4> */}
-          </div>
           <div className="card-body">
             <div className="basic-form">
               <Form
                 noValidate
                 validated={validated}
-                onSubmit={(e) => handleSubmit(e, setValidated, home)} // Pass just the event to handleSubmit
+                onSubmit={(e) => handleSubmit(e, setValidated, home)} 
               >
                 {" "}
                 <Form.Group>
@@ -602,20 +594,36 @@ function Packages() {
                     }}
                   />
                 </Form.Group>
+
                 <Form.Group>
-                  <Form.Label className="mb-1 my-3">Price Per Sqft</Form.Label>
+                  <Form.Label className="mb-1 my-2">Price Per Sqft</Form.Label>
                   <InputGroup hasValidation>
                     <Form.Control
                       required
                       type="number"
                       placeholder="Enter Price per sqft"
-                      value={data.price_per_sqft} // Use inputValue for name input
+                      value={data.price_per_sqft} 
                       onChange={(e) => {
                         const enteredValue = parseFloat(e.target.value);
                         if (!isNaN(enteredValue) && enteredValue >= 0) {
                           setData({ ...data, price_per_sqft: enteredValue });
                         }
                       }}
+                      aria-describedby="inputGroupPrepend"
+                    />
+                  </InputGroup>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label className="mb-1 my-2">Description</Form.Label>
+                  <InputGroup hasValidation>
+                    <Form.Control
+                      required
+                      type="text"
+                      placeholder="description"
+                      value={data.description} 
+                      onChange={(e) =>
+                        setData({ ...data, description: e.target.value })
+                      }
                       aria-describedby="inputGroupPrepend"
                     />
                   </InputGroup>
@@ -631,26 +639,12 @@ function Packages() {
                     Choose Cover Image
                   </Button>
                 </Form.Group>
-                <Form.Group>
-                  <Form.Label className="mb-1 my-2">Description</Form.Label>
-                  <InputGroup hasValidation>
-                    <Form.Control
-                      required
-                      type="text"
-                      placeholder="description"
-                      value={data.description} // Use inputValue for name input
-                      onChange={(e) =>
-                        setData({ ...data, description: e.target.value })
-                      }
-                      aria-describedby="inputGroupPrepend"
-                    />
-                  </InputGroup>
-                </Form.Group>
+               
                 <Form.Group>
                   <Button
                     required
                     className="btn-sm bg-info my-2 border-0 text-white "
-                    multiple // Allow multiple file selection
+                    multiple 
                     onClick={openGalleryFilePicker}
                     onChange={(e) =>
                       setData({ ...data, gallery_imgs: e.target.value })
@@ -659,25 +653,6 @@ function Packages() {
                     Choose Gallery Image
                   </Button>
                 </Form.Group>
-                {/* <Form.Group>
-                  <InputGroup hasValidation>
-
-                    <Form.Control
-                      type="number"
-                      placeholder="average_rating"
-                      name="rating"
-                      value={data.average_rating}
-                      onChange={(e) => {
-                        const enteredValue = parseFloat(e.target.value);
-                        if (!isNaN(enteredValue) && enteredValue >= 0) {
-                          setData({ ...data, average_rating: enteredValue });
-                        }
-                      }}
-                      aria-describedby="inputGroupPrepend"
-                      min="0" // Add this attribute to prevent negative values
-                    />
-                  </InputGroup>
-                </Form.Group> */}
                 <Form.Group>
                   <Select
                     className="my-2"
@@ -690,7 +665,7 @@ function Packages() {
                         (material) => material.value
                       );
                       setData({ ...data, materials: materialValues });
-                      console.log(materialValues);
+                      
                     }}
                   />
                 </Form.Group>
@@ -698,7 +673,7 @@ function Packages() {
                   <Button variant="primary" onClick={handleClose}>
                     Close
                   </Button>
-                  <Button variant="success" type="submit">
+                  <Button variant="success" type="submit"  >
                     Submit
                   </Button>
                 </Modal.Footer>
@@ -724,9 +699,6 @@ function Packages() {
       {/* edit data in modal*/}
       <Modal show={edit} onHide={handleClos}>
         <div className="card">
-          <div className="card-header">
-            {/* <h4 className="card-title ">Enter Details</h4> */}
-          </div>
           <div className="card-body">
             <div className="basic-form">
               <Form onSubmit={(e) => handleSubmit(e, setValidated, handleEdit)}>
@@ -765,7 +737,7 @@ function Packages() {
                     <Form.Control
                       type="number"
                       placeholder="Price Per Sqft"
-                      name="price_per_sqft" // Ensure that the name attribute matches the property name
+                      name="price_per_sqft" 
                       value={editedItem.price_per_sqft}
                       onChange={handleFieldChange}
                       aria-describedby="inputGroupPrepend"
@@ -782,7 +754,7 @@ function Packages() {
                     <Form.Control
                       type="text"
                       placeholder="Description"
-                      name="description" // Ensure that the name attribute matches the property name
+                      name="description" 
                       value={editedItem.description}
                       onChange={handleFieldChange}
                       aria-describedby="inputGroupPrepend"
@@ -821,20 +793,7 @@ function Packages() {
                     Choose New Cover Image
                   </Button>
                 </Form.Group>
-                <Form.Group>
-                <Select
-                required
-                    className="my-2"
-                    placeholder="materials"
-                    isMulti
-                    options={materials}
-                    value={selectedOptions}
-                    onChange={(selectedMaterials) =>
-                      setselectedOptions(selectedMaterials)
-                    }
-                  />
-                </Form.Group>
-
+                
                 <Form.Group
                   className="mb-3 my-1"
                   as={Col}
@@ -866,6 +825,20 @@ function Packages() {
                     Choose New Gallery Images
                   </Button>
                 </Form.Group>
+                <Form.Group>
+                <Select
+                required
+                    className="my-2"
+                    placeholder="materials"
+                    isMulti
+                    options={materials}
+                    value={selectedOptions}
+                    onChange={(selectedMaterials) =>
+                      setselectedOptions(selectedMaterials)
+                    }
+                  />
+                </Form.Group>
+
 
                 <Modal.Footer>
                   <Button variant="primary" onClick={handleClos}>
@@ -979,27 +952,13 @@ function Packages() {
                     alt="Cover Image"
                   />
                 </Form.Group>
-                {/* <Form.Label className="mb-1">Average Rating</Form.Label>
-                <Form.Group>
-                  <InputGroup hasValidation>
-                    <Form.Control
-                      className="my-1"
-                      type="number"
-                      placeholder="average_rating"
-                      name="rating"
-                      value={data.average_rating}
-                      onChange={handleFieldChange}
-                      aria-describedby="inputGroupPrepend"
-                    />
-                  </InputGroup>
-                </Form.Group> */}
                 <Form.Label className="mb-1">Choose Materials</Form.Label>
                 <Form.Group>
                   <Select
                     className="my-1"
                     placeholder="materials"
                     isMulti
-                    value={materials}
+                    value={selectedOptions}
                   />
                 </Form.Group>
 
