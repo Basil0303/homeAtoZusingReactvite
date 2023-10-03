@@ -9,6 +9,7 @@ import Col from "react-bootstrap/Col";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import { handleSubmit } from "../../utils/Fns";
+import { ShowToast } from "../../utils/Toast";
 
 function Hometype() {
   const [validated, setValidated] = useState(false);
@@ -55,6 +56,7 @@ function Hometype() {
     const response = await apiCall("post", homeUrl,  data );
     console.log(response.data);
     getHome();
+    ShowToast("Updated Successfully", true);
     setData({
       name: ""
     })
@@ -86,6 +88,7 @@ function Hometype() {
     };
     await apiCall("put", `${homeUrl}/${editedItem.id}`,  editedData );
     handleClose();
+    ShowToast("Updated Successfully", true);
     getHome();
   };
 

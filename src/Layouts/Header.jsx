@@ -115,7 +115,7 @@ function Header() {
                                   strokeLinejoin="round"
                                 />
                               </svg>
-                              <span className="ms-2">Settings </span>
+                              <span className="ms-2"onClick={() => navigate("/settings")}>Settings </span>
                             </a>
                             <a
                             onClick={handleLogout}

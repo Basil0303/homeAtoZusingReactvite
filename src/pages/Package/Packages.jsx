@@ -9,6 +9,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import { handleSubmit } from "../../utils/Fns";
 import Select from "react-select";
+import { ShowToast } from "../../utils/Toast";
 
 function Packages() {
   const [validated, setValidated] = useState(false);
@@ -114,16 +115,14 @@ function Packages() {
       ...data,
       gallery_imgs: data.gallery_imgs,
       cover_image: data.cover_image,
-
-    };
+  };
     console.log(dataToAdd,"data to addd")
         const response = await apiCall("post", PackageUrl, 
          dataToAdd
     );
-  
-    
     console.log(response);
     getHome();
+    ShowToast("Updated Successfully", true);
     setData({})
     setValidated(false);
     setShow(false);
@@ -156,24 +155,9 @@ function Packages() {
       completeEditedItem
     );
     handleClose();
+    ShowToast("Updated Successfully", true);
     getHome();
   };
-
-  // const EditData = (item) => {
-  //   console.log(item);
-  //   setEditedItem({
-  //     id: item._id,
-  //     name: item.name,
-  //     cover_image: item.cover_image,
-  //     gallery_imgs: item.gallery_imgs,
-  //     home_type_id: item.home_type_id,
-  //     price_per_sqft: item.price_per_sqft,
-  //     description: item.description,
-  //     materials: item.materials,
-  //   });
-  //   setEdit(true);
-  // };
-
 
   const EditData = (item) => {
     var data = [];
@@ -197,7 +181,7 @@ function Packages() {
         (element) => {
           element._id, element.name;
         }
-        // label: element.name,
+     
       ),
     });
     setEdit(true);
@@ -598,7 +582,6 @@ function Packages() {
                     options={hometypes}
                     onChange={(homeType) => {
                       setData({ ...data, home_type_id: homeType.value });
-                      console.log(homeType.value);
                     }}
                   />
                 </Form.Group>
@@ -927,16 +910,7 @@ function Packages() {
                 <Form.Group>
                   <Form.Label className="mb-1">Choose a Hometype</Form.Label>
                   <Select
-                    options={hometypes}
-                    value={hometypes.find(
-                      (option) => option.value === data.home_type_id
-                    )}
-                    onChange={(homeType) => {
-                      setEditedItem({
-                        ...data,
-                        home_type_id: homeType.value,
-                      });
-                    }}
+                    value={hometypes}
                   />
                 </Form.Group>
                 <Form.Group>
@@ -1023,15 +997,7 @@ function Packages() {
                     className="my-1"
                     placeholder="materials"
                     isMulti
-                    options={materials}
-                    onChange={(selectedMaterials) => {
-                      // selectedMaterials will be an array of selected values
-                      const materialValues = selectedMaterials.map(
-                        (material) => material.value
-                      );
-                      setData({ ...data, materials: materialValues });
-                      console.log(materialValues);
-                    }}
+                    value={materials}
                   />
                 </Form.Group>
 
