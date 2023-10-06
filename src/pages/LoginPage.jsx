@@ -11,31 +11,30 @@ import { ContextDatas } from "../Services/Context";
 import jwtDecode from "jwt-decode";
 
 function LoginPage() {
-
   const [validated, setValidated] = useState(false);
-  const { user,setUser } = useContext(ContextDatas)
+  const { user, setUser } = useContext(ContextDatas);
 
   const [data, setData] = useState({
     username: "",
     password: "",
   });
 
-  console.log({ data },'{ data }')
- 
-   useEffect(() => {  
-     if(user){
-       window.location.href = "/customer";
-     }
-   }, [])
+  console.log({ data }, "{ data }");
+
+  useEffect(() => {
+    if (user) {
+      window.location.href = "/customer";
+    }
+  }, []);
 
   const login = async () => {
-    const response = await apiCall("post", adminLoginUrl, data );
+    const response = await apiCall("post", adminLoginUrl, data);
     localStorage.setItem("token", response.data);
-    setUser(jwtDecode(response.data))
+    setUser(jwtDecode(response.data));
     window.location.href = "/customer";
   };
 
-  return ( 
+  return (
     <>
       <div className="login-page">
         <div className="container h-100">
@@ -61,7 +60,7 @@ function LoginPage() {
                             <Form.Control
                               required
                               type="text"
-                              placeholder="Username"
+                              placeholder="Enter username"
                               value={data.username}
                               onChange={(e) =>
                                 setData({ ...data, username: e.target.value })
@@ -78,12 +77,14 @@ function LoginPage() {
                           as={Col}
                           controlId="validationCustom02"
                         >
-                          <Form.Label className="mb-1">Password</Form.Label>
+                          <Form.Label className="mb-1 mt-4">
+                            Password
+                          </Form.Label>
                           <InputGroup hasValidation>
                             <Form.Control
                               required
                               type="password"
-                              placeholder="Password"
+                              placeholder="Enter password"
                               value={data.password}
                               onChange={(e) =>
                                 setData({ ...data, password: e.target.value })

@@ -102,7 +102,7 @@ function LoanApplicationPage() {
     } else {
       if (
         updatedLoanData?.status === "processing" &&
-        updatedLoanData?.rejection_reason === ""
+        updatedLoanData?.rejection_reason === undefined
       ) {
         updatedLoanData.status = "eligible";
       } else {

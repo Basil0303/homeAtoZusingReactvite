@@ -3,11 +3,14 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { AddSettingsUrl, SettingsUrl } from "../Services/baseUrl";
 import { apiCall } from "../Services/ApiCall";
-import moment from "moment/moment";
 import { useNavigate } from "react-router-dom";
+import { ShowToast } from "../utils/Toast";
+
 function AddSettings() {
    const[id,setId]=useState('');
    const navigate = useNavigate();
+
+
    const [settings, setSettings] = useState({
     customer_support: {
       email: "",
@@ -24,8 +27,10 @@ function AddSettings() {
       },
       sunday: {},
     },
+    privacy_policy: '' ,
+    faq:'',
+    terms_and_conditions:'',
   });
-
   const handleChange = (html) => {
     setSettings({ ...settings,privacy_policy: html });
   };
@@ -62,12 +67,14 @@ function AddSettings() {
         };
         settingDetail.location = {
           location_name: settingDetail[0]?.location?.location_name,
+          latitude:settingDetail[0]?.location?.latitude,
+          longitude:settingDetail[0]?.location?.longitude
         };
         settingDetail.privacy_policy = settingDetail[0]?.privacy_policy;
         settingDetail.faq = settingDetail[0]?.faq;
         settingDetail.terms_and_conditions =
           settingDetail[0]?.terms_and_conditions;
-        setSettings(settingDetail);
+        setSettings( ...settingDetail);
         setId(settingDetail[0]._id)
       }
     } catch (error) {
@@ -80,6 +87,7 @@ function AddSettings() {
       const data = await apiCall("post", AddSettingsUrl, settings);
       console.log(data, "data to add");
       if (data.status === true) {
+        ShowToast("Added Successfully", true);
         navigate("/Settings");
       }
     } catch (error) {
@@ -91,7 +99,9 @@ function AddSettings() {
     if(id){
       try {
         const updatedata= await apiCall("put",`${SettingsUrl}/${id}`,settings)
+        console.log(updatedata,"sdfsdfsdfsdfsdfsdfsfdfs")
         if (updatedata.status === true) {
+          ShowToast("Updated Successfully", true);
           navigate("/Settings");
         }
       } catch (error) {
@@ -104,6 +114,9 @@ function AddSettings() {
   useEffect(() => {
     getSettings();
   }, []);
+
+
+  
 
   return (
     <div>
@@ -135,7 +148,7 @@ function AddSettings() {
                         setSettings((prevSettings) => ({
                           ...prevSettings,
                           customer_support: {
-                            ...prevSettings.customer_support,
+                            ...prevSettings?.customer_support,
                             email: e.target.value,
                           },
                         }))
@@ -154,7 +167,7 @@ function AddSettings() {
                         setSettings((prevSettings) => ({
                           ...prevSettings,
                           customer_support: {
-                            ...prevSettings.customer_support,
+                            ...prevSettings?.customer_support,
                             phone: e.target.value,
                           },
                         }))
@@ -170,34 +183,35 @@ function AddSettings() {
                     />
                     Business Hours
                   </h4>{" "}
+                  <label htmlFor="timr">(9:00 AM To 6:00 PM)</label>
                   <div className="mb-3 col-md-6">
                     <label htmlFor="fromTime" className="form-label">
                       From Time
                     </label>
+                 
+
 
                     <input
-                      type="time"
+                      type="text"
                       id="fromTime"
                       name="fromTime"
                       className="form-control"
                       required
-                      value={moment(
-                        settings?.business_hours?.monday_to_friday?.from,
-                        "hh:mm"
-                      ).format("HH:mm")}
+                         value={settings?.business_hours?.monday_to_friday?.from || ''}
                       onChange={(e) =>
                         setSettings((prevSettings) => ({
                           ...prevSettings,
                           business_hours: {
-                            ...prevSettings.business_hours,
+                            ...prevSettings?.business_hours,
                             monday_to_friday: {
-                              ...prevSettings.business_hours.monday_to_friday,
+                              ...prevSettings?.business_hours?.monday_to_friday,
                               from: e.target.value,
                             },
                           },
                         }))
                       }
                     />
+
                   </div>
                   <div className="mb-3 col-md-6">
                     <label htmlFor="toTime" className="form-label">
@@ -205,21 +219,20 @@ function AddSettings() {
                     </label>
                     <input
                       required
-                      type="time"
+                      type="text"
                       id="toTime"
                       name="toTime"
                       className="form-control"
-                      value={moment(
-                        settings?.business_hours?.monday_to_friday?.to,
-                        "hh:mm"
-                      ).format("HH:mm")}
+                      
+
+                      value={settings?.business_hours?.monday_to_friday?.to || ''}
                       onChange={(e) =>
                         setSettings((prevSettings) => ({
                           ...prevSettings,
                           business_hours: {
-                            ...prevSettings.business_hours,
+                            ...prevSettings?.business_hours,
                             monday_to_friday: {
-                              ...prevSettings.business_hours.monday_to_friday,
+                              ...prevSettings?.business_hours?.monday_to_friday,
                               to: e.target.value,
                             },
                           },
@@ -234,21 +247,20 @@ function AddSettings() {
                     </label>
                     <input
                       required
-                      type="time"
+                      type="text"
                       id="fromTime"
                       name="fromTime"
                       className="form-control"
-                      value={moment(
-                        settings?.business_hours?.saturday?.from,
-                        "hh:mm"
-                      ).format("HH:mm")}
-                      onChange={(e) =>
+                    
+                      
+                      value={settings?.business_hours?.saturday?.from || ''}    
+                                        onChange={(e) =>
                         setSettings((prevSettings) => ({
                           ...prevSettings,
                           business_hours: {
-                            ...prevSettings.business_hours,
+                            ...prevSettings?.business_hours,
                             saturday: {
-                              ...prevSettings.business_hours.saturday,
+                              ...prevSettings?.business_hours?.saturday,
                               from: e.target.value,
                             },
                           },
@@ -262,21 +274,19 @@ function AddSettings() {
                     </label>
                     <input
                       required
-                      type="time"
+                      type="text"
                       id="toTime"
                       name="toTime"
                       className="form-control"
-                      value={moment(
-                        settings?.business_hours?.saturday?.to,
-                        "hh:mm"
-                      ).format("HH:mm")}
+
+                      value={settings?.business_hours?.saturday?.to || ''}
                       onChange={(e) =>
                         setSettings((prevSettings) => ({
                           ...prevSettings,
                           business_hours: {
-                            ...prevSettings.business_hours,
+                            ...prevSettings?.business_hours,
                             saturday: {
-                              ...prevSettings.business_hours.saturday,
+                              ...prevSettings?.business_hours?.saturday,
                               to: e.target.value,
                             },
                           },
@@ -294,43 +304,84 @@ function AddSettings() {
                         setSettings((prevSettings) => ({
                           ...prevSettings,
                           business_hours: {
-                            ...prevSettings.business_hours,
+                            ...prevSettings?.business_hours,
                             sunday: e.target.value,
                           },
                         }))
                       }
                     >
-                    
-                      <option value="open">Open</option>
-                      <option value="close">Close</option>
-                    </select>
+                 
+  <option value="open">Open</option>
+  <option value="close">Close</option>
+</select>
+
+                  
                   </div>
                 </div>
                 <div className="row">
-                  <h4>
-                    <i
-                      className="fas fa-map-marker-alt fa-2x "
-                      style={{ color: "blue", marginRight: "10px" }}
-                    />
-                    Location
-                  </h4>
-                  <div className="mb-3 col-md-6">
-                    <input
-                      type="textarea"
-                      className="form-control"
-                      value={settings?.location?.location_name}
-                      onChange={(e) =>
-                        setSettings((prevSettings) => ({
-                          ...prevSettings,
-                          location: {
-                            ...prevSettings.location,
-                            location_name: e.target.value,
-                          },
-                        }))
-                      }
-                    />
-                  </div>
-                </div>
+  <h4>
+    <i
+      className="fas fa-map-marker-alt fa-2x "
+      style={{ color: "blue", marginRight: "10px" }}
+    />
+    Location
+  </h4>
+  <div className="mb-3 col-md-6">
+    <label htmlFor="locationName">Location Name:</label>
+    <input
+      type="text"
+      id="locationName"
+      className="form-control"
+      value={settings?.location?.location_name}
+      onChange={(e) =>
+        setSettings((prevSettings) => ({
+          ...prevSettings,
+          location: {
+            ...prevSettings.location,
+            location_name: e.target.value,
+          },
+        }))
+      }
+    />
+  </div>
+  <div className="mb-3 col-md-2">
+    <label htmlFor="latitude">Latitude:(10.258711)</label>
+    <input
+      type="text"
+      id="latitude"
+      className="form-control"
+      value={settings?.location?.latitude}
+      onChange={(e) =>
+        setSettings((prevSettings) => ({
+          ...prevSettings,
+          location: {
+            ...prevSettings.location,
+            latitude: e.target.value,
+          },
+        }))
+      }
+    />
+  </div>
+  <div className="mb-3 col-md-2">
+    <label htmlFor="longitude">Longitude:(76.319762)</label>
+    <input
+      type="text"
+      id="longitude"
+      className="form-control"
+      value={settings?.location?.longitude}
+      onChange={(e) =>
+        setSettings((prevSettings) => ({
+          ...prevSettings,
+          location: {
+            ...prevSettings.location,
+            longitude: e.target.value,
+          },
+        }))
+      }
+    />
+  </div>
+</div>
+
                 <div className="row">
                   <h4>
                     <i
