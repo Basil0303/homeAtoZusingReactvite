@@ -37,13 +37,13 @@ function Packages() {
     createdAt: "",
     updatedAt: "",
   });
-  console.log(data,"data")
+  console.log(data, "data");
 
   ////drop down  materials and select hometypes
   const [hometypes, setHometypes] = useState([]);
-  console.log(hometypes,"hometypes")
+  console.log(hometypes, "hometypes");
   const [materials, setMaterials] = useState([]);
-  console.log(materials,"materials")
+  console.log(materials, "materials");
   const [list, setlist] = useState();
   const [selectedOptions, setselectedOptions] = useState([]);
 
@@ -79,7 +79,7 @@ function Packages() {
   };
 
   const getPackages = async () => {
-    const response = await apiCall("get", PackageUrl, {}, params );
+    const response = await apiCall("get", PackageUrl, {}, params);
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
     setlist(docs ?? []);
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
@@ -129,13 +129,13 @@ function Packages() {
       setShow(false);
     } else {
       ShowToast("Please select materials", false);
-      console.log('required');
+      console.log("required");
       return;
     }
-  // if (!hometypes.length){
-  //     ShowToast("rew",false)
-  //     return
-  // }
+    // if (!hometypes.length){
+    //     ShowToast("rew",false)
+    //     return
+    // }
   };
 
   //edit data
@@ -161,9 +161,7 @@ function Packages() {
       gallery_imgs: editedItem.gallery_imgs,
     };
 
-    await apiCall("put", `${PackageUrl}/${editedItem.id}`, 
-      completeEditedItem
-    );
+    await apiCall("put", `${PackageUrl}/${editedItem.id}`, completeEditedItem);
     handleClose();
     ShowToast("Updated Successfully", true);
     getHome();
@@ -187,12 +185,9 @@ function Packages() {
       home_type_id: item.home_type_id._id,
       price_per_sqft: item.price_per_sqft,
       description: item.description,
-      materials: item.materials.map(
-        (element) => {
-          element._id, element.name;
-        }
-     
-      ),
+      materials: item.materials.map((element) => {
+        element._id, element.name;
+      }),
     });
     setEdit(true);
   };
@@ -210,7 +205,7 @@ function Packages() {
 
   //get data
   const getHome = async () => {
-    const response = await apiCall("get", PackageUrl, {}, params );
+    const response = await apiCall("get", PackageUrl, {}, params);
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
     setlist(docs ?? []);
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
@@ -353,13 +348,12 @@ function Packages() {
                     <thead>
                       <tr>
                         <th>#</th>
-                        <th></th>
+
                         <th>Name</th>
                         <th>Home Type Id</th>
                         <th>Price Per Sqft</th>
                         <th>Description</th>
-                        <th/>
-                          <th/>
+                        <th />
                       </tr>
                     </thead>
                     <tbody>
@@ -523,7 +517,7 @@ function Packages() {
                       ) : (
                         <tr>
                           <td
-                            colSpan={5}
+                            colSpan={6}
                             className="text-center py-4 text-primary"
                           >
                             <b>No data</b>
@@ -564,7 +558,7 @@ function Packages() {
               <Form
                 noValidate
                 validated={validated}
-                onSubmit={(e) => handleSubmit(e, setValidated, home)} 
+                onSubmit={(e) => handleSubmit(e, setValidated, home)}
               >
                 {" "}
                 <Form.Group>
@@ -585,16 +579,17 @@ function Packages() {
                   </InputGroup>
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label className="mb-1 my-2">Choose a Hometype</Form.Label>
+                  <Form.Label className="mb-1 my-2">
+                    Choose a Hometype
+                  </Form.Label>
                   <Select
-                  required
+                    required
                     options={hometypes}
                     onChange={(homeType) => {
                       setData({ ...data, home_type_id: homeType.value });
                     }}
                   />
                 </Form.Group>
-
                 <Form.Group>
                   <Form.Label className="mb-1 my-2">Price Per Sqft</Form.Label>
                   <InputGroup hasValidation>
@@ -602,7 +597,7 @@ function Packages() {
                       required
                       type="number"
                       placeholder="Enter Price per sqft"
-                      value={data.price_per_sqft} 
+                      value={data.price_per_sqft}
                       onChange={(e) => {
                         const enteredValue = parseFloat(e.target.value);
                         if (!isNaN(enteredValue) && enteredValue >= 0) {
@@ -620,7 +615,7 @@ function Packages() {
                       required
                       type="text"
                       placeholder="description"
-                      value={data.description} 
+                      value={data.description}
                       onChange={(e) =>
                         setData({ ...data, description: e.target.value })
                       }
@@ -639,12 +634,11 @@ function Packages() {
                     Choose Cover Image
                   </Button>
                 </Form.Group>
-               
                 <Form.Group>
                   <Button
                     required
                     className="btn-sm bg-info my-2 border-0 text-white "
-                    multiple 
+                    multiple
                     onClick={openGalleryFilePicker}
                     onChange={(e) =>
                       setData({ ...data, gallery_imgs: e.target.value })
@@ -665,15 +659,20 @@ function Packages() {
                         (material) => material.value
                       );
                       setData({ ...data, materials: materialValues });
-                      
                     }}
                   />
                 </Form.Group>
                 <Modal.Footer>
-                  <Button variant="primary" onClick={handleClose}>
+                  <Button
+                    style={{
+                      backgroundColor: "grey",
+                      color: "white",
+                    }}
+                    onClick={handleClose}
+                  >
                     Close
                   </Button>
-                  <Button variant="success" type="submit"  >
+                  <Button variant="success" type="submit">
                     Submit
                   </Button>
                 </Modal.Footer>
@@ -688,11 +687,17 @@ function Packages() {
           <p>Are you sure to delete </p>
         </Modal.Body>
         <Modal.Footer>
+          <Button
+            style={{
+              backgroundColor: "grey",
+              color: "white",
+            }}
+            onClick={handleCloses}
+          >
+            No
+          </Button>
           <Button variant="danger" onClick={handleDelete}>
             Yes
-          </Button>
-          <Button variant="primary" onClick={handleCloses}>
-            No
           </Button>
         </Modal.Footer>
       </Modal>
@@ -737,7 +742,7 @@ function Packages() {
                     <Form.Control
                       type="number"
                       placeholder="Price Per Sqft"
-                      name="price_per_sqft" 
+                      name="price_per_sqft"
                       value={editedItem.price_per_sqft}
                       onChange={handleFieldChange}
                       aria-describedby="inputGroupPrepend"
@@ -754,7 +759,7 @@ function Packages() {
                     <Form.Control
                       type="text"
                       placeholder="Description"
-                      name="description" 
+                      name="description"
                       value={editedItem.description}
                       onChange={handleFieldChange}
                       aria-describedby="inputGroupPrepend"
@@ -793,7 +798,7 @@ function Packages() {
                     Choose New Cover Image
                   </Button>
                 </Form.Group>
-                
+
                 <Form.Group
                   className="mb-3 my-1"
                   as={Col}
@@ -826,8 +831,8 @@ function Packages() {
                   </Button>
                 </Form.Group>
                 <Form.Group>
-                <Select
-                required
+                  <Select
+                    required
                     className="my-2"
                     placeholder="materials"
                     isMulti
@@ -839,9 +844,13 @@ function Packages() {
                   />
                 </Form.Group>
 
-
                 <Modal.Footer>
-                  <Button variant="primary" onClick={handleClos}>
+                  <Button
+                  style={{
+                    backgroundColor: "grey",
+                    color: "white",
+                  }}
+                   onClick={handleClos}>
                     Close
                   </Button>
                   <Button variant="success" type="submit">
@@ -884,9 +893,7 @@ function Packages() {
                 </Form.Group>
                 <Form.Group>
                   <Form.Label className="mb-1">Choose a Hometype</Form.Label>
-                  <Select
-                    value={hometypes}
-                  />
+                  <Select value={hometypes} />
                 </Form.Group>
                 <Form.Group>
                   <Form.Label className="mb-1">Enter Price Sqft</Form.Label>
@@ -963,7 +970,12 @@ function Packages() {
                 </Form.Group>
 
                 <Modal.Footer>
-                  <Button  variant="primary" onClick={close}>
+                  <Button 
+                  style={{
+                    backgroundColor: "grey",
+                    color: "white",
+                  }}
+                   onClick={close}>
                     Close
                   </Button>
                   <Button variant="success" type="submit" onClick={close}>
