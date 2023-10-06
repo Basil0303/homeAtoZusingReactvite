@@ -707,7 +707,7 @@ function ProjectsPage() {
 
       <Modal show={show} onHide={handleClose}>
         <div className="card">
-          <div className="card-header"></div>
+          <div className="card-header"><h5>Add Package</h5></div>
           <div className="card-body">
             <div className="basic-form">
               <Form
@@ -929,7 +929,8 @@ function ProjectsPage() {
       {/* edit data in modal*/}
       <Modal show={edit} onHide={handleClos}>
         <div className="card">
-          <div className="card-header"></div>
+          
+          <div className="card-header"><h5>Edit Project Details</h5></div>
           <div className="card-body">
             <div className="basic-form">
               <Form
