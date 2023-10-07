@@ -112,6 +112,7 @@ function Header() {
                           <a
                             href="javascript:void(0);"
                             className="dropdown-item ai-icon "
+                            onClick={() => navigate("/Settings")}
                           >
                             <svg
                               width={20}
@@ -139,7 +140,7 @@ function Header() {
                                 strokeLinejoin="round"
                               />
                             </svg>
-                            <span className="ms-2" onClick={() => navigate("/Settings")}>Settings </span>
+                            <span className="ms-2" >Settings </span>
                           </a>
                           <a onClick={handleLogout}                           
                            href={undefined}
