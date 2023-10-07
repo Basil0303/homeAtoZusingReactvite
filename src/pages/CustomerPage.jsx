@@ -23,9 +23,7 @@ function CustomerPage () {
   });
   const [show,setShow]=useState(false)
   const [packageDetails,setPackageDetails]=useState([])
-  useEffect(() => {
-    getCustomers();
-  }, [params]);
+
 
   const getCustomers = async () => {
     const response = await apiCall("get", userUrl,{},  params );
@@ -48,9 +46,16 @@ function CustomerPage () {
    }
   };
 
+
+  useEffect(() => {
+    getCustomers();
+  }, [params]);
+
   return (
-    <div>
-      <div className="col-xl-12">
+
+    <>
+   
+        <div className="col-xl-12">
         <div className="card dz-card" id="bootstrap-table11">
           <div className="card-header flex-wrap d-flex justify-content-between">
             <div>
@@ -119,11 +124,15 @@ function CustomerPage () {
                   <table className="table header-border table-responsive-sm">
                     <thead>
                       <tr>
-                        <th></th>
+                      <th>#</th>
+
                         <th>Name</th>
+                        <th>Image</th>
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Place</th>
+                        <th>Details</th>
+                        
                       </tr>
                     </thead>
                     <tbody>
@@ -137,27 +146,36 @@ function CustomerPage () {
                         </tr>
                       ) : list?.length ? (
                         <>
-                          {list.map((item, index) => (
+                          {list.map((item, key) => (
                             <tr>
-                              <td style={{ width: "2%" }}>
-                                <img
-                                  src={item?.image ?? "images/user.webp"}
-                                  width={32}
-                                  height={32}
-                                  style={{
-                                    objectFit: "cover",
-                                    borderRadius: "4px",
-                                    backgroundColor: "#eee",
-                                  }}
-                                />
-                              </td>
+                                <td style={{ width: "2%" }}>
+                                  <ul>
+                                    <li>
+                                      {params.page === 1
+                                        ? key + 1 > 9
+                                          ? key + 1
+                                          : "0" + (key + 1)
+                                        : params.limit * (params.page - 1) +
+                                          (key + 1 > 9
+                                            ? key + 1
+                                            : "0" + (key + 1))}
+                                    </li>
+                                  </ul>
+                                </td>
+                            
                               <td>{item?.fullName}</td>
+                              <td> <img src={item?.image ?? "images/user.webp"} height={'100px'} width={'100px'} alt="" /></td>
+
                               <td>{item?.email}</td>
                               <td>{item?.mobile}</td>
+                              
                               <td>
                                 {item?.district}
                                 {item?.state},{item?.pincode}
                               </td>
+                           
+
+                        
                               <td>
   <i  className="fas fa-eye"style={{  justifyContent: 'center', alignItems: 'center' }}
   onClick={() => {
@@ -208,6 +226,9 @@ function CustomerPage () {
           </div>
         </div>
       </div>
+      
+    
+
       <Modal  show={show} onHide={()=>setShow(false)}>
         <div className="modal-content">
           <div className="modal-header">
@@ -342,39 +363,31 @@ function CustomerPage () {
                         </div>
                       </div>
                       <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Materials</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          {details?.materials.map((value, key) => (
-                            <span key={key}>
-                              {value.name}
-                              {key < details.materials.length - 1 ? ", " : ""}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
+                      <table className="table table-bordered">
+  <thead>
+    <tr style={{color:"black"}}>
+      <th>Material</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    {details?.materials.map((value, key) => (
+      <tr key={key}>
+        <td>     <span className="table-cell" style={{ marginRight: '10px',color:"#888888" }}>
+  {value.name}
+</span></td>
+  
+<td> <span className="table-cell" style={{ marginRight: '10px' ,color:"#888888"}}>
+          {value.description}
+        </span></td>
+       
+      </tr>
+    ))}
+  </tbody>
+</table>
 
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Description</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          {details?.materials.map((value, key) => (
-                            <span key={key}>{
-                            value.description}
-                                {key < details.materials.length - 1 ? ", " : ""}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
+
+
                       <hr />
                       <div className="row profileData">
                         <label
@@ -410,8 +423,9 @@ function CustomerPage () {
           </div>
         </div>
       </Modal>
-      
-    </div>
+      </>
+  
+   
   );
 }
 
