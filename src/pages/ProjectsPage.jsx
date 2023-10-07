@@ -18,7 +18,7 @@ function ProjectsPage() {
 
   const [params, setparams] = useState({
     page: 1,
-    limit: 10,
+    limit: 5,
     query: "",
   });
 
