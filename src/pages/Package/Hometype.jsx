@@ -86,7 +86,7 @@ function Hometype() {
       ...editedItem,
       updatedAt: editedItem.updatedAt || new Date(),
     };
-    await apiCall("put", `${homeUrl}/${editedItem.id}`,  editedData );
+    await apiCall("put", `${homeUrl}/${editedItem.id}`, editedData);
     handleClose();
     ShowToast("Updated Successfully", true);
     getHome();
@@ -132,7 +132,7 @@ function Hometype() {
   };
 
   const getHome = async () => {
-    const response = await apiCall("get", homeUrl, {}, params );
+    const response = await apiCall("get", homeUrl, {}, params);
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
 
     setlist(docs ?? []);
@@ -438,9 +438,14 @@ function Hometype() {
                     Choose Cover Image
                   </Button>
                 </Form.Group>
-
                 <Modal.Footer>
-                  <Button variant="primary" onClick={handleClose}>
+                  <Button
+                    style={{
+                      backgroundColor: "grey",
+                      color: "white",
+                    }}
+                    onClick={handleClose}
+                  >
                     Close
                   </Button>
                   <Button variant="success" type="submit" onClick={handleClos}>
@@ -458,11 +463,17 @@ function Hometype() {
           <p>Are you sure to delete </p>
         </Modal.Body>
         <Modal.Footer>
+          <Button
+            style={{
+              backgroundColor: "grey",
+              color: "white",
+            }}
+            onClick={handleCloses}
+          >
+            No
+          </Button>
           <Button variant="danger" onClick={handleDelete}>
             Yes
-          </Button>
-          <Button variant="primary" onClick={handleCloses}>
-            No
           </Button>
         </Modal.Footer>
       </Modal>
@@ -523,7 +534,13 @@ function Hometype() {
                 </Form.Group>
 
                 <Modal.Footer>
-                  <Button  variant="primary" onClick={handleClos}>
+                  <Button
+                    style={{
+                      backgroundColor: "grey",
+                      color: "white",
+                    }}
+                    onClick={handleClos}
+                  >
                     Close
                   </Button>
                   <Button variant="success" type="submit" onClick={handleClos}>

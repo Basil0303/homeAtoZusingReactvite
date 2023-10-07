@@ -725,7 +725,11 @@ function ProjectsPage() {
                   </Form.Group>
 
                   <Modal.Footer>
-                    <Button variant="primary" onClick={handleClose} >
+                    <Button style={{
+                      backgroundColor: "grey",
+                      color: "white",
+                    }}
+                     onClick={handleClose} >
                       Close
                     </Button>
                     <Button variant="success" type="submit">
@@ -949,7 +953,11 @@ function ProjectsPage() {
                   </Form.Group>
 
                   <Modal.Footer>
-                    <Button variant="primary" onClick={handleClos}>
+                    <Button  style={{
+                      backgroundColor: "grey",
+                      color: "white",
+                    }}
+                     onClick={handleClos}>
                       Close
                     </Button>
                     <Button
