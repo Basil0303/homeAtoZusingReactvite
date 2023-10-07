@@ -55,7 +55,7 @@ function ProjectsPage() {
     };
 
     const getPackages = async () => {
-      const response = await apiCall("get", ProjectUrl, { params });
+      const response = await apiCall("get", ProjectUrl, {}, params );
       const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
       setlist(docs ?? []);
       setpagination({ hasNextPage, hasPreviousPage, totalDocs });
@@ -351,7 +351,8 @@ function ProjectsPage() {
                           <th>#</th>
                           <th>Name</th>
                           <th>Location</th>
-                          <th></th>
+                          <th/>
+                          <th/>
                         </tr>
                       </thead>
                       <tbody>
@@ -724,10 +725,7 @@ function ProjectsPage() {
                   </Form.Group>
 
                   <Modal.Footer>
-                    <Button
-                      style={{ backgroundColor: "grey" }}
-                      onClick={handleClose}
-                    >
+                    <Button variant="primary" onClick={handleClose} >
                       Close
                     </Button>
                     <Button variant="success" type="submit">
@@ -748,7 +746,7 @@ function ProjectsPage() {
             <Button variant="danger" onClick={handleDelete}>
               Yes
             </Button>
-            <Button style={{ background: "grey" }} onClick={handleCloses}>
+            <Button variant="primary" onClick={handleCloses}>
               No
             </Button>
           </Modal.Footer>
@@ -951,7 +949,7 @@ function ProjectsPage() {
                   </Form.Group>
 
                   <Modal.Footer>
-                    <Button style={{ background: "grey" }} onClick={handleClos}>
+                    <Button variant="primary" onClick={handleClos}>
                       Close
                     </Button>
                     <Button

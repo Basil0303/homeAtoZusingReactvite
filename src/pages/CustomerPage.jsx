@@ -9,6 +9,7 @@ import { PackageApplicationUrl } from "../Services/baseUrl";
 
 function CustomerPage () {
   const [list, setlist] = useState();
+
   const [params, setparams] = useState({
     page: 1,
     limit: 10,
@@ -27,8 +28,9 @@ function CustomerPage () {
   }, [params]);
 
   const getCustomers = async () => {
-    const response = await apiCall("get", userUrl, { params });
+    const response = await apiCall("get", userUrl,{},  params );
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
+
     setlist(docs ?? []);
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
   };
@@ -122,7 +124,6 @@ function CustomerPage () {
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Place</th>
-                        <th>Package</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -174,7 +175,7 @@ function CustomerPage () {
                       ) : (
                         <tr>
                           <td
-                            colSpan={6}
+                            colSpan={5}
                             className="text-center py-4 text-primary"
                           >
                             <b>No data</b>
