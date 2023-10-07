@@ -30,7 +30,7 @@ function Materials() {
     const response = await apiCall("post", materialsUrl, data);
     console.log(response.data);
     getHome();
-    ShowToast("Updated Successfully", true);
+    ShowToast("Added Successfully", true);
     setData({
       name: "",
       description: "",
@@ -209,10 +209,11 @@ function Materials() {
                   <table className="table header-border table-responsive-sm">
                     <thead>
                       <tr>
-                        <th>#</th>
-                        <th></th>
+                        <th>SL No</th>
+                        
                         <th>Name</th>
                         <th>description</th>
+                        <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -243,7 +244,7 @@ function Materials() {
                                 </ul>
                               </td>
 
-                              <td></td>
+                            
                               <td>{item?.name}</td>
                               <td>{item?.description}</td>
                               {/* <td>{item?.createdAt}</td>
@@ -367,7 +368,7 @@ function Materials() {
       <Modal show={show} onHide={handleClose}>
         <div className="card">
           <div className="card-header">
-            {/* <h4 className="card-title ">Enter Details</h4> */}
+            <h4 className="card-title ">Add Materials</h4>
           </div>
           <div className="card-body">
             <div className="basic-form">
@@ -377,7 +378,7 @@ function Materials() {
                 onSubmit={(e) => handleSubmit(e, setValidated, home)} // Pass just the event to handleSubmit
               >
                 <Form.Group as={Col} controlId="validationCustom01">
-                  <Form.Label className="mb-1">Type a name</Form.Label>
+                  <Form.Label className="mb-1">Enter Name</Form.Label>
                   <InputGroup hasValidation>
                     <Form.Control
                       required
