@@ -19,20 +19,21 @@ function LoginPage() {
     password: "",
   });
 
-  console.log({ data }, "{ data }");
+
+ 
+  const login = async () => {
+    const response = await apiCall("post", adminLoginUrl, data);
+    console.log(response,"response.....................")
+    localStorage.setItem("token", response.data);
+    setUser(jwtDecode(response.data));
+    window.location.href = "/customer";
+  };
 
   useEffect(() => {
     if (user) {
       window.location.href = "/customer";
     }
-  }, []);
-
-  const login = async () => {
-    const response = await apiCall("post", adminLoginUrl, data);
-    localStorage.setItem("token", response.data);
-    setUser(jwtDecode(response.data));
-    window.location.href = "/customer";
-  };
+  }, [user]);
 
   return (
     <>

@@ -13,7 +13,7 @@ function Header() {
   
 
   const handleLogout=()=>{
-    localStorage.clear();
+    localStorage.removeItem("token");
     navigate("/login");
    };
 
@@ -139,11 +139,10 @@ function Header() {
                                 strokeLinejoin="round"
                               />
                             </svg>
-                            <span className="ms-2">Settings </span>
+                            <span className="ms-2" onClick={() => navigate("/Settings")}>Settings </span>
                           </a>
-                          <a
-                            onClick={() => navigate("/login")}
-                            href={undefined}
+                          <a onClick={handleLogout}                           
+                           href={undefined}
                             className="dropdown-item ai-icon"
                           >
                             <svg
@@ -161,7 +160,7 @@ function Header() {
                               <polyline points="16 17 21 12 16 7" />
                               <line x1={21} y1={12} x2={9} y2={12} />
                             </svg>
-                            <span className="ms-2" onClick={handleLogout}>
+                            <span className="ms-2" >
                               Logout{" "}
                             </span>
                           </a>
