@@ -208,7 +208,22 @@ function ProjectsPage() {
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
   };
 
-  const handleClose = () => setShow(false);
+  const handleClose = () =>{
+    setShow(false);
+    setData({
+      name: "",
+      location: "",
+      description: "",
+      amnities: {
+        bed: "",
+        kitchen: "",
+        sofa: "",
+        shower: "",
+        storage_space: "",
+        total_Sqft: "",
+      },
+    });
+  } 
 
   const [remove, setRemove] = useState({
     show: false,
@@ -393,7 +408,7 @@ function ProjectsPage() {
                               <td>
                                 {item?.featured && (
                                   <span
-                                    class="badge rounded-pill bg-secondary px-2"
+                                    class="badge  bg-secondary px-2"
                                  
                                   >
                                     featured
@@ -402,7 +417,7 @@ function ProjectsPage() {
 
                                 {item?.popular && (
                                   <span
-                                    class="badge rounded-pill bg-success px-2 mx-1"
+                                    class="badge  bg-success px-2 mx-1"
                     
                                   >
                                     popular
@@ -930,7 +945,7 @@ function ProjectsPage() {
       <Modal show={edit} onHide={handleClos}>
         <div className="card">
           
-          <div className="card-header"><h5>Edit Project Details</h5></div>
+          <div className="card-header"><h5>Edit Data</h5></div>
           <div className="card-body">
             <div className="basic-form">
               <Form
