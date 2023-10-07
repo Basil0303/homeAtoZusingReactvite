@@ -932,12 +932,13 @@ function ProjectsPage() {
           <p>Are you sure to delete </p>
         </Modal.Body>
         <Modal.Footer>
+        <Button variant="dark" onClick={handleCloses}>
+            No
+          </Button>
           <Button variant="danger" onClick={handleDelete}>
             Yes
           </Button>
-          <Button variant="primary" onClick={handleCloses}>
-            No
-          </Button>
+         
         </Modal.Footer>
       </Modal>
 

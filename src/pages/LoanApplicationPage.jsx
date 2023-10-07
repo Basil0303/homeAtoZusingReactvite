@@ -6,6 +6,7 @@ import Modal from "react-bootstrap/Modal";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { ShowToast } from "../utils/Toast";
+import { Button } from "react-bootstrap";
 
 function LoanApplicationPage() {
   const [loanList, setloanList] = useState();
@@ -937,7 +938,8 @@ function LoanApplicationPage() {
               >
                 Save
               </button>
-              <button
+              <Button
+              variant="dark"
                 type="button"
                 className="btn btn-waves-effect waves-light"
                 onClick={() => setShowRejectionForm(false)}
@@ -948,12 +950,11 @@ function LoanApplicationPage() {
                   marginTop: "15px",
                   float: "right",
                   marginBottom: "10px",
-                  backgroundColor: "grey", 
                   color: "white"
                 }}
               >
                 Close
-              </button>
+              </Button>
             </div>
           </div>
         </div>

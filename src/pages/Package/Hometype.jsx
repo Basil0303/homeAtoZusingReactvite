@@ -464,10 +464,7 @@ function Hometype() {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            style={{
-              backgroundColor: "grey",
-              color: "white",
-            }}
+          variant="dark"
             onClick={handleCloses}
           >
             No
@@ -535,10 +532,7 @@ function Hometype() {
 
                 <Modal.Footer>
                   <Button
-                    style={{
-                      backgroundColor: "grey",
-                      color: "white",
-                    }}
+                    variant="dark"
                     onClick={handleClos}
                   >
                     Close

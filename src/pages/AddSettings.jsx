@@ -5,6 +5,7 @@ import { AddSettingsUrl, SettingsUrl } from "../Services/baseUrl";
 import { apiCall } from "../Services/ApiCall";
 import { useNavigate } from "react-router-dom";
 import { ShowToast } from "../utils/Toast";
+import { Button } from "react-bootstrap";
 
 function AddSettings() {
    const[id,setId]=useState('');
@@ -446,15 +447,16 @@ function AddSettings() {
             </div>
            
    <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
-   <button 
+   <Button
+   variant="dark" 
   className="btn btn-waves-effect waves-light"
-  style={{ marginTop: "50px", backgroundColor: "grey", color: "white" }} 
+  style={{ marginTop: "50px"}} 
   onClick={() => {
     navigate("/settings");
   }}
 >
   Back
-</button>
+</Button>
 
 
   <button
