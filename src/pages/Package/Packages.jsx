@@ -28,22 +28,21 @@ function Packages() {
 
   const [data, setData] = useState({
     name: "",
-    home_type_id: "",
+    home_type_id: {},
+    home_type_image: "",
     price_per_sqft: "",
     cover_image: "",
     description: "",
-    gallery_imgs: "",
-    materials: "",
+    average_rating: "",
+    gallery_imgs: [],
+    materials: [],
     createdAt: "",
     updatedAt: "",
   });
-  console.log(data, "data");
 
   ////drop down  materials and select hometypes
   const [hometypes, setHometypes] = useState([]);
-  console.log(hometypes, "hometypes");
   const [materials, setMaterials] = useState([]);
-  console.log(materials, "materials");
   const [list, setlist] = useState();
   const [selectedOptions, setselectedOptions] = useState([]);
 
@@ -87,7 +86,8 @@ function Packages() {
 
   //file stack
   const client = filestack.init("AaRWObgSHSuGtGR3HqMYBz");
-  const openFilePicker = () => {
+
+  const openFilePicker = (imageType) => {
     const options = {
       fromSources: ["local_file_system", "instagram", "facebook"],
       accept: ["image/*"],
@@ -101,9 +101,16 @@ function Packages() {
       minFiles: 1,
       uploadInBackground: false,
       onUploadDone: (res) => {
-        console.log(res);
-        setData({ ...data, cover_image: res.filesUploaded[0].url });
-        setEditedItem({ ...editedItem, cover_image: res.filesUploaded[0].url });
+        if (imageType === "cover_image") {
+          setData({ ...data, cover_image: res.filesUploaded[0].url });
+          setEditedItem({
+            ...editedItem,
+            cover_image: res.filesUploaded[0].url,
+          });
+        } else if (imageType === "home_type_image") {
+          setData({ ...data, home_type_image: res.filesUploaded[0].url });
+          // Update any relevant state for the home type image here
+        }
       },
     };
     client.picker(options).open();
@@ -116,26 +123,22 @@ function Packages() {
     if (data.home_type_id.length > 0 && data.materials.length > 0) {
       const dataToAdd = {
         ...data,
+        home_type_image: data.home_type_image,
         gallery_imgs: data.gallery_imgs,
         cover_image: data.cover_image,
       };
-      console.log(dataToAdd, "data to add");
       const response = await apiCall("post", PackageUrl, dataToAdd);
-      console.log(response);
       getHome();
       ShowToast("Updated Successfully", true);
+
+      // Clear the data fields and set validated to false
       setData({});
       setValidated(false);
       setShow(false);
     } else {
       ShowToast("Please select materials", false);
-      console.log("required");
       return;
     }
-    // if (!hometypes.length){
-    //     ShowToast("rew",false)
-    //     return
-    // }
   };
 
   //edit data
@@ -194,7 +197,6 @@ function Packages() {
 
   //delete data from package
   const handleDelete = async () => {
-    // console.log (remove.id)
     const response = await apiCall("delete", `${PackageUrl}/${remove.id}`, {
       data,
     });
@@ -226,11 +228,11 @@ function Packages() {
   const [viewed, setViewed] = useState();
   const close = () => setViewed(false);
   const Viewmore = (item) => {
-    console.log(item);
     setData({
       id: item._id,
       name: item.name,
       home_type_id: item.home_type_id.name,
+      home_type_image: item.home_type_id.image,
       price_per_sqft: item.price_per_sqft,
       cover_image: item.cover_image,
       gallery_imgs: item.gallery_imgs,
@@ -256,7 +258,6 @@ function Packages() {
       minFiles: 1,
       uploadInBackground: false,
       onUploadDone: (res) => {
-        console.log(res);
         const uploadedImages = res.filesUploaded.map((file) => file.url);
         setData({ ...data, gallery_imgs: uploadedImages });
       },
@@ -350,7 +351,7 @@ function Packages() {
                         <th>#</th>
 
                         <th>Name</th>
-                        <th>Home Type Id</th>
+                        <th>Home Type Name</th>
                         <th>Price Per Sqft</th>
                         <th>Description</th>
                         <th />
@@ -504,6 +505,7 @@ function Packages() {
                                       onClick={(e) => {
                                         e.preventDefault();
                                         Viewmore(item);
+                                        console.log(item, "itemss");
                                       }}
                                     >
                                       View more
@@ -591,6 +593,31 @@ function Packages() {
                   />
                 </Form.Group>
                 <Form.Group>
+                  <Button
+                    className="btn-sm bg-info text-white my-2 border-0"
+                    onClick={openFilePicker}
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                  >
+                    Choose Home Type Image
+                  </Button>
+                </Form.Group>
+                <Form.Group
+                  className="mb-3 my-1"
+                  as={Col}
+                  controlId="validationCustom02"
+                >
+                  {data.home_type_image && (
+                    <img
+                      src={data.home_type_image}
+                      width={64}
+                      height={64}
+                      alt="gallery Image"
+                    />
+                  )}
+                </Form.Group>
+                <Form.Group>
                   <Form.Label className="mb-1 my-2">Price Per Sqft</Form.Label>
                   <InputGroup hasValidation>
                     <Form.Control
@@ -604,6 +631,21 @@ function Packages() {
                           setData({ ...data, price_per_sqft: enteredValue });
                         }
                       }}
+                      aria-describedby="inputGroupPrepend"
+                    />
+                  </InputGroup>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label className="mb-1 my-2">Average Rating</Form.Label>
+                  <InputGroup hasValidation>
+                    <Form.Control
+                      required
+                      type="text"
+                      placeholder="description"
+                      value={data.average_rating}
+                      onChange={(e) =>
+                        setData({ ...data, average_rating: e.target.value })
+                      }
                       aria-describedby="inputGroupPrepend"
                     />
                   </InputGroup>
@@ -634,6 +676,20 @@ function Packages() {
                     Choose Cover Image
                   </Button>
                 </Form.Group>
+                <Form.Group
+                  className="mb-3 my-1"
+                  as={Col}
+                  controlId="validationCustom02"
+                >
+                  {data.cover_image && (
+                    <img
+                      src={data.cover_image}
+                      width={64}
+                      height={64}
+                      alt="Cover Image"
+                    />
+                  )}
+                </Form.Group>
                 <Form.Group>
                   <Button
                     required
@@ -646,6 +702,20 @@ function Packages() {
                   >
                     Choose Gallery Image
                   </Button>
+                </Form.Group>
+                <Form.Group
+                  className="mb-3 my-1"
+                  as={Col}
+                  controlId="validationCustom02"
+                >
+                  {data.gallery_imgs && data.gallery_imgs.length > 0 && (
+                    <img
+                      src={data.gallery_imgs}
+                      width={64}
+                      height={64}
+                      alt="Gallery Image"
+                    />
+                  )}
                 </Form.Group>
                 <Form.Group>
                   <Select
@@ -663,13 +733,7 @@ function Packages() {
                   />
                 </Form.Group>
                 <Modal.Footer>
-                  <Button
-                    style={{
-                      backgroundColor: "grey",
-                      color: "white",
-                    }}
-                    onClick={handleClose}
-                  >
+                  <Button variant="dark" onClick={handleClose}>
                     Close
                   </Button>
                   <Button variant="success" type="submit">
@@ -684,7 +748,7 @@ function Packages() {
       {/* delete  data in modal*/}
       <Modal show={remove.show} onHide={handleClose}>
         <Modal.Body>
-          <p>Are you sure to delete </p>
+          <p>Are you sure you want to delete? </p>
         </Modal.Body>
         <Modal.Footer>
           <Button
@@ -862,10 +926,12 @@ function Packages() {
           </div>
         </div>
       </Modal>
-      {/* view more data in modal*/}
+
+      {/* View Data Modal */}
       <Modal show={viewed} onHide={close}>
-        <div className="card">
+        <div className="modal-content">
           <div className="modal-header">
+            <h5 className="mt-2">View Details</h5>
             <button
               type="button"
               onClick={close}
