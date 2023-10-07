@@ -935,7 +935,7 @@ function ProjectsPage() {
           <Button variant="danger" onClick={handleDelete}>
             Yes
           </Button>
-          <Button variant="primary" onClick={handleCloses}>
+          <Button variant="dark" onClick={handleCloses}>
             No
           </Button>
         </Modal.Footer>
