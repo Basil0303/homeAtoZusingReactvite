@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { apiCall } from "../Services/ApiCall";
-import { useNavigate } from "react-router-dom";
 import { userUrl } from "../Services/baseUrl";
+import { useAsyncValue, useNavigate, useParams } from "react-router-dom";
+import { Modal } from "react-bootstrap";
+// import { useParams } from "react-router-dom";
+import { PackageApplicationUrl } from "../Services/baseUrl";
 
-function CustomerPage() {
 
-  const navigate = useNavigate()
- 
+function CustomerPage () {
   const [list, setlist] = useState();
 
   const [params, setparams] = useState({
@@ -20,7 +21,8 @@ function CustomerPage() {
     hasPreviousPage: false,
     totalDocs: 0,
   });
-
+  const [show,setShow]=useState(false)
+  const [packageDetails,setPackageDetails]=useState([])
   useEffect(() => {
     getCustomers();
   }, [params]);
@@ -32,7 +34,20 @@ function CustomerPage() {
     setlist(docs ?? []);
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
   };
- 
+
+
+  const getPackages=async(id)=>{
+   try {
+    const response= await apiCall("get" ,`${PackageApplicationUrl}/${id}`);
+    if(response.status===true){
+     setPackageDetails(response?.data?.docs)
+    }
+    
+   } catch (error) {
+    console.log(error)
+   }
+  };
+
   return (
     <div>
       <div className="col-xl-12">
@@ -144,18 +159,16 @@ function CustomerPage() {
                                 {item?.state},{item?.pincode}
                               </td>
                               <td>
-                                <i
-                                  className="fas fa-eye"
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                  }}
-                                  onClick={() => {
-                                    navigate(`/customer-package/${item._id}`);
-                                  }}
-                                ></i>
-                              </td>
+  <i  className="fas fa-eye"style={{  justifyContent: 'center', alignItems: 'center' }}
+  onClick={() => {
+    getPackages(item._id)
+    setShow(true);
+  }}
+    >
+    
+  </i>
+</td>
+
                             </tr>
                           ))}
                         </>
@@ -195,6 +208,209 @@ function CustomerPage() {
           </div>
         </div>
       </div>
+      <Modal  show={show} onHide={()=>setShow(false)}>
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="mt-2">View Details</h5>
+            <button
+              type="button"
+              onClick={()=>setShow(false)}              className="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            />
+          </div>
+          <div className="card-body">
+            <div className="row">
+              <div className="col-xl card-bg">
+                <div className="card mb-4">
+                  <div className="card-body p-2">
+                    <form style={{ paddingLeft: "10px", paddingRight: "10px" }}>
+                      {packageDetails.map((details,key)=>(
+                        <>
+                                        <div className="row profileData">
+                        <label
+                          className="col-sm-4 col-form-label"
+                          style={{ paddingTop: "10px" }}
+                          htmlFor="basic-default-name"
+                        >
+                          <span>Name</span>
+                        </label>
+                        <div className="col-sm-7 mt-2">
+                          <span>{details?.name}</span>
+                        </div>
+                      </div>
+                      <hr />
+                      <div className="row profileData">
+                        <label
+                          className="col-sm-4 col-form-label"
+                          htmlFor="basic-default-name"
+                        >
+                          <span>Cover Image</span>
+                        </label>
+                        <div className="col-sm-7 mt-2">
+                          <span>
+                            <img
+                              src={details?.cover_image}
+                              width={64}
+                              height={64}
+                              alt="Cover Image"
+                            />
+                          </span>
+                        </div>
+                      </div>
+
+                      <hr />
+
+                      <div className="row profileData">
+                        <label
+                          className="col-sm-4 col-form-label"
+                          htmlFor="basic-default-name"
+                        >
+                          <span>Gallery Images</span>
+                        </label>
+                        <div className="col-sm-7 mt-2">
+                          {details?.gallery_imgs.map(
+                            (img, key) => (
+                              (
+                                <span key={key} style={{ marginRight: "10px" }}>
+                                  <img
+                                    src={img}
+                                    width={64}
+                                    height={64}
+                                    alt={`Cover Image ${key + 1}`}
+                                  />
+                                </span>
+                              )
+                            )
+                          )}
+                        </div>
+                      </div>
+                      <hr />
+                      <div className="row profileData">
+                        <label
+                          className="col-sm-4 col-form-label"
+                          htmlFor="basic-default-name"
+                        >
+                          <sapn>Hometype Name</sapn>
+                        </label>
+                        <div className="col-sm-7 mt-2 d-flex flex-column">
+                          <span>{details?.home_type_id?.name}</span>
+                          <img
+                            className="mt-2"
+                            src={details?.home_type_id?.image}
+                            width={64}
+                            height={64}
+                            alt="Cover Image"
+                          />
+                        </div>
+                      </div>
+
+                      <hr />
+                      <div className="row profileData">
+                        <label
+                          className="col-sm-4 col-form-label"
+                          htmlFor="basic-default-name"
+                        >
+                          <span>Price Per Sqft</span>
+                        </label>
+                        <div className="col-sm-7 mt-2">
+                          <span>{details?.price_per_sqft}</span>
+                        </div>
+                      </div>
+                      <hr />
+                      <div className="row profileData">
+                        <label
+                          className="col-sm-4 col-form-label"
+                          htmlFor="basic-default-name"
+                        >
+                          <span>Description</span>
+                        </label>
+                        <div className="col-sm-7 mt-2">
+                          <span>{details?.description}</span>
+                        </div>
+                      </div>
+                      <hr />
+                      <div className="row profileData">
+                        <label
+                          className="col-sm-4 col-form-label"
+                          htmlFor="basic-default-name"
+                        >
+                          <span>Average Rating</span>
+                        </label>
+                        <div className="col-sm-7 mt-2">
+                          <span>{details?.average_rating}</span>
+                        </div>
+                      </div>
+                      <hr />
+                      <div className="row profileData">
+                        <label
+                          className="col-sm-4 col-form-label"
+                          htmlFor="basic-default-name"
+                        >
+                          <span>Materials</span>
+                        </label>
+                        <div className="col-sm-7 mt-2">
+                          {details?.materials.map((value, key) => (
+                            <span key={key}>
+                              {value.name}
+                              {key < details.materials.length - 1 ? ", " : ""}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="row profileData">
+                        <label
+                          className="col-sm-4 col-form-label"
+                          htmlFor="basic-default-name"
+                        >
+                          <span>Description</span>
+                        </label>
+                        <div className="col-sm-7 mt-2">
+                          {details?.materials.map((value, key) => (
+                            <span key={key}>{
+                            value.description}
+                                {key < details.materials.length - 1 ? ", " : ""}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <hr />
+                      <div className="row profileData">
+                        <label
+                          className="col-sm-4 col-form-label"
+                          htmlFor="basic-default-name"
+                        >
+                          <span>Plan</span>
+                        </label>
+                        <div className="col-sm-7 mt-2">
+                        <span><a href="{details?.plan}">{details?.plan}</a></span>
+                        </div>
+                      </div>
+                      <hr />   <div className="row profileData">
+                        <label
+                          className="col-sm-4 col-form-label"
+                          htmlFor="basic-default-name"
+                        >
+                          <span>Sqft</span>
+                        </label>
+                        <div className="col-sm-7 mt-2">
+                          <span><a>{details?.square_feet}</a></span>
+                        </div>
+                      </div>
+
+                        </>
+                      ))}
+      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
+      
     </div>
   );
 }
