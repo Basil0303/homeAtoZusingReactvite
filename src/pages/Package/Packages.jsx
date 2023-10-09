@@ -33,13 +33,13 @@ function Packages() {
     price_per_sqft: "",
     cover_image: "",
     description: "",
-    average_rating: "",
     gallery_imgs: [],
     materials: [],
     createdAt: "",
     updatedAt: "",
   });
 
+  console.log(data,"dataaaaaaaaaaaaa");
   ////drop down  materials and select hometypes
   const [hometypes, setHometypes] = useState([]);
   const [materials, setMaterials] = useState([]);
@@ -87,7 +87,7 @@ function Packages() {
   //file stack
   const client = filestack.init("AaRWObgSHSuGtGR3HqMYBz");
 
-  const openFilePicker = (imageType) => {
+  const openFilePicker = () => {
     const options = {
       fromSources: ["local_file_system", "instagram", "facebook"],
       accept: ["image/*"],
@@ -101,16 +101,11 @@ function Packages() {
       minFiles: 1,
       uploadInBackground: false,
       onUploadDone: (res) => {
-        if (imageType === "cover_image") {
-          setData({ ...data, cover_image: res.filesUploaded[0].url });
-          setEditedItem({
-            ...editedItem,
-            cover_image: res.filesUploaded[0].url,
-          });
-        } else if (imageType === "home_type_image") {
-          setData({ ...data, home_type_image: res.filesUploaded[0].url });
-          // Update any relevant state for the home type image here
-        }
+        setData({ ...data, cover_image: res.filesUploaded[0].url });
+        setEditedItem({
+          ...editedItem,
+          cover_image: res.filesUploaded[0].url,
+        });
       },
     };
     client.picker(options).open();
@@ -120,24 +115,25 @@ function Packages() {
 
   //add data
   const home = async () => {
-    if (data.home_type_id.length > 0 && data.materials.length > 0) {
+    if (data.cover_image && data.materials.length > 0) {
       const dataToAdd = {
         ...data,
-        home_type_image: data.home_type_image,
         gallery_imgs: data.gallery_imgs,
         cover_image: data.cover_image,
       };
       const response = await apiCall("post", PackageUrl, dataToAdd);
       getHome();
-      ShowToast("Updated Successfully", true);
-
-      // Clear the data fields and set validated to false
+      ShowToast("Added Successfully", true);
       setData({});
       setValidated(false);
       setShow(false);
     } else {
-      ShowToast("Please select materials", false);
-      return;
+      if (!data.cover_image) {
+        ShowToast("Please choose a Cover Image", false);
+      }
+      if (data.materials.length === 0) {
+        ShowToast("Please select materials", false);
+      }
     }
   };
 
@@ -147,13 +143,12 @@ function Packages() {
   const handleClos = () => setEdit(false);
 
   const [editedItem, setEditedItem] = useState({ ...edit });
-
+console.log(editedItem,"11111111111111");
   const handleFieldChange = (event) => {
     const { name, value } = event.target;
     setEditedItem((prevItem) => ({
       ...prevItem,
       [name]: value === null ? "" : value,
-      // cover_image: data.cover_image,
     }));
   };
 
@@ -165,9 +160,11 @@ function Packages() {
     };
 
     await apiCall("put", `${PackageUrl}/${editedItem.id}`, completeEditedItem);
-    handleClose();
+    handleClos();
     ShowToast("Updated Successfully", true);
     getHome();
+    setValidated(false)
+    
   };
 
   const EditData = (item) => {
@@ -188,13 +185,13 @@ function Packages() {
       home_type_id: item.home_type_id._id,
       price_per_sqft: item.price_per_sqft,
       description: item.description,
-      average_rating: item.average_rating,
       materials: item.materials.map((element) => {
         element._id, element.name;
       }),
     });
     setEdit(true);
   };
+
 
   //delete data from package
   const handleDelete = async () => {
@@ -233,11 +230,9 @@ function Packages() {
       id: item._id,
       name: item.name,
       home_type_id: item.home_type_id.name,
-      home_type_image: item.home_type_id.image,
       price_per_sqft: item.price_per_sqft,
       cover_image: item.cover_image,
       gallery_imgs: item.gallery_imgs,
-      average_rating: item.average_rating,
       description: item.description,
       materials: item.materials,
     });
@@ -380,9 +375,16 @@ function Packages() {
                                         ? key + 1
                                         : "0" + (key + 1)
                                       : params.limit * (params.page - 1) +
-                                        (key + 1 > 9
-                                          ? key + 1
-                                          : "0" + (key + 1))}
+                                          key +
+                                          1 >
+                                        9
+                                      ? params.limit * (params.page - 1) +
+                                        key +
+                                        1
+                                      : "0" +
+                                        (params.limit * (params.page - 1) +
+                                          key +
+                                          1)}
                                   </li>
                                 </ul>
                               </td>
@@ -557,6 +559,7 @@ function Packages() {
       {/* ADD PACKAGE POPUP */}
       <Modal show={show} onHide={handleClose}>
         <div className="card">
+          <div className="card-header">Add Package</div>
           <div className="card-body">
             <div className="basic-form">
               <Form
@@ -567,13 +570,13 @@ function Packages() {
                 {" "}
                 <Form.Group>
                   <Form.Label className="mb-1 my-2">
-                    Enter Package Name
+                    Package Name
                   </Form.Label>
                   <InputGroup hasValidation>
                     <Form.Control
                       required
                       type="text"
-                      placeholder="name"
+                      placeholder="enter package name"
                       value={data.name} // Use inputValue for name input
                       onChange={(e) =>
                         setData({ ...data, name: e.target.value })
@@ -584,9 +587,10 @@ function Packages() {
                 </Form.Group>
                 <Form.Group>
                   <Form.Label className="mb-1 my-2">
-                    Choose a Hometype
+                    Hometype
                   </Form.Label>
                   <Select
+                  placeholder="choose hometype "
                     required
                     options={hometypes}
                     onChange={(homeType) => {
@@ -595,37 +599,12 @@ function Packages() {
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Button
-                    className="btn-sm bg-info text-white my-2 border-0"
-                    onClick={openFilePicker}
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                  >
-                    Choose Home Type Image
-                  </Button>
-                </Form.Group>
-                <Form.Group
-                  className="mb-3 my-1"
-                  as={Col}
-                  controlId="validationCustom02"
-                >
-                  {data.home_type_image && (
-                    <img
-                      src={data.home_type_image}
-                      width={64}
-                      height={64}
-                      alt="gallery Image"
-                    />
-                  )}
-                </Form.Group>
-                <Form.Group>
                   <Form.Label className="mb-1 my-2">Price Per Sqft</Form.Label>
                   <InputGroup hasValidation>
                     <Form.Control
                       required
                       type="number"
-                      placeholder="Enter Price per sqft"
+                      placeholder="enter price per sqft"
                       value={data.price_per_sqft}
                       onChange={(e) => {
                         const enteredValue = parseFloat(e.target.value);
@@ -638,27 +617,12 @@ function Packages() {
                   </InputGroup>
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label className="mb-1 my-2">Average Rating</Form.Label>
-                  <InputGroup hasValidation>
-                    <Form.Control
-                      required
-                      type="text"
-                      placeholder="description"
-                      value={data.average_rating}
-                      onChange={(e) =>
-                        setData({ ...data, average_rating: e.target.value })
-                      }
-                      aria-describedby="inputGroupPrepend"
-                    />
-                  </InputGroup>
-                </Form.Group>
-                <Form.Group>
                   <Form.Label className="mb-1 my-2">Description</Form.Label>
                   <InputGroup hasValidation>
                     <Form.Control
                       required
                       type="text"
-                      placeholder="description"
+                      placeholder="enter description"
                       value={data.description}
                       onChange={(e) =>
                         setData({ ...data, description: e.target.value })
@@ -668,10 +632,27 @@ function Packages() {
                   </InputGroup>
                 </Form.Group>
                 <Form.Group>
+                  <Form.Label className="mb-1 my-2">
+                    Choose Materials
+                  </Form.Label>
+                  <Select
+                    className="my-2"
+                    placeholder="choose material"
+                    isMulti
+                    options={materials}
+                    onChange={(selectedMaterials) => {
+                      // selectedMaterials will be an array of selected values
+                      const materialValues = selectedMaterials.map(
+                        (material) => material.value
+                      );
+                      setData({ ...data, materials: materialValues });
+                    }}
+                  />
+                </Form.Group>
+                <Form.Group>
                   <Button
                     className="btn-sm bg-info text-white my-2 border-0"
                     onClick={openFilePicker}
-                    type="file"
                     name="image"
                     accept="image/*"
                   >
@@ -705,35 +686,24 @@ function Packages() {
                     Choose Gallery Image
                   </Button>
                 </Form.Group>
+
                 <Form.Group
                   className="mb-3 my-1"
                   as={Col}
                   controlId="validationCustom02"
                 >
-                  {data.gallery_imgs && data.gallery_imgs.length > 0 && (
+                  {data?.gallery_imgs?.map((imageUrl, index) => (
                     <img
-                      src={data.gallery_imgs}
+                      key={index}
+                      src={imageUrl}
+                      alt={`Gallery Image ${index}`}
                       width={64}
                       height={64}
-                      alt="Gallery Image"
+                      style={{ marginRight: "10px" }}
                     />
-                  )}
+                  ))}
                 </Form.Group>
-                <Form.Group>
-                  <Select
-                    className="my-2"
-                    placeholder="materials"
-                    isMulti
-                    options={materials}
-                    onChange={(selectedMaterials) => {
-                      // selectedMaterials will be an array of selected values
-                      const materialValues = selectedMaterials.map(
-                        (material) => material.value
-                      );
-                      setData({ ...data, materials: materialValues });
-                    }}
-                  />
-                </Form.Group>
+               
                 <Modal.Footer>
                   <Button variant="dark" onClick={handleClose}>
                     Close
@@ -753,8 +723,7 @@ function Packages() {
           <p>Are you sure you want to delete? </p>
         </Modal.Body>
         <Modal.Footer>
-         
-          <Button variant="primary" onClick={handleCloses}>
+          <Button variant="dark" onClick={handleCloses}>
             No
           </Button>
           <Button variant="danger" onClick={handleDelete}>
@@ -765,17 +734,20 @@ function Packages() {
       {/* edit data in modal*/}
       <Modal show={edit} onHide={handleClos}>
         <div className="card">
+          <div className="card-header">
+            Edit Data
+          </div>
           <div className="card-body">
             <div className="basic-form">
               <Form onSubmit={(e) => handleSubmit(e, setValidated, handleEdit)}>
                 <Form.Group as={Col} controlId="validationCustom01" />
-                <Form.Label className="mb-1">Edit Data</Form.Label>
+                <Form.Label className="mb-1">Package Name</Form.Label>
                 <Form.Group>
                   <InputGroup hasValidation>
                     <Form.Control
                       type="text"
                       name="name"
-                      placeholder="Name"
+                      placeholder="enter package name"
                       value={editedItem.name}
                       onChange={handleFieldChange}
                       aria-describedby="inputGroupPrepend"
@@ -783,8 +755,9 @@ function Packages() {
                   </InputGroup>
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label className="mb-1">Type a Hometype</Form.Label>
+                  <Form.Label className="mb-1">Hometype</Form.Label>
                   <Select
+                    placeholder="choose hometype"
                     options={hometypes}
                     value={hometypes.find(
                       (option) => option.value === editedItem.home_type_id
@@ -802,7 +775,7 @@ function Packages() {
                   <InputGroup hasValidation>
                     <Form.Control
                       type="number"
-                      placeholder="Price Per Sqft"
+                      placeholder="enter price per sqft"
                       name="price_per_sqft"
                       value={editedItem.price_per_sqft}
                       onChange={handleFieldChange}
@@ -819,77 +792,13 @@ function Packages() {
                   <InputGroup hasValidation>
                     <Form.Control
                       type="text"
-                      placeholder="Description"
+                      placeholder="enter description"
                       name="description"
                       value={editedItem.description}
                       onChange={handleFieldChange}
                       aria-describedby="inputGroupPrepend"
                     />
                   </InputGroup>
-                </Form.Group>
-
-                <Form.Group
-                  className="mb-3 my-1"
-                  as={Col}
-                  controlId="validationCustom02"
-                >
-                  <img
-                    src={
-                      editedItem.cover_image
-                        ? editedItem.cover_image
-                        : "images/user.webp"
-                    }
-                    width={64}
-                    height={64}
-                    alt="Cover Image"
-                  />
-                </Form.Group>
-                <Form.Group
-                  className="mb-3 my-1"
-                  as={Col}
-                  controlId="validationCustom02"
-                >
-                  <Button
-                    className="btn-sm bg-info text-white my-1 border-0"
-                    onClick={openFilePicker}
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                  >
-                    Choose New Cover Image
-                  </Button>
-                </Form.Group>
-
-                <Form.Group
-                  className="mb-3 my-1"
-                  as={Col}
-                  controlId="validationCustom02"
-                >
-                  <img
-                    src={
-                      editedItem.gallery_imgs
-                        ? editedItem.gallery_imgs
-                        : "images/user.webp"
-                    }
-                    width={64}
-                    height={64}
-                    alt="gallery Image"
-                  />
-                </Form.Group>
-                <Form.Group
-                  className="mb-3"
-                  as={Col}
-                  controlId="validationCustom02"
-                >
-                  <Button
-                    className="btn-sm bg-info text-white my-1 border-0"
-                    onClick={openGalleryFilePicker}
-                    type="file"
-                    name="gallery_imgs"
-                    accept="image/*"
-                  >
-                    Choose New Gallery Images
-                  </Button>
                 </Form.Group>
                 <Form.Group>
                   <Select
@@ -903,9 +812,70 @@ function Packages() {
                     }
                   />
                 </Form.Group>
+                
+                <Form.Group
+                  className="mb-3 my-1"
+                  as={Col}
+                  controlId="validationCustom02"
+                >
+                  <Button
+                    className="btn-sm bg-info text-white my-1 border-0"
+                    onClick={openFilePicker}
+                    name="image"
+                    accept="image/*"
+                  >
+                    Choose New Cover Image
+                  </Button>
+                </Form.Group>
+                <Form.Group
+                  className="mb-3 my-1"
+                  as={Col}
+                  controlId="validationCustom02"
+                >
+                 {editedItem.cover_image && (
+                    <img
+                      src={editedItem.cover_image}
+                      width={64}
+                      height={64}
+                      alt="Cover Image"
+                    />
+                  )}
+                </Form.Group>
+
+                <Form.Group
+                  className="mb-3"
+                  as={Col}
+                  controlId="validationCustom02"
+                >
+                  <Button
+                    className="btn-sm bg-info text-white my-1 border-0"
+                    onClick={openGalleryFilePicker}
+                    name="gallery_imgs"
+                    accept="image/*"
+                  >
+                    Choose New Gallery Images
+                  </Button>
+                </Form.Group>
+                 <Form.Group
+                  className="mb-3 my-1"
+                  as={Col}
+                  controlId="validationCustom02"
+                >
+                 {editedItem?.gallery_imgs?.map((imageUrl, index) => (
+                    <img
+                      key={index}
+                      src={imageUrl}
+                      alt={`Gallery Image ${index}`}
+                      width={64}
+                      height={64}
+                      style={{ marginRight: "10px" }}
+                    />
+                  ))}
+                </Form.Group>
+               
 
                 <Modal.Footer>
-                  <Button variant="primary" onClick={handleClos}>
+                  <Button variant="dark" onClick={handleClos}>
                     Close
                   </Button>
                   <Button variant="success" type="submit">
@@ -917,7 +887,6 @@ function Packages() {
           </div>
         </div>
       </Modal>
-
       {/* View Data Modal */}
       <Modal show={viewed} onHide={close}>
         <div className="modal-content">
@@ -979,7 +948,7 @@ function Packages() {
                           <span>Gallery Images</span>
                         </label>
                         <div className="col-sm-7 mt-2">
-                          {data?.gallery_imgs.map((img, key) => (
+                          {data?.gallery_imgs?.map((img, key) => (
                             <span key={key} style={{ marginRight: "10px" }}>
                               <img
                                 src={img}
@@ -1001,13 +970,6 @@ function Packages() {
                         </label>
                         <div className="col-sm-7 mt-2 d-flex flex-column">
                           <span>{data?.home_type_id}</span>
-                          <img
-                            className="mt-2"
-                            src={data?.home_type_image}
-                            width={64}
-                            height={64}
-                            alt="Cover Image"
-                          />
                         </div>
                       </div>
 
@@ -1029,6 +991,22 @@ function Packages() {
                           className="col-sm-4 col-form-label"
                           htmlFor="basic-default-name"
                         >
+                          <span>Materials</span>
+                        </label>
+                        <div className="col-sm-7 mt-2">
+                          {data?.materials?.map((value, key) => (
+                            <span key={key}>
+                              {value.name}
+                              {key < data.materials.length - 1 ? ", " : ""}
+                            </span>
+                          ))}
+                        </div>
+                      </div><hr />
+                      <div className="row profileData">
+                        <label
+                          className="col-sm-4 col-form-label"
+                          htmlFor="basic-default-name"
+                        >
                           <span>Description</span>
                         </label>
                         <div className="col-sm-7 mt-2">
@@ -1043,41 +1021,12 @@ function Packages() {
                         >
                           <span>Average Rating</span>
                         </label>
-                        <div className="col-sm-7 mt-2">
+                        <div className="col-sm-7 mt-2 mb-5">
                           <span>{data?.average_rating}</span>
                         </div>
                       </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Materials</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          {data?.materials.map((value, key) => (
-                            <span key={key}>
-                              {value.name}
-                              {key < data.materials.length - 1 ? ", " : ""}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Description</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          {data?.materials.map((value, key) => (
-                            <span key={key}>{value.description}</span>
-                          ))}
-                        </div>
-                      </div>
+                      
+                      
                     </form>
                   </div>
                 </div>
