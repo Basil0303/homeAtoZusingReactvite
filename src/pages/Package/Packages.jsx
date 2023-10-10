@@ -39,7 +39,6 @@ function Packages() {
     updatedAt: "",
   });
 
-  console.log(data,"dataaaaaaaaaaaaa");
   ////drop down  materials and select hometypes
   const [hometypes, setHometypes] = useState([]);
   const [materials, setMaterials] = useState([]);
@@ -123,7 +122,7 @@ function Packages() {
       };
       const response = await apiCall("post", PackageUrl, dataToAdd);
       getHome();
-      ShowToast("Added Successfully", true);
+      ShowToast("Added Successfully", true);1111
       setData({});
       setValidated(false);
       setShow(false);
@@ -142,8 +141,7 @@ function Packages() {
 
   const handleClos = () => setEdit(false);
 
-  const [editedItem, setEditedItem] = useState({ ...edit });
-console.log(editedItem,"11111111111111");
+  const [editedItem, setEditedItem] = useState({});
   const handleFieldChange = (event) => {
     const { name, value } = event.target;
     setEditedItem((prevItem) => ({
@@ -158,13 +156,16 @@ console.log(editedItem,"11111111111111");
       cover_image: editedItem.cover_image,
       gallery_imgs: editedItem.gallery_imgs,
     };
-
+    var materialsID = []
+    selectedOptions.forEach((element) => {
+      materialsID.push(element.value)
+    })
+    completeEditedItem.materials = materialsID
     await apiCall("put", `${PackageUrl}/${editedItem.id}`, completeEditedItem);
     handleClos();
     ShowToast("Updated Successfully", true);
     getHome();
-    setValidated(false)
-    
+    setValidated(false);
   };
 
   const EditData = (item) => {
@@ -176,7 +177,6 @@ console.log(editedItem,"11111111111111");
       });
     });
     setselectedOptions(data);
-
     setEditedItem({
       id: item._id,
       name: item.name,
@@ -185,13 +185,9 @@ console.log(editedItem,"11111111111111");
       home_type_id: item.home_type_id._id,
       price_per_sqft: item.price_per_sqft,
       description: item.description,
-      materials: item.materials.map((element) => {
-        element._id, element.name;
-      }),
     });
     setEdit(true);
   };
-
 
   //delete data from package
   const handleDelete = async () => {
@@ -254,8 +250,13 @@ console.log(editedItem,"11111111111111");
       minFiles: 1,
       uploadInBackground: false,
       onUploadDone: (res) => {
+        console.log("............",res)
         const uploadedImages = res.filesUploaded.map((file) => file.url);
         setData({ ...data, gallery_imgs: uploadedImages });
+        setEditedItem({
+          ...editedItem,
+          gallery_imgs: uploadedImages,
+        });
       },
     };
     client.picker(options).open();
@@ -405,33 +406,8 @@ console.log(editedItem,"11111111111111");
                               <td>{item?.name}</td>
                               <td>{item?.home_type_id?.name}</td>
                               <td>{item?.price_per_sqft}</td>
-
-                              {/* Display gallery images
-                              <td>
-                                {data.gallery_imgs.length > 0 && (
-                                  <div>
-                                    {data.gallery_imgs.map(
-                                      (imageUrl, index) => (
-                                        <img
-                                          key={index}
-                                          src={imageUrl}
-                                          width={80} // Adjust image dimensions as needed
-                                          height={80}
-                                          style={{
-                                            objectFit: "cover",
-                                          }}
-                                          alt={`Image ${index}`}
-                                        />
-                                      )
-                                    )}
-                                  </div>
-                                )}
-                              </td> */}
-
                               <td>{item?.description}</td>
                               <td>{item?.materials?.name}</td>
-                              {/* <td>{formatUpdateTime(item?.createdAt)}</td>
-                              <td>{formatUpdateTime(item.updatedAt)}</td> */}
                               <td>
                                 <div className="dropdown">
                                   <button
@@ -509,7 +485,6 @@ console.log(editedItem,"11111111111111");
                                       onClick={(e) => {
                                         e.preventDefault();
                                         Viewmore(item);
-                                        console.log(item, "itemss");
                                       }}
                                     >
                                       View more
@@ -523,7 +498,7 @@ console.log(editedItem,"11111111111111");
                       ) : (
                         <tr>
                           <td
-                            colSpan={5}
+                            colSpan={6}
                             className="text-center py-4 text-primary"
                           >
                             <b>No data</b>
@@ -569,9 +544,7 @@ console.log(editedItem,"11111111111111");
               >
                 {" "}
                 <Form.Group>
-                  <Form.Label className="mb-1 my-2">
-                    Package Name
-                  </Form.Label>
+                  <Form.Label className="mb-1 my-2">Package Name</Form.Label>
                   <InputGroup hasValidation>
                     <Form.Control
                       required
@@ -586,11 +559,9 @@ console.log(editedItem,"11111111111111");
                   </InputGroup>
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label className="mb-1 my-2">
-                    Hometype
-                  </Form.Label>
+                  <Form.Label className="mb-1 my-2">Hometype</Form.Label>
                   <Select
-                  placeholder="choose hometype "
+                    placeholder="choose hometype "
                     required
                     options={hometypes}
                     onChange={(homeType) => {
@@ -641,7 +612,6 @@ console.log(editedItem,"11111111111111");
                     isMulti
                     options={materials}
                     onChange={(selectedMaterials) => {
-                      // selectedMaterials will be an array of selected values
                       const materialValues = selectedMaterials.map(
                         (material) => material.value
                       );
@@ -686,7 +656,6 @@ console.log(editedItem,"11111111111111");
                     Choose Gallery Image
                   </Button>
                 </Form.Group>
-
                 <Form.Group
                   className="mb-3 my-1"
                   as={Col}
@@ -703,7 +672,6 @@ console.log(editedItem,"11111111111111");
                     />
                   ))}
                 </Form.Group>
-               
                 <Modal.Footer>
                   <Button variant="dark" onClick={handleClose}>
                     Close
@@ -734,9 +702,7 @@ console.log(editedItem,"11111111111111");
       {/* edit data in modal*/}
       <Modal show={edit} onHide={handleClos}>
         <div className="card">
-          <div className="card-header">
-            Edit Data
-          </div>
+          <div className="card-header">Edit Data</div>
           <div className="card-body">
             <div className="basic-form">
               <Form onSubmit={(e) => handleSubmit(e, setValidated, handleEdit)}>
@@ -812,7 +778,7 @@ console.log(editedItem,"11111111111111");
                     }
                   />
                 </Form.Group>
-                
+
                 <Form.Group
                   className="mb-3 my-1"
                   as={Col}
@@ -832,7 +798,7 @@ console.log(editedItem,"11111111111111");
                   as={Col}
                   controlId="validationCustom02"
                 >
-                 {editedItem.cover_image && (
+                  {editedItem.cover_image && (
                     <img
                       src={editedItem.cover_image}
                       width={64}
@@ -856,12 +822,12 @@ console.log(editedItem,"11111111111111");
                     Choose New Gallery Images
                   </Button>
                 </Form.Group>
-                 <Form.Group
+                <Form.Group
                   className="mb-3 my-1"
                   as={Col}
                   controlId="validationCustom02"
                 >
-                 {editedItem?.gallery_imgs?.map((imageUrl, index) => (
+                  {editedItem.gallery_imgs?.map((imageUrl, index) => (
                     <img
                       key={index}
                       src={imageUrl}
@@ -872,7 +838,6 @@ console.log(editedItem,"11111111111111");
                     />
                   ))}
                 </Form.Group>
-               
 
                 <Modal.Footer>
                   <Button variant="dark" onClick={handleClos}>
@@ -1001,7 +966,8 @@ console.log(editedItem,"11111111111111");
                             </span>
                           ))}
                         </div>
-                      </div><hr />
+                      </div>
+                      <hr />
                       <div className="row profileData">
                         <label
                           className="col-sm-4 col-form-label"
@@ -1025,8 +991,6 @@ console.log(editedItem,"11111111111111");
                           <span>{data?.average_rating}</span>
                         </div>
                       </div>
-                      
-                      
                     </form>
                   </div>
                 </div>
