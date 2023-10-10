@@ -53,16 +53,14 @@ function Hometype() {
 
   //add data
   const home = async () => {
-    const response = await apiCall("post", homeUrl,  data );
+    const response = await apiCall("post", homeUrl, data);
     console.log(response.data);
     getHome();
-    ShowToast("Updated Successfully", true);
+    ShowToast("Added Successfully", true);
     setData({
-      name: ""
-    })
-    setValidated(
-      false
-    );
+      name: "",
+    });
+    setValidated(false);
     setShow(false);
   };
 
@@ -86,6 +84,7 @@ function Hometype() {
       ...editedItem,
       updatedAt: editedItem.updatedAt || new Date(),
     };
+    await apiCall("put", `${homeUrl}/${editedItem.id}`, editedData);
     await apiCall("put", `${homeUrl}/${editedItem.id}`, editedData);
     handleClose();
     ShowToast("Updated Successfully", true);
@@ -158,7 +157,7 @@ function Hometype() {
         <div className="card dz-card" id="bootstrap-table11">
           <div className="card-header flex-wrap d-flex justify-content-between">
             <div>
-              <h4 className="card-title">Home Table</h4>
+              <h4 className="card-title">Home Type</h4>
             </div>
 
             <div
@@ -236,16 +235,16 @@ function Hometype() {
                   <table className="table header-border table-responsive-sm">
                     <thead>
                       <tr>
-                        <th>#</th>
-                        <th></th>
+                        <th>SL No</th>
                         <th>Name</th>
-                        <th>updatedAt</th>
+                        <th>Image</th>
+                        <th className="text-center">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {!list ? (
                         <tr>
-                          <td colSpan={5} className="text-center py-4">
+                          <td colSpan={3} className="text-center py-4">
                             <div className="spinner-border" role="status">
                               <span className="sr-only">Loading...</span>
                             </div>
@@ -270,6 +269,7 @@ function Hometype() {
                                 </ul>
                               </td>
 
+                              <td>{item?.name}</td>
                               <td style={{ width: "2%" }}>
                                 <img
                                   src={item?.image ?? "images/user.webp"}
@@ -282,10 +282,8 @@ function Hometype() {
                                   }}
                                 />
                               </td>
-                              <td>{item?.name}</td>
-                              <td>{formatUpdateTime(item.updatedAt)}</td>
 
-                              <td>
+                              <td className="text-center">
                                 <div className="dropdown">
                                   <button
                                     type="button"
@@ -402,7 +400,7 @@ function Hometype() {
       <Modal show={show} onHide={handleClose}>
         <div className="card">
           <div className="card-header">
-            {/* <h4 className="card-title ">Enter Details</h4> */}
+            <h4 className="card-title ">Add Home Type</h4>
           </div>
           <div className="card-body">
             <div className="basic-form">
@@ -412,7 +410,7 @@ function Hometype() {
                 onSubmit={(e) => handleSubmit(e, setValidated, home)} // Pass just the event to handleSubmit
               >
                 <Form.Group as={Col} controlId="validationCustom01">
-                  <Form.Label className="mb-1 m-2">Type a name</Form.Label>
+                  <Form.Label className="mb-1">Enter Name</Form.Label>
                   <InputGroup hasValidation>
                     <Form.Control
                       required
@@ -427,7 +425,7 @@ function Hometype() {
                   </InputGroup>
                 </Form.Group>
                 <Form.Group
-                  className="mb-3"
+                  
                   as={Col}
                   controlId="validationCustom02"
                 >
@@ -435,7 +433,7 @@ function Hometype() {
                     className="btn-sm bg-info text-white my-2 border-0"
                     onClick={openFilePicker}
                   >
-                    Choose Cover Image
+                    Upload Image
                   </Button>
                 </Form.Group>
                 <Modal.Footer>
@@ -478,7 +476,7 @@ function Hometype() {
       <Modal show={edit} onHide={handleClos}>
         <div className="card">
           <div className="card-header">
-            {/* <h4 className="card-title ">Enter Details</h4> */}
+            <h4 className="card-title ">Edit Details</h4>
           </div>
           <div className="card-body">
             <div className="basic-form">
@@ -488,7 +486,7 @@ function Hometype() {
                 onSubmit={(e) => handleSubmit(e, setValidated, handleEdit)}
               >
                 <Form.Group as={Col} controlId="validationCustom01">
-                  <Form.Label className="mb-1">Edit Data</Form.Label>
+                  <Form.Label className="mb-1">Name</Form.Label>
                   <InputGroup hasValidation>
                     <Form.Control
                       type="text"
@@ -505,6 +503,8 @@ function Hometype() {
                   as={Col}
                   controlId="validationCustom02"
                 >
+                  <Form.Label className="mb-1">Image</Form.Label>
+                  <br />
                   <img
                     src={
                       editedItem.image ? editedItem.image : "images/user.webp"
@@ -522,11 +522,11 @@ function Hometype() {
                   <Button
                     className="btn-sm bg-info text-white my-2 border-0"
                     onClick={openFilePicker}
-                    type="file"
+                    type="button"
                     name="image"
                     accept="image/*"
                   >
-                    Choose New Cover Image
+                    Upload
                   </Button>
                 </Form.Group>
 
