@@ -18,7 +18,7 @@ function ProjectsPage() {
 
   const [params, setparams] = useState({
     page: 1,
-    limit: 10,
+    limit: 5,
     query: "",
   });
 
@@ -196,8 +196,12 @@ function ProjectsPage() {
     const response = await apiCall("delete", `${ProjectUrl}/${remove.id}`, {
       data,
     });
-    setRemove({ show: false, id: null });
-    getProject();
+    if(response.status){
+      ShowToast('successfully deletd',true)
+      setRemove({ show: false, id: null });
+      getProject();
+    }
+
   };
 
   //get data

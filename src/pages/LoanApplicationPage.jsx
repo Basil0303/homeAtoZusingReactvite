@@ -189,7 +189,7 @@ function LoanApplicationPage() {
                         <th>Phone</th>
                         <th>Applied Date</th>
                         <th>Status</th>
-                        <th />
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -206,7 +206,7 @@ function LoanApplicationPage() {
                           {loanList.map((item, key) => (
                             <>
                               <tr key={item._id}>
-                                <td style={{ width: "2%" }}>
+                                <td colSpan={1} >
                                   <ul>
                                     <li>
                                       {params.page === 1
@@ -231,8 +231,8 @@ function LoanApplicationPage() {
                                
                                   {item?.status === "submitted" && (
                                     <span
-                                      className="badge rounded-pill bg-primary px-2"
-                                      style={{ fontSize: "9px" }}
+                                      className="badge  bg-primary px-2"
+                                      
                                     >
                                       Submitted
                                     </span>
@@ -240,28 +240,28 @@ function LoanApplicationPage() {
 
                                   {item?.status === "review" && (
                                     <span
-                                      className="badge rounded-pill bg-info px-2"
-                                      style={{ fontSize: "9px" }}
+                                      className="badge  bg-info px-2"
+                                     
                                     >
                                       Review
                                     </span>
                                   )}
 
                                   {item?.status === "processing" && (
-                                       <span className="badge rounded-pill bg-warning px-2" style={{ fontSize: '9px', }}>
+                                       <span className="badge  bg-warning px-2" >
                                        Processing
                                      </span>
                                   )}
 
                                   {item?.status === "rejected" && (
-                                  <span className="badge rounded-pill bg-danger px-2" style={{ fontSize: '9px', }}>
+                                  <span className="badge  bg-danger px-2" >
                                   Rejected
                                 </span>
                                 
                                   )}
 
                                   {item?.status === "eligible" && (
-                                   <span className="badge rounded-pill bg-success px-2" style={{ fontSize: '9px', }}>
+                                   <span className="badge  bg-success px-2" >
                                    Eligible
                                  </span>
                                  
@@ -484,8 +484,8 @@ function LoanApplicationPage() {
                           >
                             {loanData?.user_status === "new" && (
                               <span
-                              className="badge rounded-pill bg-primary px-2"
-                              style={{ fontSize: "9px" }}
+                              className="badge  bg-primary px-2"
+                              
                               >
                                 New
                               </span>
@@ -493,8 +493,8 @@ function LoanApplicationPage() {
 
                             {loanData?.user_status === "submitted" && (
                               <span
-                              className="badge rounded-pill bg-primary px-2"
-                              style={{ fontSize: "9px" }}
+                              className="badge  bg-primary px-2"
+                              
                               >
                                 Submitted
                               </span>
@@ -502,28 +502,28 @@ function LoanApplicationPage() {
 
                             {loanData?.user_status === "review" && (
                               <span
-                              className="badge rounded-pill bg-info px-2"
-                              style={{ fontSize: "9px" }}
+                              className="badge  bg-info px-2"
+                              
                               >
                                 Review
                               </span>
                             )}
 
                             {loanData?.user_status === "processing" && (
-                               <span className="badge rounded-pill bg-warning px-2" style={{ fontSize: '9px', }}>
+                               <span className="badge  bg-warning px-2" >
                                Processing
                              </span>
                             )}
 
                             {loanData?.user_status === "rejected" && (
-                              <span className="badge rounded-pill bg-danger px-2" style={{ fontSize: '9px', }}>
+                              <span className="badge bg-danger px-2" >
                               Rejected
                             </span>
                             
                             )}
 
                             {loanData?.user_status === "eligible" && (
-                               <span className="badge rounded-pill bg-success px-2" style={{ fontSize: '9px', }}>
+                               <span className="badge bg-success px-2" >
                                Eligible
                              </span>
                             )}
@@ -768,8 +768,8 @@ function LoanApplicationPage() {
 
                           {loanData?.status === "submitted" && (
                             <span
-                            className="badge rounded-pill bg-primary px-2"
-                            style={{ fontSize: "9px" }}
+                            className="badge  bg-primary px-2"
+                          
                           >
                             Submitted
                           </span>
@@ -777,27 +777,27 @@ function LoanApplicationPage() {
 
                           {loanData?.status === "review" && (
                              <span
-                             className="badge rounded-pill bg-info px-2"
-                             style={{ fontSize: "9px" }}
+                             className="badge  bg-info px-2"
+                            
                            >
                              Review
                            </span>
                           )}
 
                           {loanData?.status === "processing" && (
-                            <span className="badge rounded-pill bg-warning px-2" style={{ fontSize: '9px', }}>
+                            <span className="badge  bg-warning px-2" >
                             Processing
                           </span>
                           )}
 
                           {loanData?.status === "rejected" && (
-                            <span className="badge rounded-pill bg-danger px-2" style={{ fontSize: '9px', }}>
+                            <span className="badge  bg-danger px-2" >
                             Rejected
                           </span>
                           )}
 
                           {loanData?.status === "eligible" && (
-                             <span className="badge rounded-pill bg-success px-2" style={{ fontSize: '9px', }}>
+                             <span className="badge  bg-success px-2" >
                              Eligible
                            </span>
                           )}
