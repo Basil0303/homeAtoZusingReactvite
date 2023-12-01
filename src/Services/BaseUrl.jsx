@@ -18,4 +18,9 @@ export const ProjectUrl="projects"
 export const FeedbackUrl="feedback"
 
 export const SettingsUrl="settings"
+
 export const AddSettingsUrl="settings/create"
+
+export const PackageApplicationUrl="application"
+
+export const loanUrl = "loans"
