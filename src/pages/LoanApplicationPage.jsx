@@ -113,7 +113,7 @@ function LoanApplicationPage() {
     var response = await apiCall(
       "put",
       `${loanUrl}/${updatedLoanData?.loan_id ?? ""}`,
-       updatedLoanData 
+      updatedLoanData
     );
     if (response.status) {
       ShowToast("Updated Successfully", true);
@@ -195,7 +195,7 @@ function LoanApplicationPage() {
                     <tbody>
                       {!loanList ? (
                         <tr>
-                          <td colSpan={5} className="text-center py-4">
+                          <td colSpan={6} className="text-center py-4">
                             <div className="spinner-border" role="status">
                               <span className="sr-only">Loading...</span>
                             </div>
@@ -206,7 +206,7 @@ function LoanApplicationPage() {
                           {loanList.map((item, key) => (
                             <>
                               <tr key={item._id}>
-                                <td colSpan={1} >
+                                <td colSpan={1}>
                                   <ul>
                                     <li>
                                       {params.page === 1
@@ -228,43 +228,34 @@ function LoanApplicationPage() {
                                   )}
                                 </td>
                                 <td>
-                               
                                   {item?.status === "submitted" && (
-                                    <span
-                                      className="badge  bg-primary px-2"
-                                      
-                                    >
+                                    <span className="badge  bg-primary px-2">
                                       Submitted
                                     </span>
                                   )}
 
                                   {item?.status === "review" && (
-                                    <span
-                                      className="badge  bg-info px-2"
-                                     
-                                    >
+                                    <span className="badge  bg-info px-2">
                                       Review
                                     </span>
                                   )}
 
                                   {item?.status === "processing" && (
-                                       <span className="badge  bg-warning px-2" >
-                                       Processing
-                                     </span>
+                                    <span className="badge  bg-warning px-2">
+                                      Processing
+                                    </span>
                                   )}
 
                                   {item?.status === "rejected" && (
-                                  <span className="badge  bg-danger px-2" >
-                                  Rejected
-                                </span>
-                                
+                                    <span className="badge  bg-danger px-2">
+                                      Rejected
+                                    </span>
                                   )}
 
                                   {item?.status === "eligible" && (
-                                   <span className="badge  bg-success px-2" >
-                                   Eligible
-                                 </span>
-                                 
+                                    <span className="badge  bg-success px-2">
+                                      Eligible
+                                    </span>
                                   )}
                                 </td>
                                 <td>
@@ -333,7 +324,7 @@ function LoanApplicationPage() {
                       ) : (
                         <tr>
                           <td
-                            colSpan={5}
+                            colSpan={6}
                             className="text-center py-4 text-primary"
                           >
                             <b>No data</b>
@@ -483,49 +474,39 @@ function LoanApplicationPage() {
                             style={{ paddingBottom: "10px" }}
                           >
                             {loanData?.user_status === "new" && (
-                              <span
-                              className="badge  bg-primary px-2"
-                              
-                              >
+                              <span className="badge  bg-primary px-2">
                                 New
                               </span>
                             )}
 
                             {loanData?.user_status === "submitted" && (
-                              <span
-                              className="badge  bg-primary px-2"
-                              
-                              >
+                              <span className="badge  bg-primary px-2">
                                 Submitted
                               </span>
                             )}
 
                             {loanData?.user_status === "review" && (
-                              <span
-                              className="badge  bg-info px-2"
-                              
-                              >
+                              <span className="badge  bg-info px-2">
                                 Review
                               </span>
                             )}
 
                             {loanData?.user_status === "processing" && (
-                               <span className="badge  bg-warning px-2" >
-                               Processing
-                             </span>
+                              <span className="badge  bg-warning px-2">
+                                Processing
+                              </span>
                             )}
 
                             {loanData?.user_status === "rejected" && (
-                              <span className="badge bg-danger px-2" >
-                              Rejected
-                            </span>
-                            
+                              <span className="badge bg-danger px-2">
+                                Rejected
+                              </span>
                             )}
 
                             {loanData?.user_status === "eligible" && (
-                               <span className="badge bg-success px-2" >
-                               Eligible
-                             </span>
+                              <span className="badge bg-success px-2">
+                                Eligible
+                              </span>
                             )}
 
                             {loanData?.user_status === "updating" && (
@@ -765,41 +746,32 @@ function LoanApplicationPage() {
                           <span>Status</span>
                         </label>
                         <div className="col-sm-7 mt-2">
-
                           {loanData?.status === "submitted" && (
-                            <span
-                            className="badge  bg-primary px-2"
-                          
-                          >
-                            Submitted
-                          </span>
+                            <span className="badge  bg-primary px-2">
+                              Submitted
+                            </span>
                           )}
 
                           {loanData?.status === "review" && (
-                             <span
-                             className="badge  bg-info px-2"
-                            
-                           >
-                             Review
-                           </span>
+                            <span className="badge  bg-info px-2">Review</span>
                           )}
 
                           {loanData?.status === "processing" && (
-                            <span className="badge  bg-warning px-2" >
-                            Processing
-                          </span>
+                            <span className="badge  bg-warning px-2">
+                              Processing
+                            </span>
                           )}
 
                           {loanData?.status === "rejected" && (
-                            <span className="badge  bg-danger px-2" >
-                            Rejected
-                          </span>
+                            <span className="badge  bg-danger px-2">
+                              Rejected
+                            </span>
                           )}
 
                           {loanData?.status === "eligible" && (
-                             <span className="badge  bg-success px-2" >
-                             Eligible
-                           </span>
+                            <span className="badge  bg-success px-2">
+                              Eligible
+                            </span>
                           )}
 
                           {loanData?.status === "rejected" ? (
@@ -939,7 +911,7 @@ function LoanApplicationPage() {
                 Save
               </button>
               <Button
-              variant="dark"
+                variant="dark"
                 type="button"
                 className="btn btn-waves-effect waves-light"
                 onClick={() => setShowRejectionForm(false)}
@@ -950,7 +922,7 @@ function LoanApplicationPage() {
                   marginTop: "15px",
                   float: "right",
                   marginBottom: "10px",
-                  color: "white"
+                  color: "white",
                 }}
               >
                 Close

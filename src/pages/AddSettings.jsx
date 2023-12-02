@@ -8,11 +8,10 @@ import { ShowToast } from "../utils/Toast";
 import { Button } from "react-bootstrap";
 
 function AddSettings() {
-   const[id,setId]=useState('');
-   const navigate = useNavigate();
+  const [id, setId] = useState("");
+  const navigate = useNavigate();
 
-
-   const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState({
     customer_support: {
       email: "",
       phone: "",
@@ -28,27 +27,24 @@ function AddSettings() {
       },
       sunday: {},
     },
-    privacy_policy: '' ,
-    faq:'',
-    terms_and_conditions:'',
+    privacy_policy: "",
+    faq: "",
+    terms_and_conditions: "",
   });
   const handleChange = (html) => {
-    setSettings({ ...settings,privacy_policy: html });
+    setSettings({ ...settings, privacy_policy: html });
   };
-  const handleChangeFaq=(html)=>{
-    setSettings({ ...settings,faq: html });
-
+  const handleChangeFaq = (html) => {
+    setSettings({ ...settings, faq: html });
   };
-  const handleChangeTerms=(html)=>{
-    setSettings({...settings,terms_and_conditions:html})
+  const handleChangeTerms = (html) => {
+    setSettings({ ...settings, terms_and_conditions: html });
   };
-  
-
 
   const getSettings = async () => {
     try {
       const response = await apiCall("get", SettingsUrl);
-      const settingDetail = response.data.docs; 
+      const settingDetail = response.data.docs;
 
       if (settingDetail) {
         settingDetail.customer_support = {
@@ -68,15 +64,15 @@ function AddSettings() {
         };
         settingDetail.location = {
           location_name: settingDetail[0]?.location?.location_name,
-          latitude:settingDetail[0]?.location?.latitude,
-          longitude:settingDetail[0]?.location?.longitude
+          latitude: settingDetail[0]?.location?.latitude,
+          longitude: settingDetail[0]?.location?.longitude,
         };
         settingDetail.privacy_policy = settingDetail[0]?.privacy_policy;
         settingDetail.faq = settingDetail[0]?.faq;
         settingDetail.terms_and_conditions =
           settingDetail[0]?.terms_and_conditions;
-        setSettings( ...settingDetail);
-        setId(settingDetail[0]._id)
+        setSettings(...settingDetail);
+        setId(settingDetail[0]._id);
       }
     } catch (error) {
       console.log(error);
@@ -96,28 +92,27 @@ function AddSettings() {
     }
   };
 
-  const updateDetails=async()=>{
-    if(id){
+  const updateDetails = async () => {
+    if (id) {
       try {
-        const updatedata= await apiCall("put",`${SettingsUrl}/${id}`,settings)
-        console.log(updatedata,"sdfsdfsdfsdfsdfsdfsfdfs")
+        const updatedata = await apiCall(
+          "put",
+          `${SettingsUrl}/${id}`,
+          settings
+        );
+        console.log(updatedata, "sdfsdfsdfsdfsdfsdfsfdfs");
         if (updatedata.status === true) {
           ShowToast("Updated Successfully", true);
           navigate("/Settings");
         }
       } catch (error) {
         console.log(error);
-
       }
-    };
-
+    }
   };
   useEffect(() => {
     getSettings();
   }, []);
-
-
-  
 
   return (
     <div>
@@ -189,8 +184,6 @@ function AddSettings() {
                     <label htmlFor="fromTime" className="form-label">
                       From Time
                     </label>
-                 
-
 
                     <input
                       type="text"
@@ -198,7 +191,9 @@ function AddSettings() {
                       name="fromTime"
                       className="form-control"
                       required
-                         value={settings?.business_hours?.monday_to_friday?.from || ''}
+                      value={
+                        settings?.business_hours?.monday_to_friday?.from || ""
+                      }
                       onChange={(e) =>
                         setSettings((prevSettings) => ({
                           ...prevSettings,
@@ -212,7 +207,6 @@ function AddSettings() {
                         }))
                       }
                     />
-
                   </div>
                   <div className="mb-3 col-md-6">
                     <label htmlFor="toTime" className="form-label">
@@ -224,9 +218,9 @@ function AddSettings() {
                       id="toTime"
                       name="toTime"
                       className="form-control"
-                      
-
-                      value={settings?.business_hours?.monday_to_friday?.to || ''}
+                      value={
+                        settings?.business_hours?.monday_to_friday?.to || ""
+                      }
                       onChange={(e) =>
                         setSettings((prevSettings) => ({
                           ...prevSettings,
@@ -252,10 +246,8 @@ function AddSettings() {
                       id="fromTime"
                       name="fromTime"
                       className="form-control"
-                    
-                      
-                      value={settings?.business_hours?.saturday?.from || ''}    
-                                        onChange={(e) =>
+                      value={settings?.business_hours?.saturday?.from || ""}
+                      onChange={(e) =>
                         setSettings((prevSettings) => ({
                           ...prevSettings,
                           business_hours: {
@@ -279,8 +271,7 @@ function AddSettings() {
                       id="toTime"
                       name="toTime"
                       className="form-control"
-
-                      value={settings?.business_hours?.saturday?.to || ''}
+                      value={settings?.business_hours?.saturday?.to || ""}
                       onChange={(e) =>
                         setSettings((prevSettings) => ({
                           ...prevSettings,
@@ -311,77 +302,74 @@ function AddSettings() {
                         }))
                       }
                     >
-                 
-  <option value="open">Open</option>
-  <option value="close">Close</option>
-</select>
-
-                  
+                      <option value="open">Open</option>
+                      <option value="close">Close</option>
+                    </select>
                   </div>
                 </div>
                 <div className="row">
-  <h4>
-    <i
-      className="fas fa-map-marker-alt fa-2x "
-      style={{ color: "blue", marginRight: "10px" }}
-    />
-    Location
-  </h4>
-  <div className="mb-3 col-md-6">
-    <label htmlFor="locationName">Location Name:</label>
-    <input
-      type="text"
-      id="locationName"
-      className="form-control"
-      value={settings?.location?.location_name}
-      onChange={(e) =>
-        setSettings((prevSettings) => ({
-          ...prevSettings,
-          location: {
-            ...prevSettings.location,
-            location_name: e.target.value,
-          },
-        }))
-      }
-    />
-  </div>
-  <div className="mb-3 col-md-2">
-    <label htmlFor="latitude">Latitude:(10.258711)</label>
-    <input
-      type="text"
-      id="latitude"
-      className="form-control"
-      value={settings?.location?.latitude}
-      onChange={(e) =>
-        setSettings((prevSettings) => ({
-          ...prevSettings,
-          location: {
-            ...prevSettings.location,
-            latitude: e.target.value,
-          },
-        }))
-      }
-    />
-  </div>
-  <div className="mb-3 col-md-2">
-    <label htmlFor="longitude">Longitude:(76.319762)</label>
-    <input
-      type="text"
-      id="longitude"
-      className="form-control"
-      value={settings?.location?.longitude}
-      onChange={(e) =>
-        setSettings((prevSettings) => ({
-          ...prevSettings,
-          location: {
-            ...prevSettings.location,
-            longitude: e.target.value,
-          },
-        }))
-      }
-    />
-  </div>
-</div>
+                  <h4>
+                    <i
+                      className="fas fa-map-marker-alt fa-2x "
+                      style={{ color: "blue", marginRight: "10px" }}
+                    />
+                    Location
+                  </h4>
+                  <div className="mb-3 col-md-6">
+                    <label htmlFor="locationName">Location Name:</label>
+                    <input
+                      type="text"
+                      id="locationName"
+                      className="form-control"
+                      value={settings?.location?.location_name}
+                      onChange={(e) =>
+                        setSettings((prevSettings) => ({
+                          ...prevSettings,
+                          location: {
+                            ...prevSettings.location,
+                            location_name: e.target.value,
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="mb-3 col-md-2">
+                    <label htmlFor="latitude">Latitude:(10.258711)</label>
+                    <input
+                      type="text"
+                      id="latitude"
+                      className="form-control"
+                      value={settings?.location?.latitude}
+                      onChange={(e) =>
+                        setSettings((prevSettings) => ({
+                          ...prevSettings,
+                          location: {
+                            ...prevSettings.location,
+                            latitude: e.target.value,
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="mb-3 col-md-2">
+                    <label htmlFor="longitude">Longitude:(76.319762)</label>
+                    <input
+                      type="text"
+                      id="longitude"
+                      className="form-control"
+                      value={settings?.location?.longitude}
+                      onChange={(e) =>
+                        setSettings((prevSettings) => ({
+                          ...prevSettings,
+                          location: {
+                            ...prevSettings.location,
+                            longitude: e.target.value,
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                </div>
 
                 <div className="row">
                   <h4>
@@ -392,82 +380,83 @@ function AddSettings() {
                     Privacy Policy
                   </h4>
                   <div className="mb-3 col-md-6">
-                  <div>
-                  <ReactQuill
-                     value={settings?.privacy_policy}
-                     onChange={handleChange}
-                     style={{ width: "200%", height: "200px" }}
-                  />
-                   </div>
+                    <div>
+                      <ReactQuill
+                        value={settings?.privacy_policy}
+                        onChange={handleChange}
+                        style={{ width: "200%", height: "200px" }}
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="row" style={{ marginTop: "40px" }}>
-  <h4>
-    <i
-      className="fas fa-question-circle  fa-2x "
-      style={{ color: "blue", marginRight: "10px" }}
-    />
-    FAQ
-  </h4>
-  <div className="mb-3 col-md-6">
-    <div>
-      <ReactQuill
-        value={settings?.faq}
-        onChange={handleChangeFaq}
-        style={{ width: "200%", height: "200px" }}
-      />
-    </div>
-  </div>
-</div>
+                  <h4>
+                    <i
+                      className="fas fa-question-circle  fa-2x "
+                      style={{ color: "blue", marginRight: "10px" }}
+                    />
+                    FAQ
+                  </h4>
+                  <div className="mb-3 col-md-6">
+                    <div>
+                      <ReactQuill
+                        value={settings?.faq}
+                        onChange={handleChangeFaq}
+                        style={{ width: "200%", height: "200px" }}
+                      />
+                    </div>
+                  </div>
+                </div>
 
-<div style={{ margin: "40px 0" }}></div>
+                <div style={{ margin: "40px 0" }}></div>
 
-<div className="row" style={{ marginBottom: "40px" }}>
-  <h4>
-    <i
-      className="fas fa-file-contract fa-2x "
-      style={{ color: "blue", marginRight: "10px" }}
-    />
-   Terms and Conditions
-  </h4>
-  <div className="mb-3 col-md-6">
-    <div>
-      <ReactQuill
-        value={settings?.terms_and_conditions}
-        onChange={handleChangeTerms}
-        style={{ width: "200%", height: "200px" }}
-      />
-    </div>
-  </div>
-</div>
-
-            
-               
+                <div className="row" style={{ marginBottom: "40px" }}>
+                  <h4>
+                    <i
+                      className="fas fa-file-contract fa-2x "
+                      style={{ color: "blue", marginRight: "10px" }}
+                    />
+                    Terms and Conditions
+                  </h4>
+                  <div className="mb-3 col-md-6">
+                    <div>
+                      <ReactQuill
+                        value={settings?.terms_and_conditions}
+                        onChange={handleChangeTerms}
+                        style={{ width: "200%", height: "200px" }}
+                      />
+                    </div>
+                  </div>
+                </div>
               </form>
             </div>
-           
-   <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
-   <Button
-   variant="dark" 
-  className="btn btn-waves-effect waves-light"
-  style={{ marginTop: "50px"}} 
-  onClick={() => {
-    navigate("/settings");
-  }}
->
-  Back
-</Button>
 
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                width: "100%",
+              }}
+            >
+              <Button
+                variant="dark"
+                className="btn btn-waves-effect waves-light"
+                style={{ marginTop: "50px" }}
+                onClick={() => {
+                  navigate("/settings");
+                }}
+              >
+                Back
+              </Button>
 
-  <button
-    className="btn btn-success waves-effect waves-light ms-2"
-    onClick={id ? updateDetails : AddSettingsDetails}
-    style={{ marginTop: "50px" }}
-  >
-    {id ? 'Update' : 'Add'}
-  </button>
-</div>
-
+              <button
+                className="btn btn-success waves-effect waves-light ms-2"
+                onClick={id ? updateDetails : AddSettingsDetails}
+                style={{ marginTop: "50px" }}
+              >
+                {id ? "Update" : "Add"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
