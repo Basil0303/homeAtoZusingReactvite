@@ -36562,7 +36562,6 @@ font-weight: 500;
 }
 .feedback-container {
   width: 80%;
-  margin: 10%;
   display: flex;
   flex-wrap: wrap;
   gap: 20px;

@@ -541,7 +541,7 @@ function Hometype() {
                   >
                     Close
                   </Button>
-                  <Button variant="success" size="sm" type="submit" onClick={handleClos}>
+                  <Button variant="success"  size="sm" type="submit" onClick={handleClos}>
                     Save Changes
                   </Button>
                 </Modal.Footer>

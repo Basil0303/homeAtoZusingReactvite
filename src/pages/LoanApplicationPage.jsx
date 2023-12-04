@@ -113,7 +113,7 @@ function LoanApplicationPage() {
     var response = await apiCall(
       "put",
       `${loanUrl}/${updatedLoanData?.loan_id ?? ""}`,
-       updatedLoanData 
+      updatedLoanData
     );
     if (response.status) {
       ShowToast("Updated Successfully", true);
@@ -228,7 +228,6 @@ function LoanApplicationPage() {
                                   )}
                                 </td>
                                 <td>
-                               
                                   {item?.status === "submitted" && (
                                     <span
                                       className="badge rounded-pill bg-primary px-2"
@@ -248,23 +247,30 @@ function LoanApplicationPage() {
                                   )}
 
                                   {item?.status === "processing" && (
-                                       <span className="badge rounded-pill bg-warning px-2" style={{ fontSize: '9px', }}>
-                                       Processing
-                                     </span>
+                                    <span
+                                      className="badge rounded-pill bg-warning px-2"
+                                      style={{ fontSize: "9px" }}
+                                    >
+                                      Processing
+                                    </span>
                                   )}
 
                                   {item?.status === "rejected" && (
-                                  <span className="badge rounded-pill bg-danger px-2" style={{ fontSize: '9px', }}>
-                                  Rejected
-                                </span>
-                                
+                                    <span
+                                      className="badge rounded-pill bg-danger px-2"
+                                      style={{ fontSize: "9px" }}
+                                    >
+                                      Rejected
+                                    </span>
                                   )}
 
                                   {item?.status === "eligible" && (
-                                   <span className="badge rounded-pill bg-success px-2" style={{ fontSize: '9px', }}>
-                                   Eligible
-                                 </span>
-                                 
+                                    <span
+                                      className="badge rounded-pill bg-success px-2"
+                                      style={{ fontSize: "9px" }}
+                                    >
+                                      Eligible
+                                    </span>
                                   )}
                                 </td>
                                 <td>
@@ -388,157 +394,124 @@ function LoanApplicationPage() {
                 Applicant Details
               </h5>
             </div>
-            <div className="row"></div>
+
             <div className="row">
               <div className="col-md-6">
-                <div
-                  className="row"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    minHeight: "200px",
-                  }}
-                >
-                  <div className="col-5">
-                    <img
-                      alt="user-avatar"
-                      src={loanData?.image}
-                      style={{
-                        height: "170px",
-                        width: "130px",
-                        paddingBottom: "30px",
-                        borderRadius: "10%",
-                        paddingLeft: "5px",
-                        paddingTop: "5px",
-                      }}
-                    />
-                  </div>
-                  <div className="col-7">
-                    <span>{loanData?.fullName}</span>
-                    <br />
-                    <br />
-                    <span>{loanData?.mobile}</span>
-                    <br />
-                    <br />
-                    <span>{loanData?.email}</span>
-                    <br />
-                    <br />
-                  </div>
+                <div className="table-responsive">
+                  <table className="table">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <img
+                            alt="user-avatar"
+                            src={loanData?.image}
+                            style={{
+                              height: "120px",
+                              width: "80px",
+                              borderRadius: "10%",
+                              paddingLeft: "5px",
+                              paddingTop: "5px",
+                            }}
+                          />
+                        </td>
+                        <td>
+                          <span>{loanData?.fullName}</span>
+                          <br />
+                          <br />
+                          <span>{loanData?.mobile}</span>
+                          <br />
+                          <br />
+                          <span>{loanData?.email}</span>
+                          <br />
+                          <br />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
+
               <div className="col-md-6">
-                <div className=" card-bg">
+                <div className="card-bg">
                   <div className="card mb-4">
                     <div className="card-body p-2">
-                      <form
-                        style={{ paddingLeft: "10px", paddingRight: "10px" }}
-                      >
-                        <div className="row profileData">
-                          <label
-                            className="col-sm-4 col-form-label"
-                            style={{ paddingTop: "10px" }}
-                            htmlFor="basic-default-name"
-                          >
-                            <span>District</span>
-                          </label>
-                          <div className="col-sm-7 mt-2">
-                            <span>{loanData?.district}</span>
-                          </div>
-                        </div>
-                        <hr />
-                        <div className="row profileData">
-                          <label
-                            className="col-sm-4 col-form-label"
-                            htmlFor="basic-default-name"
-                          >
-                            <span>Pincode</span>
-                          </label>
-                          <div className="col-sm-7 mt-2">
-                            <span>{loanData?.pincode}</span>
-                          </div>
-                        </div>
-                        <hr />
-                        <div className="row profileData">
-                          <label
-                            className="col-sm-4 col-form-label"
-                            htmlFor="basic-default-name"
-                          >
-                            <span>State</span>
-                          </label>
-                          <div className="col-sm-7 mt-2">
-                            <span>{loanData?.state}</span>
-                          </div>
-                        </div>
-                        <hr />
-                        <div className="row profileData">
-                          <label
-                            className="col-sm-4 col-form-label"
-                            htmlFor="basic-default-name"
-                          >
-                            <span>Status</span>
-                          </label>
-                          <div
-                            className="col-sm-7 mt-2"
-                            style={{ paddingBottom: "10px" }}
-                          >
-                            {loanData?.user_status === "new" && (
-                              <span
-                              className="badge rounded-pill bg-primary px-2"
-                              style={{ fontSize: "9px" }}
-                              >
-                                New
-                              </span>
-                            )}
-
-                            {loanData?.user_status === "submitted" && (
-                              <span
-                              className="badge rounded-pill bg-primary px-2"
-                              style={{ fontSize: "9px" }}
-                              >
-                                Submitted
-                              </span>
-                            )}
-
-                            {loanData?.user_status === "review" && (
-                              <span
-                              className="badge rounded-pill bg-info px-2"
-                              style={{ fontSize: "9px" }}
-                              >
-                                Review
-                              </span>
-                            )}
-
-                            {loanData?.user_status === "processing" && (
-                               <span className="badge rounded-pill bg-warning px-2" style={{ fontSize: '9px', }}>
-                               Processing
-                             </span>
-                            )}
-
-                            {loanData?.user_status === "rejected" && (
-                              <span className="badge rounded-pill bg-danger px-2" style={{ fontSize: '9px', }}>
-                              Rejected
-                            </span>
-                            
-                            )}
-
-                            {loanData?.user_status === "eligible" && (
-                               <span className="badge rounded-pill bg-success px-2" style={{ fontSize: '9px', }}>
-                               Eligible
-                             </span>
-                            )}
-
-                            {loanData?.user_status === "updating" && (
-                              <span
-                                className="badge badge-dark border-0 px-2"
-                                style={{ fontSize: "12px" }}
-                              >
-                                Updating
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </form>
+                      <table className="table">
+                        <tbody>
+                          <tr>
+                            <th scope="row">District</th>
+                            <td>{loanData?.district}</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Pincode</th>
+                            <td>{loanData?.pincode}</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">State</th>
+                            <td>{loanData?.state}</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Status</th>
+                            <td>
+                              {loanData?.user_status === "new" && (
+                                <span
+                                  className="badge rounded-pill bg-primary px-2"
+                                  style={{ fontSize: "9px" }}
+                                >
+                                  New
+                                </span>
+                              )}
+                              {loanData?.user_status === "submitted" && (
+                                <span
+                                  className="badge rounded-pill bg-primary px-2"
+                                  style={{ fontSize: "9px" }}
+                                >
+                                  Submitted
+                                </span>
+                              )}
+                              {loanData?.user_status === "review" && (
+                                <span
+                                  className="badge rounded-pill bg-info px-2"
+                                  style={{ fontSize: "9px" }}
+                                >
+                                  Review
+                                </span>
+                              )}
+                              {loanData?.user_status === "processing" && (
+                                <span
+                                  className="badge rounded-pill bg-warning px-2"
+                                  style={{ fontSize: "9px" }}
+                                >
+                                  Processing
+                                </span>
+                              )}
+                              {loanData?.user_status === "rejected" && (
+                                <span
+                                  className="badge rounded-pill bg-danger px-2"
+                                  style={{ fontSize: "9px" }}
+                                >
+                                  Rejected
+                                </span>
+                              )}
+                              {loanData?.user_status === "eligible" && (
+                                <span
+                                  className="badge rounded-pill bg-success px-2"
+                                  style={{ fontSize: "9px" }}
+                                >
+                                  Eligible
+                                </span>
+                              )}
+                              {loanData?.user_status === "updating" && (
+                                <span
+                                  className="badge badge-dark border-0 px-2"
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  Updating
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
@@ -549,351 +522,246 @@ function LoanApplicationPage() {
                   Application Details
                 </h5>
               </div>
+
               <div className="col-xl card-bg">
                 <div className="card mb-4">
                   <div className="card-body p-2">
-                    <form style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          style={{ paddingTop: "10px" }}
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Address</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{loanData?.address}</span>
+                    <table className="table">
+                      <tbody>
+                        <div className="d-flex">
+                          <div>
+                            <tr>
+                              <th scope="row">Address</th>
+                              <td>{loanData?.address}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">DOB</th>
+                              <td>
+                                {moment(loanData?.date_of_birth).format(
+                                  "DD-MM-YYYY"
+                                )}
+                              </td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Contact Number</th>
+                              <td>{loanData?.contactNumber}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Whatsapp Number</th>
+                              <td>{loanData?.whatsapp}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Nationality</th>
+                              <td>{loanData?.nationality}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Employer Name</th>
+                              <td>{loanData?.employer_name}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Employer Address</th>
+                              <td>{loanData?.employer_address}</td>
+                            </tr>
+
+                            <tr>
+                              <th scope="row">Occupation</th>
+                              <td>{loanData?.occupation}</td>
+                            </tr>
+                          </div>
+                          <div>
+                            <tr>
+                              <th scope="row">Pancard No.</th>
+                              <td>{loanData?.pan_number}</td>
+                            </tr>
+
+                            <tr>
+                              <th scope="row">Affordable Down Payment</th>
+                              <td>{loanData?.affordable_downpayment}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Loan Tenure</th>
+                              <td>{loanData?.loan_tenure}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Source of Fund</th>
+                              <td>{loanData?.source_of_fund}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Down Payment(%)</th>
+                              <td>
+                                {loanData?.down_payment &&
+                                  Object.values(loanData.down_payment).join(
+                                    " , "
+                                  )}
+                              </td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Bank Statement</th>
+                              <td>
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  style={{
+                                    width: "140px",
+                                    height: "30px",
+                                    fontSize: "12px",
+                                    lineHeight: "10px",
+                                    padding: "5px",
+                                  }}
+                                >
+                                  <a
+                                    href={loanData?.bank_statement}
+                                    target="_blank"
+                                    style={{
+                                      display: "block",
+                                      width: "80%",
+                                      height: "50%",
+                                      textDecoration: "none",
+                                      color: "#fff",
+                                    }}
+                                  >
+                                    View Statement
+                                  </a>
+                                </button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <th scope="row">TIN Number</th>
+                              <td>{loanData?.tin_number}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Status</th>
+                              <td>
+                                {loanData?.status === "submitted" && (
+                                  <span
+                                    className="badge rounded-pill bg-primary px-2"
+                                    style={{ fontSize: "9px" }}
+                                  >
+                                    Submitted
+                                  </span>
+                                )}
+                                {loanData?.status === "review" && (
+                                  <span
+                                    className="badge rounded-pill bg-info px-2"
+                                    style={{ fontSize: "9px" }}
+                                  >
+                                    Review
+                                  </span>
+                                )}
+                                {loanData?.status === "processing" && (
+                                  <span
+                                    className="badge rounded-pill bg-warning px-2"
+                                    style={{ fontSize: "9px" }}
+                                  >
+                                    Processing
+                                  </span>
+                                )}
+                                {loanData?.status === "rejected" && (
+                                  <span
+                                    className="badge rounded-pill bg-danger px-2"
+                                    style={{ fontSize: "9px" }}
+                                  >
+                                    Rejected
+                                  </span>
+                                )}
+                                {loanData?.status === "eligible" && (
+                                  <span
+                                    className="badge rounded-pill bg-success px-2"
+                                    style={{ fontSize: "9px" }}
+                                  >
+                                    Eligible
+                                  </span>
+                                )}
+                                {loanData?.status === "rejected" ? (
+                                  <>
+                                    <button
+                                      type="button"
+                                      className="btn btn-outline-primary"
+                                      data-bs-dismiss="modal"
+                                      onClick={rejectionModal}
+                                      style={{
+                                        width: "120px",
+                                        height: "30px",
+                                        fontSize: "12px",
+                                        lineHeight: "10px",
+                                      }}
+                                    >
+                                      View Reason
+                                    </button>
+                                  </>
+                                ) : (
+                                  <></>
+                                )}
+                              </td>
+                            </tr>
+                          </div>
                         </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>DOB</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>
-                            {moment(loanData?.date_of_birth).format(
-                              "DD-MM-YYYY"
-                            )}
-                          </span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Contact Number</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{loanData?.contactNumber}</span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Whatsapp Number</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{loanData?.whatsapp}</span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Nationality</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{loanData?.nationality}</span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Employer Name</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{loanData?.employer_name}</span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Employer Address</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{loanData?.employer_address}</span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Occupation</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{loanData?.occupation}</span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Pancard No.</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{loanData?.pan_number}</span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Affordable Down Payment</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{loanData?.affordable_downpayment}</span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Loan Tenure</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{loanData?.loan_tenure}</span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Source of Fund</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{loanData?.source_of_fund}</span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Down Payment(%)</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>
-                            {" "}
-                            {loanData?.down_payment &&
-                              Object.values(loanData.down_payment).join(" , ")}
-                          </span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Bank Statement</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
+                      </tbody>
+                    </table>
+                    <div style={{ paddingTop: "20px", paddingBottom: "10px" }}>
+                      {loanData?.status === "submitted" ||
+                      loanData?.status === "review" ||
+                      loanData?.status === "processing" ? (
+                        <>
                           <button
                             type="button"
-                            className="btn btn-outline-primary btn-color"
+                            className="btn btn-outline-success"
+                            onClick={updateStatus}
                             style={{
-                              width: "140px",
-                              height: "30px",
-                              float: "left",
-                              fontSize: "12px",
-                              lineHeight: "10px",
+                              width: "200px",
+                              height: "40px",
+                              fontSize: "13px",
+                              float: "right",
                             }}
                           >
-                            <a href={loanData?.bank_statement} target="_blank">
-                              View Statement
-                            </a>
+                            {(loanData?.status === "submitted" &&
+                              "Change to Review") ||
+                              (loanData?.status === "review" &&
+                                "Change to Processing") ||
+                              (loanData?.status === "processing" && "Approve")}
                           </button>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>TIN Number</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{loanData?.tin_number}</span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          style={{ paddingBottom: "10px" }}
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Status</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-
-                          {loanData?.status === "submitted" && (
-                            <span
-                            className="badge rounded-pill bg-primary px-2"
-                            style={{ fontSize: "9px" }}
+                        </>
+                      ) : (
+                        ""
+                      )}
+                      {loanData?.status === "processing" && (
+                        <>
+                          <button
+                            type="button"
+                            className="btn btn-outline-danger mx-2"
+                            data-bs-dismiss="modal"
+                            onClick={rejectionModal}
+                            style={{
+                              width: "150px",
+                              height: "40px",
+                              float: "right",
+                            }}
                           >
-                            Submitted
-                          </span>
-                          )}
-
-                          {loanData?.status === "review" && (
-                             <span
-                             className="badge rounded-pill bg-info px-2"
-                             style={{ fontSize: "9px" }}
-                           >
-                             Review
-                           </span>
-                          )}
-
-                          {loanData?.status === "processing" && (
-                            <span className="badge rounded-pill bg-warning px-2" style={{ fontSize: '9px', }}>
-                            Processing
-                          </span>
-                          )}
-
-                          {loanData?.status === "rejected" && (
-                            <span className="badge rounded-pill bg-danger px-2" style={{ fontSize: '9px', }}>
-                            Rejected
-                          </span>
-                          )}
-
-                          {loanData?.status === "eligible" && (
-                             <span className="badge rounded-pill bg-success px-2" style={{ fontSize: '9px', }}>
-                             Eligible
-                           </span>
-                          )}
-
-                          {loanData?.status === "rejected" ? (
-                            <>
-                              <button
-                                type="button"
-                                className="btn btn-outline-primary"
-                                data-bs-dismiss="modal"
-                                onClick={rejectionModal}
-                                style={{
-                                  width: "120px",
-                                  height: "30px",
-                                  float: "right",
-                                  fontSize: "12px",
-                                  lineHeight: "10px",
-                                }}
-                              >
-                                View Reason
-                              </button>
-                            </>
-                          ) : (
-                            <></>
-                          )}
-                        </div>
-
-                        <div
-                          style={{ paddingTop: "20px", paddingBottom: "10px" }}
-                        >
-                          {loanData?.status === "submitted" ||
-                          loanData?.status === "review" ||
-                          loanData?.status === "processing" ? (
-                            <>
-                              <button
-                                type="button"
-                                className="btn btn-outline-success"
-                                onClick={updateStatus}
-                                style={{
-                                  width: "200px",
-                                  height: "40px",
-                                  float: "right",
-                                  fontSize: "13px",
-                                }}
-                              >
-                                {(loanData?.status === "submitted" &&
-                                  "Change to Review") ||
-                                  (loanData?.status === "review" &&
-                                    "Change to Processing") ||
-                                  (loanData?.status === "processing" &&
-                                    "Approve")}
-                              </button>
-                            </>
-                          ) : (
-                            ""
-                          )}
-                          {loanData?.status === "processing" && (
-                            <>
-                              <button
-                                type="button"
-                                className="btn btn-outline-danger mx-2"
-                                data-bs-dismiss="modal"
-                                onClick={rejectionModal}
-                                style={{
-                                  width: "150px",
-                                  height: "40px",
-                                  float: "right",
-                                }}
-                              >
-                                Reject
-                              </button>
-                            </>
-                          )}
-                          {loanData?.status === "submitted" ||
-                          loanData?.status === "review" ? (
-                            <>
-                              <button
-                                type="button"
-                                className="btn btn-outline-secondary mx-2"
-                                onClick={() => setshow(false)}
-                                data-bs-dismiss="modal"
-                                style={{
-                                  width: "100px",
-                                  height: "40px",
-                                  float: "right",
-                                }}
-                              >
-                                Close
-                              </button>
-                            </>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                      </div>
-                    </form>
+                            Reject
+                          </button>
+                        </>
+                      )}
+                      {loanData?.status === "submitted" ||
+                      loanData?.status === "review" ? (
+                        <>
+                          <button
+                            type="button"
+                            className="btn btn-outline-secondary mx-2"
+                            onClick={() => setshow(false)}
+                            data-bs-dismiss="modal"
+                            style={{
+                              width: "100px",
+                              height: "40px",
+                              float: "right",
+                            }}
+                          >
+                            Close
+                          </button>
+                        </>
+                      ) : (
+                        ""
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -939,7 +807,7 @@ function LoanApplicationPage() {
                 Save
               </button>
               <Button
-              variant="dark"
+                variant="dark"
                 type="button"
                 className="btn btn-waves-effect waves-light"
                 onClick={() => setShowRejectionForm(false)}
@@ -950,7 +818,7 @@ function LoanApplicationPage() {
                   marginTop: "15px",
                   float: "right",
                   marginBottom: "10px",
-                  color: "white"
+                  color: "white",
                 }}
               >
                 Close

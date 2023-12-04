@@ -4,21 +4,21 @@ import { SettingsUrl } from "../Services/baseUrl";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 function SettingsPage() {
+
   const navigate = useNavigate();
   const [settingDetails, setSettingDetails] = useState([]);
-  console.log(settingDetails,"se")
+
+  const [loading, setLoading] = useState(true);
 
   const getSettings = async () => {
     try {
       const response = await apiCall("get", SettingsUrl);
-      console.log(response, "response");
       setSettingDetails(response.data.docs);
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
-  // function convertTo12HourFormat(timeString) {
-  //   const formattedTime = moment(timeString, 'HH:mm').format('h:mm A');
-  //   return formattedTime;
-  // }
 
   useEffect(() => {
     getSettings();
@@ -26,6 +26,7 @@ function SettingsPage() {
 
   return (
     <div>
+      
       <div className="main-content">
         <div className="page-content">
           <div className="container-fluid">
@@ -47,12 +48,22 @@ function SettingsPage() {
                 <br />
               </div>
             </div>
-
-            {settingDetails.length === 0 ? (
-              <p>No setting details available.</p>
+                   {loading ? (
+              // Show loading spinner while data is being fetched
+              <div className="text-center py-4">
+                <div className="spinner-border" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            ) : settingDetails.length === 0 ? (
+        
+              <div className="feedback-container mx-3 mt-5 mb-5 d-flex align-items-center justify-content-center">
+                   <p>No setting details available.</p>
+            </div>
             ) : (
               <div className="checkout-tabs">
                 {settingDetails.map((value) => (
+                  
                   <div className="row" key={value}>
                     <div className="col-lg-2">
                       <div
@@ -71,8 +82,8 @@ function SettingsPage() {
                           aria-selected="true"
                         >
                           <div style={{ marginTop: "20px" }}>
-                            <i className="fas fa-home fa-3x" />
-                            <p className="fw-bold mb-4">Generals</p>
+                            <i className="fas fa-home fa-3x " style = {{ color: "black", fontSize: "1.5em" }} />
+                            <p className="fw-bold mb-4" style = {{ color: "black"}}>Generals</p>
                           </div>
                         </a>
                         <a
@@ -85,8 +96,8 @@ function SettingsPage() {
                           aria-selected="false"
                         >
                           <div style={{ marginTop: "20px" }}>
-                            <i className="fas fa-shield fa-3x " />
-                            <p className="fw-bold mb-4">Privacy Policy</p>
+                            <i className="fas fa-shield fa-3x " style = {{ color: "black", fontSize: "1.5em" }} />
+                            <p className="fw-bold mb-4" style = {{ color: "black"}}>Privacy Policy</p>
                           </div>
                         </a>
                         <a
@@ -99,8 +110,8 @@ function SettingsPage() {
                           aria-selected="false"
                         >
                           <div style={{ marginTop: "20px" }}>
-                            <i className="fas fa-question-circle fa-3x" />
-                            <p className="fw-bold mb-4">FAQ</p>
+                            <i className="fas fa-question-circle fa-3x" style = {{ color: "black", fontSize: "1.5em" }} />
+                            <p className="fw-bold mb-4" style = {{ color: "black"}}>FAQ</p>
                           </div>
                         </a>
                         <a
@@ -113,8 +124,8 @@ function SettingsPage() {
                           aria-selected="false"
                         >
                           <div style={{ marginTop: "20px" }}>
-                            <i className="fas fa-file-contract fa-3x" />
-                            <p className="fw-bold mb-4">Terms and Conditions</p>
+                            <i className="fas fa-file-contract fa-3x" style = {{ color: "black", fontSize: "1.5em" }} />
+                            <p className="fw-bold mb-4" style = {{ color: "black"}}>Terms and Conditions</p>
                           </div>
                         </a>
                       </div>

@@ -5,10 +5,13 @@ import { FeedbackUrl } from "../Services/baseUrl";
 
 function FeedBackPage() {
   const [list, setList] = useState("");
+
   const [params, setParams] = useState({
     page: 1,
     limit: 3,
   });
+  const [loading, setLoading] = useState(true);
+
   const [pagination, setPagination] = useState({
     hasNextPage: false,
     hasPreviousPage: false,
@@ -17,10 +20,15 @@ function FeedBackPage() {
 
   //----------------------------get list------------------------------
   const getList = async () => {
-    const response = await apiCall("get", FeedbackUrl, {}, params);
-    const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
-    setList(docs ?? []);
-    setPagination({ hasNextPage, hasPreviousPage, totalDocs });
+    try {
+      setLoading(true);
+      const response = await apiCall("get", FeedbackUrl, {}, params);
+      const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
+      setList(docs ?? []);
+      setPagination({ hasNextPage, hasPreviousPage, totalDocs });
+    } finally {
+      setLoading(false);
+    }
   };
 
   //----------------------------useEffect------------------------------
@@ -32,54 +40,17 @@ function FeedBackPage() {
     <div>
       <div className="col-xl-12">
         <div className="card dz-card" id="bootstrap-table11">
-          {/* <div className="card-header flex-wrap">
-            <h4 className="card-title ">Feedback</h4>
-            <div className="mt-5 mb-5" style={{ width: "80%", margin: "10%" }}>
-              <tbody>
-                {list.length ? (
-                  <>
-                    {list.map((item, key) => {
-                      return (
-                        <tr key={item._id}>
-                          <div className="border rounded border-3 p-3 m-2">
-                            <div className="d-flex justify-content-end fw-normal">
-                              {item.feedback_type.replace(/_/g, " ")}
-                            </div>
-                            <div className="mx-1" style={{ margin: "-22px" }}>
-                              <div className="mb-1 fw-normal fw-bolder">
-                                {item.name}
-                              </div>
-
-                              <div className="mb-5  fw-normal">
-                                {item.email}
-                              </div>
-                            </div>
-                  
-                            <div
-                              className="text-muted "
-                              style={{ lineHeight: "2" }}
-                            >
-                              {item.feedback}
-                            </div>
-                          </div>
-                        </tr>
-                      );
-                    })}
-                  </>
-                ) : (
-                  <tr>
-                    <td colSpan={7} style={{ textAlign: "center" }}>
-                      <b> No Data Found</b>{" "}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </div>
-          </div> */}
+          <h4 className="card-title mx-5 mt-5 ">Feedback</h4>
           <div className="card-header">
-            <h4 className="card-title mb-8">Feedback</h4>
             <div className="feedback-container mt-5 mb-5">
-              {list.length ? (
+              {loading ? (
+                // Show loader while data is being fetched
+                <div className="feedback-container mx-3 mt-5 mb-5 d-flex align-items-center justify-content-center">
+                  <div className="spinner-border" role="status">
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                </div>
+              ) : list.length ? (
                 list.map((item) => (
                   <div key={item._id} className="feedback-card">
                     <div className="feedback-type">
@@ -93,8 +64,8 @@ function FeedBackPage() {
                   </div>
                 ))
               ) : (
-                <div className="feedback-card no-data">
-                  <b>No Data Found</b>
+                <div className="feedback-container mx-3 mt-5 mb-5 d-flex align-items-center justify-content-center">
+                  <b>No data</b>
                 </div>
               )}
             </div>
