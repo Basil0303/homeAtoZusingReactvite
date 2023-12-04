@@ -11,7 +11,7 @@ import { ProjectUrl } from "../Services/baseUrl";
 import { ShowToast } from "../utils/Toast";
 
 function ProjectsPage() {
-  {
+  
     const [validated, setValidated] = useState(false);
 
     const [params, setparams] = useState({
@@ -747,11 +747,15 @@ function ProjectsPage() {
             <p>Are you sure to delete </p>
           </Modal.Body>
           <Modal.Footer>
+          <Button 
+          style={{
+              backgroundColor: "grey",
+              color: "white",
+            }} onClick={handleCloses}>
+              No
+            </Button>
             <Button variant="danger" onClick={handleDelete}>
               Yes
-            </Button>
-            <Button variant="primary" onClick={handleCloses}>
-              No
             </Button>
           </Modal.Footer>
         </Modal>
@@ -976,5 +980,5 @@ function ProjectsPage() {
       </div>
     );
   }
-}
+
 export default ProjectsPage;

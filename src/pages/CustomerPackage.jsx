@@ -34,7 +34,7 @@ function CustomerPackage() {
   useEffect(() => {
     getPackages();
   }, [params]);
-  
+
   return (
     <div>
       <div className="col-xl-12">
@@ -57,7 +57,7 @@ function CustomerPackage() {
                   <table className="table header-border table-responsive-sm">
                     <thead className="text-left">
                       <tr>
-                        {/* <th>SL.No</th> */}
+                        <th>#</th>
                         <th></th>
                         <th>Name</th>
                         <th>Home Type Name</th>
@@ -79,7 +79,7 @@ function CustomerPackage() {
                         <>
                           {list.map((item, key) => (
                             <tr key={item._id}>
-                              {/* <td>
+                              <td>
                                 <ul>
                                   <li>
                                     {params.page === 1
@@ -92,7 +92,7 @@ function CustomerPackage() {
                                           : "0" + (key + 1))}
                                   </li>
                                 </ul>
-                              </td> */}
+                              </td>
                               <td style={{ width: "2%" }}>
                                 <img
                                   src={item?.cover_image ?? "images/user.webp"}
@@ -119,8 +119,8 @@ function CustomerPackage() {
                       ) : (
                         <tr>
                           <td
-                            colSpan={6}
-                            className="text-center py-4 text-primary"
+                            colSpan={5}
+                            className="text-center  py-4 text-primary"
                           >
                             <b>No Packages</b>
                           </td>
@@ -133,7 +133,7 @@ function CustomerPackage() {
             </div>
           </div>
 
-        {/* ----------------------------------pagination---------------------------------- */}
+          {/* ----------------------------------pagination---------------------------------- */}
           <div className="d-flex justify-content-end mx-4 mb-3">
             <button
               className="btn btn-sm btn-primary"
@@ -151,7 +151,7 @@ function CustomerPackage() {
               <i className="fa-solid fa-angle-right" />
             </button>
           </div>
-        {/* -------------------------------pagination ends------------------------------- */}
+          {/* -------------------------------pagination ends------------------------------- */}
         </div>
       </div>
     </div>

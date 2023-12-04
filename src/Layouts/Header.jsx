@@ -17,7 +17,7 @@ function Header() {
 
   return (
     <>
-      <div className="nav-header">
+           <div className="nav-header">
         <div className="nav-control">
           <div className="hamburger">
             <span className="line">
@@ -43,7 +43,7 @@ function Header() {
         </div>
       </div>
 
-      <div className="header">
+      <div className="header" style={{backgroundColor:"#222B40"}}>
         <div className="header-content">
           <nav className="navbar navbar-expand">
             <div className="collapse navbar-collapse justify-content-between">

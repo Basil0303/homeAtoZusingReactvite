@@ -21,9 +21,6 @@ function CustomerPage() {
     totalDocs: 0,
   });
 
-  useEffect(() => {
-    getCustomers();
-  }, [params]);
 
   const getCustomers = async () => {
     const response = await apiCall("get", userUrl,{},  params );
@@ -32,6 +29,11 @@ function CustomerPage() {
     setlist(docs ?? []);
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
   };
+
+  useEffect(() => {
+    getCustomers();
+  }, [params]);
+
  
   return (
     <div>
@@ -104,11 +106,13 @@ function CustomerPage() {
                   <table className="table header-border table-responsive-sm">
                     <thead>
                       <tr>
+                        <th>#</th>
                         <th></th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Place</th>
+                        <th>details</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -122,8 +126,23 @@ function CustomerPage() {
                         </tr>
                       ) : list?.length ? (
                         <>
-                          {list.map((item, index) => (
+                          {list.map((item, key) => (
                             <tr>
+                              <td>
+                                <ul>
+                                  <li>
+                                    {params.page === 1
+                                      ? key + 1 > 9
+                                        ? key + 1
+                                        : "0" + (key + 1)
+                                      : params.limit * (params.page - 1) +
+                                        (key + 1 > 9
+                                          ? key + 1
+                                          : "0" + (key + 1))}
+                                  </li>
+                                </ul>
+                              </td>
+
                               <td style={{ width: "2%" }}>
                                 <img
                                   src={item?.image ?? "images/user.webp"}

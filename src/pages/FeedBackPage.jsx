@@ -32,7 +32,7 @@ function FeedBackPage() {
     <div>
       <div className="col-xl-12">
         <div className="card dz-card" id="bootstrap-table11">
-          <div className="card-header flex-wrap">
+          {/* <div className="card-header flex-wrap">
             <h4 className="card-title ">Feedback</h4>
             <div className="mt-5 mb-5" style={{ width: "80%", margin: "10%" }}>
               <tbody>
@@ -54,7 +54,7 @@ function FeedBackPage() {
                                 {item.email}
                               </div>
                             </div>
-                            {/* <span>{item.subject}</span> */}
+                  
                             <div
                               className="text-muted "
                               style={{ lineHeight: "2" }}
@@ -75,7 +75,31 @@ function FeedBackPage() {
                 )}
               </tbody>
             </div>
+          </div> */}
+          <div className="card-header">
+            <h4 className="card-title mb-8">Feedback</h4>
+            <div className="feedback-container mt-5 mb-5">
+              {list.length ? (
+                list.map((item) => (
+                  <div key={item._id} className="feedback-card">
+                    <div className="feedback-type">
+                      {item.feedback_type.replace(/_/g, " ")}
+                    </div>
+                    <div className="feedback-details">
+                      <div className="name">{item.name}</div>
+                      <div className="email">{item.email}</div>
+                      <div className="text-muted">{item.feedback}</div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="feedback-card no-data">
+                  <b>No Data Found</b>
+                </div>
+              )}
+            </div>
           </div>
+
           {/* ------- pagination------------------------------- */}
           <div className="d-flex justify-content-end mx-4 mb-4">
             <button

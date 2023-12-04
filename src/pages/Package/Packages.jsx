@@ -348,7 +348,7 @@ function Packages() {
                     <thead>
                       <tr>
                         <th>#</th>
-
+                        <th></th>
                         <th>Name</th>
                         <th>Home Type Id</th>
                         <th>Price Per Sqft</th>
