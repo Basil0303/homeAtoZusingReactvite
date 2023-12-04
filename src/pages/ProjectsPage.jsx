@@ -404,7 +404,7 @@ function ProjectsPage() {
                               </td>
                               <td>{item?.name}</td>
                               <td>{item?.location}</td>
-                              <td> <img src={item?.gallery} height={'100px'} width={'100px'} alt="" /></td>
+                              <td> <img src={item?.gallery} height={'50px'} width={'50px'} alt="" /></td>
                               <td>
                                 {item?.featured && (
                                   <span
@@ -496,6 +496,13 @@ function ProjectsPage() {
                                       Edit
                                     </a>
                                     <a
+                                      className="dropdown-item"
+                                      href="#"
+                                      onClick={() => setDetails({ show: true, data: item })}
+                                    >
+                                      View more
+                                    </a>
+                                    <a
                                       className="dropdown-item  text-danger"
                                       href="#"
                                       onClick={(e) => {
@@ -509,13 +516,7 @@ function ProjectsPage() {
                                     >
                                       Delete
                                     </a>
-                                    <a
-                                      className="dropdown-item"
-                                      href="#"
-                                      onClick={() => setDetails({ show: true, data: item })}
-                                    >
-                                      View more
-                                    </a>
+                                   
                                   </div>
                                 </div>
                               </td>
@@ -912,10 +913,10 @@ function ProjectsPage() {
                 </Form.Group>
 
                 <Modal.Footer>
-                  <Button variant="dark" onClick={handleClose} >
+                  <Button variant="dark" size="sm" onClick={handleClose} >
                     Close
                   </Button>
-                  <Button variant="success" type="submit">
+                  <Button variant="success" size="sm" type="submit">
                     Submit
                   </Button>
                 </Modal.Footer>
@@ -932,10 +933,10 @@ function ProjectsPage() {
           <p>Are you sure to delete </p>
         </Modal.Body>
         <Modal.Footer>
-        <Button variant="dark" onClick={handleCloses}>
+        <Button variant="dark" size="sm" onClick={handleCloses}>
             No
           </Button>
-          <Button variant="danger" onClick={handleDelete}>
+          <Button variant="danger" size="sm" onClick={handleDelete}>
             Yes
           </Button>
          
@@ -1140,12 +1141,13 @@ function ProjectsPage() {
                 </Form.Group>
 
                 <Modal.Footer>
-                  <Button variant="dark" onClick={handleClos}>
+                  <Button variant="dark" size="sm" onClick={handleClos}>
                     Close
                   </Button>
                   <Button
                     variant="success"
                     type="submit"
+                    size="sm" 
                     onClick={handleClos}
                   >
                     Save Changes

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 function SettingsPage() {
   const navigate = useNavigate();
   const [settingDetails, setSettingDetails] = useState([]);
+  console.log(settingDetails,"se")
 
   const getSettings = async () => {
     try {
@@ -33,13 +34,14 @@ function SettingsPage() {
                 <div className="page-title-box d-flex align-items-center justify-content-between">
                   <h4 className="mb-0 font-size-18">Settings</h4>
                   <button
+                   size="sm" 
                     className="btn btn-success waves-effect waves-light"
                     type="submit"
                     onClick={() => {
                       navigate("/addsettings");
                     }}
                   >
-                    {settingDetails.length ? "Update" : "Add"}
+                    {settingDetails?.length ? "Update" : "Add"}
                   </button>
                 </div>
                 <br />

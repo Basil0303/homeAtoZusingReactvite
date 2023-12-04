@@ -6,8 +6,7 @@ import { Modal } from "react-bootstrap";
 // import { useParams } from "react-router-dom";
 import { PackageApplicationUrl } from "../Services/baseUrl";
 
-
-function CustomerPage () {
+function CustomerPage() {
   const [list, setlist] = useState();
 
   const [params, setparams] = useState({
@@ -21,12 +20,11 @@ function CustomerPage () {
     hasPreviousPage: false,
     totalDocs: 0,
   });
-  const [show,setShow]=useState(false)
-  const [packageDetails,setPackageDetails]=useState([])
-
+  const [show, setShow] = useState(false);
+  const [packageDetails, setPackageDetails] = useState([]);
 
   const getCustomers = async () => {
-    const response = await apiCall("get", userUrl,{},  params );
+    const response = await apiCall("get", userUrl, {}, params);
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
 
     setlist(docs ?? []);
@@ -37,30 +35,24 @@ function CustomerPage () {
     getCustomers();
   }, [params]);
 
-
-
-  const getPackages=async(id)=>{
-   try {
-    const response= await apiCall("get" ,`${PackageApplicationUrl}/${id}`);
-    if(response.status===true){
-     setPackageDetails(response?.data?.docs)
+  const getPackages = async (id) => {
+    try {
+      const response = await apiCall("get", `${PackageApplicationUrl}/${id}`);
+      if (response.status === true) {
+        setPackageDetails(response?.data?.docs);
+      }
+    } catch (error) {
+      console.log(error);
     }
-    
-   } catch (error) {
-    console.log(error)
-   }
   };
-
 
   useEffect(() => {
     getCustomers();
   }, [params]);
 
   return (
-
     <>
-   
-        <div className="col-xl-12">
+      <div className="col-xl-12">
         <div className="card dz-card" id="bootstrap-table11">
           <div className="card-header flex-wrap d-flex justify-content-between">
             <div>
@@ -130,15 +122,12 @@ function CustomerPage () {
                     <thead>
                       <tr>
                         <th>#</th>
-                      <th>#</th>
-
                         <th>Name</th>
                         <th>Image</th>
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Place</th>
-                        <th>Details</th>
-                        
+                        <th>Packages</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -154,45 +143,53 @@ function CustomerPage () {
                         <>
                           {list.map((item, key) => (
                             <tr>
-                                <td style={{ width: "2%" }}>
-                                  <ul>
-                                    <li>
-                                      {params.page === 1
-                                        ? key + 1 > 9
+                              <td style={{ width: "2%" }}>
+                                <ul>
+                                  <li>
+                                    {params.page === 1
+                                      ? key + 1 > 9
+                                        ? key + 1
+                                        : "0" + (key + 1)
+                                      : params.limit * (params.page - 1) +
+                                        (key + 1 > 9
                                           ? key + 1
-                                          : "0" + (key + 1)
-                                        : params.limit * (params.page - 1) +
-                                          (key + 1 > 9
-                                            ? key + 1
-                                            : "0" + (key + 1))}
-                                    </li>
-                                  </ul>
-                                </td>
-                            
+                                          : "0" + (key + 1))}
+                                  </li>
+                                </ul>
+                              </td>
+
                               <td>{item?.fullName}</td>
-                              <td> <img src={item?.image ?? "images/user.webp"} height={'100px'} width={'100px'} alt="" /></td>
+                              <td>
+                                {" "}
+                                <img
+                                  src={item?.image ?? "images/user.webp"}
+                                  height={"50px"}
+                                  width={"50px"}
+                                  alt=""
+                                />
+                              </td>
 
                               <td>{item?.email}</td>
                               <td>{item?.mobile}</td>
-                              
+
                               <td>
                                 {item?.district}
                                 {item?.state},{item?.pincode}
                               </td>
-                           
 
-                        
                               <td>
-  <i  className="fas fa-eye"style={{  justifyContent: 'center', alignItems: 'center' }}
-  onClick={() => {
-    getPackages(item._id)
-    setShow(true);
-  }}
-    >
-    
-  </i>
-</td>
-
+                                <i
+                                  className="fas fa-eye"
+                                  style={{
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                  }}
+                                  onClick={() => {
+                                    getPackages(item._id);
+                                    setShow(true);
+                                  }}
+                                ></i>
+                              </td>
                             </tr>
                           ))}
                         </>
@@ -232,16 +229,15 @@ function CustomerPage () {
           </div>
         </div>
       </div>
-      
-    
 
-      <Modal  show={show} onHide={()=>setShow(false)}>
+      <Modal show={show} onHide={() => setShow(false)}>
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="mt-2">View Details</h5>
             <button
               type="button"
-              onClick={()=>setShow(false)}              className="btn-close"
+              onClick={() => setShow(false)}
+              className="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
             />
@@ -252,53 +248,49 @@ function CustomerPage () {
                 <div className="card mb-4">
                   <div className="card-body p-2">
                     <form style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                      {packageDetails.map((details,key)=>(
+                      {packageDetails.map((details, key) => (
                         <>
-                                        <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          style={{ paddingTop: "10px" }}
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Name</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{details?.name}</span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Cover Image</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>
-                            <img
-                              src={details?.cover_image}
-                              width={64}
-                              height={64}
-                              alt="Cover Image"
-                            />
-                          </span>
-                        </div>
-                      </div>
-
-                      <hr />
-
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Gallery Images</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          {details?.gallery_imgs.map(
-                            (img, key) => (
-                              (
+                          <div className="row profileData">
+                            <label
+                              className="col-sm-4 col-form-label"
+                              style={{ paddingTop: "10px" }}
+                              htmlFor="basic-default-name"
+                            >
+                              <span>Name</span>
+                            </label>
+                            <div className="col-sm-7 mt-2">
+                              <span>{details?.name}</span>
+                            </div>
+                          </div>
+                          <hr />
+                          {/* <div className="row profileData">
+                            <label
+                              className="col-sm-4 col-form-label"
+                              htmlFor="basic-default-name"
+                            >
+                              <span>Cover Image</span>
+                            </label>
+                            <div className="col-sm-7 mt-2">
+                              <span>
+                                <img
+                                  src={details?.cover_image}
+                                  width={64}
+                                  height={64}
+                                  alt="Cover Image"
+                                />
+                              </span>
+                            </div>
+                          </div>
+                          <hr />
+                          <div className="row profileData">
+                            <label
+                              className="col-sm-4 col-form-label"
+                              htmlFor="basic-default-name"
+                            >
+                              <span>Gallery Images</span>
+                            </label>
+                            <div className="col-sm-7 mt-2">
+                              {details?.gallery_imgs.map((img, key) => (
                                 <span key={key} style={{ marginRight: "10px" }}>
                                   <img
                                     src={img}
@@ -307,120 +299,134 @@ function CustomerPage () {
                                     alt={`Cover Image ${key + 1}`}
                                   />
                                 </span>
-                              )
-                            )
-                          )}
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <sapn>Hometype Name</sapn>
-                        </label>
-                        <div className="col-sm-7 mt-2 d-flex flex-column">
-                          <span>{details?.home_type_id?.name}</span>
-                          <img
-                            className="mt-2"
-                            src={details?.home_type_id?.image}
-                            width={64}
-                            height={64}
-                            alt="Cover Image"
-                          />
-                        </div>
-                      </div>
+                              ))}
+                            </div>
+                          </div>
+                          <hr />
+                          <div className="row profileData">
+                            <label
+                              className="col-sm-4 col-form-label"
+                              htmlFor="basic-default-name"
+                            >
+                              <sapn>Hometype Name</sapn>
+                            </label>
+                            <div className="col-sm-7 mt-2 d-flex flex-column">
+                              <span>{details?.home_type_id?.name}</span>
+                              <img
+                                className="mt-2"
+                                src={details?.home_type_id?.image}
+                                width={64}
+                                height={64}
+                                alt="Cover Image"
+                              />
+                            </div>
+                          </div> */}
+                          <hr />
+                          <div className="row profileData">
+                            <label
+                              className="col-sm-4 col-form-label"
+                              htmlFor="basic-default-name"
+                            >
+                              <span>Price Per Sqft</span>
+                            </label>
+                            <div className="col-sm-7 mt-2">
+                              <span>{details?.price_per_sqft}</span>
+                            </div>
+                          </div>
+                          <hr />
+                          <div className="row profileData">
+                            <label
+                              className="col-sm-4 col-form-label"
+                              htmlFor="basic-default-name"
+                            >
+                              <span>Description</span>
+                            </label>
+                            <div className="col-sm-7 mt-2">
+                              <span>{details?.description}</span>
+                            </div>
+                          </div>
+                          <hr />
+                          <div className="row profileData">
+                            <label
+                              className="col-sm-4 col-form-label"
+                              htmlFor="basic-default-name"
+                            >
+                              <span>Average Rating</span>
+                            </label>
+                            <div className="col-sm-7 mt-2">
+                              <span>{details?.average_rating}</span>
+                            </div>
+                          </div>
+                          <hr />
+                          <table className="table table-bordered">
+                            <thead>
+                              <tr style={{ color: "black" }}>
+                                <th>Material</th>
+                                <th>Description</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {details?.materials.map((value, key) => (
+                                <tr key={key}>
+                                  <td>
+                                    {" "}
+                                    <span
+                                      className="table-cell"
+                                      style={{
+                                        marginRight: "10px",
+                                        color: "#888888",
+                                      }}
+                                    >
+                                      {value.name}
+                                    </span>
+                                  </td>
 
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Price Per Sqft</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{details?.price_per_sqft}</span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Description</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{details?.description}</span>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Average Rating</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span>{details?.average_rating}</span>
-                        </div>
-                      </div>
-                      <hr />
-                      <table className="table table-bordered">
-  <thead>
-    <tr style={{color:"black"}}>
-      <th>Material</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    {details?.materials.map((value, key) => (
-      <tr key={key}>
-        <td>     <span className="table-cell" style={{ marginRight: '10px',color:"#888888" }}>
-  {value.name}
-</span></td>
-  
-<td> <span className="table-cell" style={{ marginRight: '10px' ,color:"#888888"}}>
-          {value.description}
-        </span></td>
-       
-      </tr>
-    ))}
-  </tbody>
-</table>
-
-
-
-                      <hr />
-                      <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Plan</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                        <span><a href="{details?.plan}">{details?.plan}</a></span>
-                        </div>
-                      </div>
-                      <hr />   <div className="row profileData">
-                        <label
-                          className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name"
-                        >
-                          <span>Sqft</span>
-                        </label>
-                        <div className="col-sm-7 mt-2">
-                          <span><a>{details?.square_feet}</a></span>
-                        </div>
-                      </div>
-
+                                  <td>
+                                    {" "}
+                                    <span
+                                      className="table-cell"
+                                      style={{
+                                        marginRight: "10px",
+                                        color: "#888888",
+                                      }}
+                                    >
+                                      {value.description}
+                                    </span>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                          <hr />
+                          <div className="row profileData">
+                            <label
+                              className="col-sm-4 col-form-label"
+                              htmlFor="basic-default-name"
+                            >
+                              <span>Plan</span>
+                            </label>
+                            <div className="col-sm-7 mt-2">
+                              <span>
+                                <a href="{details?.plan}">{details?.plan}</a>
+                              </span>
+                            </div>
+                          </div>
+                          <hr />{" "}
+                          <div className="row profileData">
+                            <label
+                              className="col-sm-4 col-form-label"
+                              htmlFor="basic-default-name"
+                            >
+                              <span>Sqft</span>
+                            </label>
+                            <div className="col-sm-7 mt-2">
+                              <span>
+                                <a>{details?.square_feet}</a>
+                              </span>
+                            </div>
+                          </div>
                         </>
                       ))}
-      
                     </form>
                   </div>
                 </div>
@@ -429,9 +435,7 @@ function CustomerPage () {
           </div>
         </div>
       </Modal>
-      </>
-  
-   
+    </>
   );
 }
 

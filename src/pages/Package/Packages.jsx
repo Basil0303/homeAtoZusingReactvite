@@ -466,6 +466,16 @@ function Packages() {
                                       Edit
                                     </a>
                                     <a
+                                      className="dropdown-item"
+                                      href="#"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        Viewmore(item);
+                                      }}
+                                    >
+                                      View more
+                                    </a>
+                                    <a
                                       className="dropdown-item  text-danger"
                                       href="#"
                                       onClick={(e) => {
@@ -478,16 +488,6 @@ function Packages() {
                                       }}
                                     >
                                       Delete
-                                    </a>
-                                    <a
-                                      className="dropdown-item"
-                                      href="#"
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        Viewmore(item);
-                                      }}
-                                    >
-                                      View more
                                     </a>
                                   </div>
                                 </div>
@@ -673,10 +673,10 @@ function Packages() {
                   ))}
                 </Form.Group>
                 <Modal.Footer>
-                  <Button variant="dark" onClick={handleClose}>
+                  <Button variant="dark" size="sm" onClick={handleClose}>
                     Close
                   </Button>
-                  <Button variant="success" type="submit">
+                  <Button variant="success" size="sm" type="submit">
                     Submit
                   </Button>
                 </Modal.Footer>
@@ -691,10 +691,10 @@ function Packages() {
           <p>Are you sure you want to delete? </p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="dark" onClick={handleCloses}>
+          <Button variant="dark" size="sm" onClick={handleCloses}>
             No
           </Button>
-          <Button variant="danger" onClick={handleDelete}>
+          <Button variant="danger" size="sm" onClick={handleDelete}>
             Yes
           </Button>
         </Modal.Footer>
@@ -840,10 +840,10 @@ function Packages() {
                 </Form.Group>
 
                 <Modal.Footer>
-                  <Button variant="dark" onClick={handleClos}>
+                  <Button variant="dark" size="sm" onClick={handleClos}>
                     Close
                   </Button>
-                  <Button variant="success" type="submit">
+                  <Button variant="success" size="sm" type="submit">
                     Save Changes
                   </Button>
                 </Modal.Footer>
@@ -884,7 +884,7 @@ function Packages() {
                         </div>
                       </div>
                       <hr />
-                      <div className="row profileData">
+                      {/* <div className="row profileData">
                         <label
                           className="col-sm-4 col-form-label"
                           htmlFor="basic-default-name"
@@ -925,7 +925,7 @@ function Packages() {
                           ))}
                         </div>
                       </div>
-                      <hr />
+                      <hr /> */}
                       <div className="row profileData">
                         <label
                           className="col-sm-4 col-form-label"

@@ -19,16 +19,28 @@ function LoginPage() {
     password: "",
   });
 
-
- 
   const login = async () => {
-    const response = await apiCall("post", adminLoginUrl, data);
-    console.log(response,"response.....................")
-    localStorage.setItem("token", response.data);
-    setUser(jwtDecode(response.data));
-    window.location.href = "/customer";
-  };
+    try {
+      const response = await apiCall("post", adminLoginUrl, data);
+      
+      const token = response.data;
+  
+      // Store token in localStorage
+      localStorage.setItem("token", token);
+  
+      setUser(jwtDecode(token));
+  
+      alert("Login successful!");
+  
+      window.location.href = "/customer";
+    } catch (error) {
 
+      console.error("Login failed:", error);
+  
+      alert("Login failed. Please check your credentials and try again.");
+    }
+  };
+  
   useEffect(() => {
     if (user) {
       window.location.href = "/customer";
