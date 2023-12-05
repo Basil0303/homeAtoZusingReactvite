@@ -31,10 +31,6 @@ function CustomerPage() {
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
   };
 
-  useEffect(() => {
-    getCustomers();
-  }, [params]);
-
   const getPackages = async (id) => {
     try {
       const response = await apiCall("get", `${PackageApplicationUrl}/${id}`);
@@ -122,6 +118,7 @@ function CustomerPage() {
                     <thead>
                       <tr>
                         <th>#</th>
+
                         <th>Name</th>
                         <th>Image</th>
                         <th>Email</th>
@@ -133,7 +130,7 @@ function CustomerPage() {
                     <tbody>
                       {!list ? (
                         <tr>
-                          <td colSpan={5} className="text-center py-4">
+                          <td colSpan={7} className="text-center py-4">
                             <div class="spinner-border" role="status">
                               <span class="sr-only">Loading...</span>
                             </div>
@@ -196,7 +193,7 @@ function CustomerPage() {
                       ) : (
                         <tr>
                           <td
-                            colSpan={5}
+                            colSpan={7}
                             className="text-center py-4 text-primary"
                           >
                             <b>No data</b>
@@ -263,7 +260,7 @@ function CustomerPage() {
                             </div>
                           </div>
                           <hr />
-                          {/* <div className="row profileData">
+                          <div className="row profileData">
                             <label
                               className="col-sm-4 col-form-label"
                               htmlFor="basic-default-name"
@@ -320,7 +317,7 @@ function CustomerPage() {
                                 alt="Cover Image"
                               />
                             </div>
-                          </div> */}
+                          </div>
                           <hr />
                           <div className="row profileData">
                             <label
@@ -407,7 +404,9 @@ function CustomerPage() {
                             </label>
                             <div className="col-sm-7 mt-2">
                               <span>
-                                <a href="{details?.plan}">{details?.plan}</a>
+                                <a target="_blank" href={details?.plan}>
+                                  {details?.plan}
+                                </a>
                               </span>
                             </div>
                           </div>

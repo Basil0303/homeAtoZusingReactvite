@@ -189,13 +189,13 @@ function LoanApplicationPage() {
                         <th>Phone</th>
                         <th>Applied Date</th>
                         <th>Status</th>
-                        <th />
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       {!loanList ? (
                         <tr>
-                          <td colSpan={5} className="text-center py-4">
+                          <td colSpan={6} className="text-center py-4">
                             <div className="spinner-border" role="status">
                               <span className="sr-only">Loading...</span>
                             </div>
@@ -206,7 +206,7 @@ function LoanApplicationPage() {
                           {loanList.map((item, key) => (
                             <>
                               <tr key={item._id}>
-                                <td style={{ width: "2%" }}>
+                                <td colSpan={1}>
                                   <ul>
                                     <li>
                                       {params.page === 1
@@ -229,19 +229,13 @@ function LoanApplicationPage() {
                                 </td>
                                 <td>
                                   {item?.status === "submitted" && (
-                                    <span
-                                      className="badge rounded-pill bg-primary px-2"
-                                      style={{ fontSize: "9px" }}
-                                    >
+                                    <span className="badge  bg-primary px-2">
                                       Submitted
                                     </span>
                                   )}
 
                                   {item?.status === "review" && (
-                                    <span
-                                      className="badge rounded-pill bg-info px-2"
-                                      style={{ fontSize: "9px" }}
-                                    >
+                                    <span className="badge  bg-info px-2">
                                       Review
                                     </span>
                                   )}
@@ -339,7 +333,7 @@ function LoanApplicationPage() {
                       ) : (
                         <tr>
                           <td
-                            colSpan={5}
+                            colSpan={6}
                             className="text-center py-4 text-primary"
                           >
                             <b>No data</b>

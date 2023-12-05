@@ -3,30 +3,41 @@ import { apiCall } from "../Services/ApiCall";
 import { SettingsUrl } from "../Services/baseUrl";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader/Loader";
 function SettingsPage() {
 
   const navigate = useNavigate();
   const [settingDetails, setSettingDetails] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const [loading, setLoading] = useState(true);
-
+ 
+///------------get setting-----------------
   const getSettings = async () => {
+    setIsLoading(true)
     try {
       const response = await apiCall("get", SettingsUrl);
-      setSettingDetails(response.data.docs);
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
+      if(response?.status===true){
+        setSettingDetails(response?.data?.docs);
+        setIsLoading(false);
+      }else{
+        console.log("No settings found.");
+
+      }
+     
+    } catch (error) {}
   };
+ 
 
   useEffect(() => {
     getSettings();
   }, []);
 
   return (
-    <div>
-      
+
+    <>
+       {isLoading ? (
+        <Loader/>
+      ) : (
       <div className="main-content">
         <div className="page-content">
           <div className="container-fluid">
@@ -48,18 +59,9 @@ function SettingsPage() {
                 <br />
               </div>
             </div>
-                   {loading ? (
-              // Show loading spinner while data is being fetched
-              <div className="text-center py-4">
-                <div className="spinner-border" role="status">
-                  <span className="sr-only">Loading...</span>
-                </div>
-              </div>
-            ) : settingDetails.length === 0 ? (
-        
-              <div className="feedback-container mx-3 mt-5 mb-5 d-flex align-items-center justify-content-center">
-                   <p>No setting details available.</p>
-            </div>
+
+            {settingDetails.length === 0 ? (
+              <p>No setting details available.</p>
             ) : (
               <div className="checkout-tabs">
                 {settingDetails.map((value) => (
@@ -82,8 +84,8 @@ function SettingsPage() {
                           aria-selected="true"
                         >
                           <div style={{ marginTop: "20px" }}>
-                            <i className="fas fa-home fa-3x " style = {{ color: "black", fontSize: "1.5em" }} />
-                            <p className="fw-bold mb-4" style = {{ color: "black"}}>Generals</p>
+                            <i className="fas fa-home fa-3x" />
+                            <p className="fw-bold mb-4">Generals</p>
                           </div>
                         </a>
                         <a
@@ -96,8 +98,8 @@ function SettingsPage() {
                           aria-selected="false"
                         >
                           <div style={{ marginTop: "20px" }}>
-                            <i className="fas fa-shield fa-3x " style = {{ color: "black", fontSize: "1.5em" }} />
-                            <p className="fw-bold mb-4" style = {{ color: "black"}}>Privacy Policy</p>
+                            <i className="fas fa-shield fa-3x " />
+                            <p className="fw-bold mb-4">Privacy Policy</p>
                           </div>
                         </a>
                         <a
@@ -110,8 +112,8 @@ function SettingsPage() {
                           aria-selected="false"
                         >
                           <div style={{ marginTop: "20px" }}>
-                            <i className="fas fa-question-circle fa-3x" style = {{ color: "black", fontSize: "1.5em" }} />
-                            <p className="fw-bold mb-4" style = {{ color: "black"}}>FAQ</p>
+                            <i className="fas fa-question-circle fa-3x" />
+                            <p className="fw-bold mb-4">FAQ</p>
                           </div>
                         </a>
                         <a
@@ -124,8 +126,8 @@ function SettingsPage() {
                           aria-selected="false"
                         >
                           <div style={{ marginTop: "20px" }}>
-                            <i className="fas fa-file-contract fa-3x" style = {{ color: "black", fontSize: "1.5em" }} />
-                            <p className="fw-bold mb-4" style = {{ color: "black"}}>Terms and Conditions</p>
+                            <i className="fas fa-file-contract fa-3x" />
+                            <p className="fw-bold mb-4">Terms and Conditions</p>
                           </div>
                         </a>
                       </div>
@@ -186,12 +188,11 @@ function SettingsPage() {
                                         <h3>Business Hours</h3>
                                         <hr />
                                         <h4>
-                                          Monday to Friday
+                                          Monday to Friday{" "}
                                           <h4>
                                             {value.business_hours.monday_to_friday.from.toUpperCase()}{" "}
-                                            AM To{" "}
-                                            {value.business_hours.monday_to_friday.to.toUpperCase()}{" "}
-                                            PM
+                                            To{" "}
+                                            {value.business_hours.monday_to_friday.to.toUpperCase()}
                                           </h4>
                                         </h4>
 
@@ -199,15 +200,15 @@ function SettingsPage() {
                                           Saturday
                                           <h4>
                                             {value?.business_hours?.saturday?.from.toUpperCase()}{" "}
-                                            AM To{" "}
-                                            {value?.business_hours?.saturday?.to.toUpperCase()}{" "}
-                                            PM
+                                            To{" "}
+                                            {value?.business_hours?.saturday?.to.toUpperCase()}
                                           </h4>
                                         </h4>
 
                                         <h4>
                                           Sunday
                                           <h4>
+                                            {" "}
                                             {value?.business_hours?.sunday ??
                                               ""}
                                           </h4>
@@ -257,7 +258,7 @@ function SettingsPage() {
                               </div>
                               <hr />
                               <div className="App">
-                                <p
+                                {/* <p
                                   style={{
                                     fontSize: "16px",
                                     color: "#333",
@@ -266,7 +267,18 @@ function SettingsPage() {
                                   }}
                                 >
                                   {value?.privacy_policy ?? ""}
-                                </p>
+                                </p> */}
+                                <p
+                                  style={{
+                                    fontSize: "16px",
+                                    color: "#333",
+                                    lineHeight: 1.5,
+                                    marginBottom: "20px",
+                                  }}
+                                  dangerouslySetInnerHTML={{
+                                    __html: value?.privacy_policy ?? "",
+                                  }}
+                                />
                               </div>
                             </div>
 
@@ -281,15 +293,16 @@ function SettingsPage() {
                               <hr />
                               <div>
                                 <p
+                                  dangerouslySetInnerHTML={{
+                                    __html: value?.faq ?? "",
+                                  }}
                                   style={{
                                     fontSize: "16px",
                                     color: "#333",
                                     lineHeight: 1.5,
                                     marginBottom: "20px",
                                   }}
-                                >
-                                  {value?.faq ?? ""}
-                                </p>
+                                ></p>
                               </div>
                             </div>
 
@@ -306,15 +319,16 @@ function SettingsPage() {
                               <hr />
                               <div>
                                 <p
+                                  dangerouslySetInnerHTML={{
+                                    __html: value?.terms_and_conditions ?? "",
+                                  }}
                                   style={{
                                     fontSize: "16px",
                                     color: "#333",
                                     lineHeight: 1.5,
                                     marginBottom: "20px",
                                   }}
-                                >
-                                  {value?.terms_and_conditions ?? ""}
-                                </p>
+                                ></p>
                               </div>
                             </div>
                           </div>
@@ -328,7 +342,8 @@ function SettingsPage() {
           </div>{" "}
         </div>
       </div>
-    </div>
+      )}
+    </>
   );
 }
 
