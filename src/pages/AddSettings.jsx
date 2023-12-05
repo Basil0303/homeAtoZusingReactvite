@@ -6,116 +6,66 @@ import { apiCall } from "../Services/ApiCall";
 import { useNavigate } from "react-router-dom";
 import { ShowToast } from "../utils/Toast";
 import { Button } from "react-bootstrap";
+import Loader from "../components/Loader/Loader";
 
 function AddSettings() {
-  const [id, setId] = useState("");
   const navigate = useNavigate();
+  const [settingDetail, SetsettingDetail] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
-  const [settings, setSettings] = useState({
-    customer_support: {
-      email: "",
-      phone: "",
-    },
-    business_hours: {
-      monday_to_friday: {
-        from: "",
-        to: "",
-      },
-      saturday: {
-        from: "",
-        to: "",
-      },
-      sunday: {},
-    },
-    privacy_policy: "",
-    faq: "",
-    terms_and_conditions: "",
-  });
-  const handleChange = (html) => {
-    setSettings({ ...settings, privacy_policy: html });
-  };
-  const handleChangeFaq = (html) => {
-    setSettings({ ...settings, faq: html });
-  };
-  const handleChangeTerms = (html) => {
-    setSettings({ ...settings, terms_and_conditions: html });
-  };
-
+  ///------------------get settings--------------------------
   const getSettings = async () => {
+    setIsLoading(true)
     try {
       const response = await apiCall("get", SettingsUrl);
-      const settingDetail = response.data.docs;
-
-      if (settingDetail) {
-        settingDetail.customer_support = {
-          email: settingDetail[0]?.customer_support?.email,
-          phone: settingDetail[0]?.customer_support?.phone,
-        };
-        settingDetail.business_hours = {
-          monday_to_friday: {
-            from: settingDetail[0]?.business_hours?.monday_to_friday?.from,
-            to: settingDetail[0]?.business_hours?.monday_to_friday?.to,
-          },
-          saturday: {
-            from: settingDetail[0]?.business_hours?.saturday?.from,
-            to: settingDetail[0]?.business_hours?.saturday?.to,
-          },
-          sunday: settingDetail[0]?.business_hours?.sunday,
-        };
-        settingDetail.location = {
-          location_name: settingDetail[0]?.location?.location_name,
-          latitude: settingDetail[0]?.location?.latitude,
-          longitude: settingDetail[0]?.location?.longitude,
-        };
-        settingDetail.privacy_policy = settingDetail[0]?.privacy_policy;
-        settingDetail.faq = settingDetail[0]?.faq;
-        settingDetail.terms_and_conditions =
-          settingDetail[0]?.terms_and_conditions;
-        setSettings(...settingDetail);
-        setId(settingDetail[0]._id);
+      if (response.status === true) {
+        setIsLoading(false)
+        SetsettingDetail(response?.data?.docs[0]);
+      } else {
+        console.log("No settings found.");
       }
     } catch (error) {
       console.log(error);
     }
   };
+  //---------------- create or edit settings----------------------------
 
-  const AddSettingsDetails = async () => {
+  const saveOrUpdateSettings = async () => {
     try {
-      const data = await apiCall("post", AddSettingsUrl, settings);
-      console.log(data, "data to add");
-      if (data.status === true) {
-        ShowToast("Added Successfully", true);
-        navigate("/Settings");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const updateDetails = async () => {
-    if (id) {
-      try {
-        const updatedata = await apiCall(
+      
+      if (settingDetail?._id) {
+        const updatedData = await apiCall(
           "put",
-          `${SettingsUrl}/${id}`,
-          settings
+          `${SettingsUrl}/${settingDetail._id}`,
+          settingDetail
         );
-        console.log(updatedata, "sdfsdfsdfsdfsdfsdfsfdfs");
-        if (updatedata.status === true) {
+
+        if (updatedData.status === true) {
           ShowToast("Updated Successfully", true);
           navigate("/Settings");
         }
-      } catch (error) {
-        console.log(error);
+      } else {
+        const addedData = await apiCall("post", AddSettingsUrl, settingDetail);
+
+        if (addedData.status === true) {
+          ShowToast("Added Successfully", true);
+          navigate("/Settings");
+        }
       }
+    } catch (error) {
+      console.error("Error saving or updating settings:", error);
     }
   };
+
   useEffect(() => {
     getSettings();
   }, []);
 
   return (
-    <div>
+    <>
+      {isLoading ? (
+        <Loader/>
+      ) : (
       <div className="col-xl-12 col-lg-12 ">
         <div className="card">
           <div className="card-header">
@@ -139,15 +89,15 @@ function AddSettings() {
                       className="form-control"
                       placeholder="Email"
                       required
-                      value={settings?.customer_support?.email}
+                      value={settingDetail?.customer_support?.email}
                       onChange={(e) =>
-                        setSettings((prevSettings) => ({
-                          ...prevSettings,
+                        SetsettingDetail({
+                          ...settingDetail,
                           customer_support: {
-                            ...prevSettings?.customer_support,
+                            ...settingDetail.customer_support,
                             email: e.target.value,
                           },
-                        }))
+                        })
                       }
                     />
                   </div>
@@ -157,16 +107,16 @@ function AddSettings() {
                       type="tel"
                       className="form-control"
                       placeholder="Mobile Number"
-                      value={settings?.customer_support?.phone}
                       required
+                      value={settingDetail?.customer_support?.phone}
                       onChange={(e) =>
-                        setSettings((prevSettings) => ({
-                          ...prevSettings,
+                        SetsettingDetail({
+                          ...settingDetail,
                           customer_support: {
-                            ...prevSettings?.customer_support,
+                            ...settingDetail.customer_support,
                             phone: e.target.value,
                           },
-                        }))
+                        })
                       }
                     />
                   </div>
@@ -192,19 +142,20 @@ function AddSettings() {
                       className="form-control"
                       required
                       value={
-                        settings?.business_hours?.monday_to_friday?.from || ""
+                        settingDetail?.business_hours?.monday_to_friday?.from ||
+                        "-"
                       }
                       onChange={(e) =>
-                        setSettings((prevSettings) => ({
-                          ...prevSettings,
+                        SetsettingDetail({
+                          ...settingDetail,
                           business_hours: {
-                            ...prevSettings?.business_hours,
+                            ...settingDetail.business_hours,
                             monday_to_friday: {
-                              ...prevSettings?.business_hours?.monday_to_friday,
+                              ...settingDetail.business_hours.monday_to_friday,
                               from: e.target.value,
                             },
                           },
-                        }))
+                        })
                       }
                     />
                   </div>
@@ -219,19 +170,20 @@ function AddSettings() {
                       name="toTime"
                       className="form-control"
                       value={
-                        settings?.business_hours?.monday_to_friday?.to || ""
+                        settingDetail?.business_hours?.monday_to_friday?.to ||
+                        "-"
                       }
                       onChange={(e) =>
-                        setSettings((prevSettings) => ({
-                          ...prevSettings,
+                        SetsettingDetail({
+                          ...settingDetail,
                           business_hours: {
-                            ...prevSettings?.business_hours,
+                            ...settingDetail.business_hours,
                             monday_to_friday: {
-                              ...prevSettings?.business_hours?.monday_to_friday,
+                              ...settingDetail.business_hours.monday_to_friday,
                               to: e.target.value,
                             },
                           },
-                        }))
+                        })
                       }
                     />
                   </div>
@@ -246,18 +198,20 @@ function AddSettings() {
                       id="fromTime"
                       name="fromTime"
                       className="form-control"
-                      value={settings?.business_hours?.saturday?.from || ""}
+                      value={
+                        settingDetail?.business_hours?.saturday?.from || ""
+                      }
                       onChange={(e) =>
-                        setSettings((prevSettings) => ({
-                          ...prevSettings,
+                        SetsettingDetail({
+                          ...settingDetail,
                           business_hours: {
-                            ...prevSettings?.business_hours,
+                            ...settingDetail.business_hours,
                             saturday: {
-                              ...prevSettings?.business_hours?.saturday,
+                              ...settingDetail.business_hours.saturday,
                               from: e.target.value,
                             },
                           },
-                        }))
+                        })
                       }
                     />
                   </div>
@@ -271,18 +225,18 @@ function AddSettings() {
                       id="toTime"
                       name="toTime"
                       className="form-control"
-                      value={settings?.business_hours?.saturday?.to || ""}
+                      value={settingDetail?.business_hours?.saturday?.to || ""}
                       onChange={(e) =>
-                        setSettings((prevSettings) => ({
-                          ...prevSettings,
+                        SetsettingDetail({
+                          ...settingDetail,
                           business_hours: {
-                            ...prevSettings?.business_hours,
+                            ...settingDetail.business_hours,
                             saturday: {
-                              ...prevSettings?.business_hours?.saturday,
+                              ...settingDetail.business_hours.saturday,
                               to: e.target.value,
                             },
                           },
-                        }))
+                        })
                       }
                     />
                   </div>
@@ -291,15 +245,15 @@ function AddSettings() {
                     <select
                       className="form-select"
                       required
-                      value={settings?.business_hours?.sunday}
+                      value={settingDetail?.business_hours?.sunday}
                       onChange={(e) =>
-                        setSettings((prevSettings) => ({
-                          ...prevSettings,
+                        SetsettingDetail({
+                          ...settingDetail,
                           business_hours: {
-                            ...prevSettings?.business_hours,
+                            ...settingDetail.business_hours,
                             sunday: e.target.value,
                           },
-                        }))
+                        })
                       }
                     >
                       <option value="open">Open</option>
@@ -321,15 +275,15 @@ function AddSettings() {
                       type="text"
                       id="locationName"
                       className="form-control"
-                      value={settings?.location?.location_name}
+                      value={settingDetail?.location?.location_name}
                       onChange={(e) =>
-                        setSettings((prevSettings) => ({
-                          ...prevSettings,
+                        SetsettingDetail({
+                          ...settingDetail,
                           location: {
-                            ...prevSettings.location,
+                            ...settingDetail.location,
                             location_name: e.target.value,
                           },
-                        }))
+                        })
                       }
                     />
                   </div>
@@ -339,15 +293,15 @@ function AddSettings() {
                       type="text"
                       id="latitude"
                       className="form-control"
-                      value={settings?.location?.latitude}
+                      value={settingDetail?.location?.latitude}
                       onChange={(e) =>
-                        setSettings((prevSettings) => ({
-                          ...prevSettings,
+                        SetsettingDetail({
+                          ...settingDetail,
                           location: {
-                            ...prevSettings.location,
+                            ...settingDetail.location,
                             latitude: e.target.value,
                           },
-                        }))
+                        })
                       }
                     />
                   </div>
@@ -357,15 +311,15 @@ function AddSettings() {
                       type="text"
                       id="longitude"
                       className="form-control"
-                      value={settings?.location?.longitude}
+                      value={settingDetail?.location?.longitude}
                       onChange={(e) =>
-                        setSettings((prevSettings) => ({
-                          ...prevSettings,
+                        SetsettingDetail({
+                          ...settingDetail,
                           location: {
-                            ...prevSettings.location,
+                            ...settingDetail.location,
                             longitude: e.target.value,
                           },
-                        }))
+                        })
                       }
                     />
                   </div>
@@ -382,8 +336,13 @@ function AddSettings() {
                   <div className="mb-3 col-md-6">
                     <div>
                       <ReactQuill
-                        value={settings?.privacy_policy}
-                        onChange={handleChange}
+                        value={settingDetail?.privacy_policy}
+                        onChange={(content) =>
+                          SetsettingDetail((prevSettingDetail) => ({
+                            ...prevSettingDetail,
+                            privacy_policy: content,
+                          }))
+                        }
                         style={{ width: "200%", height: "200px" }}
                       />
                     </div>
@@ -400,8 +359,13 @@ function AddSettings() {
                   <div className="mb-3 col-md-6">
                     <div>
                       <ReactQuill
-                        value={settings?.faq}
-                        onChange={handleChangeFaq}
+                        value={settingDetail?.faq}
+                        onChange={(content) =>
+                          SetsettingDetail((prevSettingDetail) => ({
+                            ...prevSettingDetail,
+                            faq: content,
+                          }))
+                        }
                         style={{ width: "200%", height: "200px" }}
                       />
                     </div>
@@ -421,8 +385,13 @@ function AddSettings() {
                   <div className="mb-3 col-md-6">
                     <div>
                       <ReactQuill
-                        value={settings?.terms_and_conditions}
-                        onChange={handleChangeTerms}
+                        value={settingDetail?.terms_and_conditions}
+                        onChange={(content) =>
+                          SetsettingDetail((prevSettingDetail) => ({
+                            ...prevSettingDetail,
+                            terms_and_conditions: content,
+                          }))
+                        }
                         style={{ width: "200%", height: "200px" }}
                       />
                     </div>
@@ -451,16 +420,17 @@ function AddSettings() {
 
               <button
                 className="btn btn-success waves-effect waves-light ms-2"
-                onClick={id ? updateDetails : AddSettingsDetails}
+                onClick={saveOrUpdateSettings}
                 style={{ marginTop: "50px" }}
               >
-                {id ? "Update" : "Add"}
+                {settingDetail?._id ? "Update" : "Add"}
               </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      )}
+    </>
   );
 }
 

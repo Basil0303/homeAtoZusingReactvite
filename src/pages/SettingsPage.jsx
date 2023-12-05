@@ -2,29 +2,41 @@ import React, { useEffect, useState } from "react";
 import { apiCall } from "../Services/ApiCall";
 import { SettingsUrl } from "../Services/baseUrl";
 import moment from "moment";
-
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader/Loader";
 function SettingsPage() {
   const navigate = useNavigate();
   const [settingDetails, setSettingDetails] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+ 
+///------------get setting-----------------
+  const getSettings = async () => {
+    setIsLoading(true)
+    try {
+      const response = await apiCall("get", SettingsUrl);
+      if(response?.status===true){
+        setSettingDetails(response?.data?.docs);
+        setIsLoading(false);
+      }else{
+        console.log("No settings found.");
+
+      }
+     
+    } catch (error) {}
+  };
+ 
 
   useEffect(() => {
     getSettings();
   }, []);
 
-  const getSettings = async () => {
-    try {
-      const response = await apiCall("get", SettingsUrl);
-      setSettingDetails(response.data.docs);
-    } catch (error) {}
-  };
-  // function convertTo12HourFormat(timeString) {
-  //   const formattedTime = moment(timeString, 'HH:mm').format('h:mm A');
-  //   return formattedTime;
-  // }
-
   return (
-    <div>
+
+    <>
+       {isLoading ? (
+        <Loader/>
+      ) : (
       <div className="main-content">
         <div className="page-content">
           <div className="container-fluid">
@@ -327,7 +339,8 @@ function SettingsPage() {
           </div>{" "}
         </div>
       </div>
-    </div>
+      )}
+    </>
   );
 }
 
