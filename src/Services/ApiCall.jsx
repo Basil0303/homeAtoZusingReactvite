@@ -1,6 +1,6 @@
 import axios from "axios";
 import { baseUrl } from "./baseUrl";
-import { ShowToast } from "../utils/Toast";
+import {  Show_Toast } from "../utils/Toast";
 
 export const apiCall = async (method, endPoint, data, params, isFormdata) => {
   var headers = {
@@ -27,7 +27,7 @@ export const apiCall = async (method, endPoint, data, params, isFormdata) => {
 
     return response;
   } catch (error) {
-    ShowToast(
+    Show_Toast(
       error.response ? error.response.data.message : "Internal Server Error"
     );
     return;

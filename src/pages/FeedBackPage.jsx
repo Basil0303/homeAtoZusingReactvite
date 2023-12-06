@@ -2,9 +2,12 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { apiCall } from "../Services/ApiCall";
 import { FeedbackUrl } from "../Services/baseUrl";
+import Loader from "../components/Loader/Loader";
 
 function FeedBackPage() {
   const [list, setList] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [params, setParams] = useState({
     page: 1,
@@ -21,13 +24,13 @@ function FeedBackPage() {
   //----------------------------get list------------------------------
   const getList = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       const response = await apiCall("get", FeedbackUrl, {}, params);
       const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
       setList(docs ?? []);
       setPagination({ hasNextPage, hasPreviousPage, totalDocs });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -38,6 +41,9 @@ function FeedBackPage() {
 
   return (
     <div>
+          {isLoading ? (
+        <Loader/>
+      ):
       <div className="col-xl-12">
         <div className="card dz-card" id="bootstrap-table11">
           <h4 className="card-title mx-5 mt-5 ">Feedback</h4>
@@ -46,9 +52,7 @@ function FeedBackPage() {
               {loading ? (
                 // Show loader while data is being fetched
                 <div className="feedback-container mx-3 mt-5 mb-5 d-flex align-items-center justify-content-center">
-                  <div className="spinner-border" role="status">
-                    <span className="sr-only">Loading...</span>
-                  </div>
+                  
                 </div>
               ) : list.length ? (
                 list.map((item) => (
@@ -91,6 +95,7 @@ function FeedBackPage() {
           </div>
         </div>
       </div>
+}
     </div>
   );
 }

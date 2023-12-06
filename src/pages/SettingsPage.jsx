@@ -3,14 +3,14 @@ import { apiCall } from "../Services/ApiCall";
 import { SettingsUrl } from "../Services/baseUrl";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
-import Loader from "../components/Loader/Loader";
+import Loader from "../components/Loader/Loader"; 
 function SettingsPage() {
 
   const navigate = useNavigate();
   const [settingDetails, setSettingDetails] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
- 
+  const [isLoading, setIsLoading] = useState(false);
+
 ///------------get setting-----------------
   const getSettings = async () => {
     setIsLoading(true)
@@ -98,7 +98,7 @@ function SettingsPage() {
                           aria-selected="false"
                         >
                           <div style={{ marginTop: "20px" }}>
-                            <i className="fas fa-shield fa-3x " />
+                            <i className="fas fa-shield fa-3x "/>
                             <p className="fw-bold mb-4">Privacy Policy</p>
                           </div>
                         </a>

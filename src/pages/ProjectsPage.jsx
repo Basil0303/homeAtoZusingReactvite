@@ -8,12 +8,14 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import { handleSubmit } from "../utils/Fns";
 import { ProjectUrl } from "../Services/baseUrl";
-import { ShowToast } from "../utils/Toast";
+import { Show_Toast } from "../utils/Toast";
+import Loader from "../components/Loader/Loader";
 
 function ProjectsPage() {
   const [validated, setValidated] = useState(false);
   const [details, setDetails] = useState({ show: false, data: null });
-  console.log(details, "details modal");
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [params, setparams] = useState({
     page: 1,
@@ -56,9 +58,11 @@ function ProjectsPage() {
   };
 
   const getPackages = async () => {
+    setIsLoading(true)
     const response = await apiCall("get", ProjectUrl, {}, params);
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
     setlist(docs ?? []);
+    setIsLoading(false)
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
   };
   const [show, setShow] = useState(false);
@@ -74,7 +78,7 @@ function ProjectsPage() {
     const response = await apiCall("post", ProjectUrl, dataToAdd);
 
     getProject();
-    ShowToast("Updated Successfully", true);
+    Show_Toast("Updated Successfully", true);
     setData({
       name: "",
       location: "",
@@ -182,7 +186,7 @@ function ProjectsPage() {
 
     await apiCall("put", `${ProjectUrl}/${editedItem.id}`, completeEditedItem);
     handleClose();
-    ShowToast("Updated Successfully", true);
+    Show_Toast("Updated Successfully", true);
     getPackages();
   };
 
@@ -192,7 +196,7 @@ function ProjectsPage() {
       data,
     });
     if (response.status) {
-      ShowToast("successfully deletd", true);
+      Show_Toast("successfully deletd", true);
       setRemove({ show: false, id: null });
       getProject();
     }
@@ -281,6 +285,9 @@ function ProjectsPage() {
 
   return (
     <div>
+       {isLoading ? (
+        <Loader/>
+      ):
       <div className="col-xl-12">
         <div className="card dz-card" id="bootstrap-table11">
           <div className="card-header flex-wrap d-flex justify-content-between">
@@ -374,11 +381,7 @@ function ProjectsPage() {
                     <tbody>
                       {!list ? (
                         <tr>
-                          <td colSpan={5} className="text-center py-4">
-                            <div className="spinner-border" role="status">
-                              <span className="sr-only">Loading...</span>
-                            </div>
-                          </td>
+                          
                         </tr>
                       ) : list?.length ? (
                         <>
@@ -549,6 +552,7 @@ function ProjectsPage() {
           </div>
         </div>
       </div>
+}
 
       {/* ------------view more modal---------------------- */}
 

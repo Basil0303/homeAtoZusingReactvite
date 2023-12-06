@@ -9,10 +9,13 @@ import Col from "react-bootstrap/Col";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import { handleSubmit } from "../../utils/Fns";
-import { ShowToast } from "../../utils/Toast";
+import { Show_Toast } from "../../utils/Toast";
+import Loader from "../../components/Loader/Loader";
 
 function Hometype() {
   const [validated, setValidated] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [data, setData] = useState({
     name: "",
@@ -54,9 +57,8 @@ function Hometype() {
   //add data
   const home = async () => {
     const response = await apiCall("post", homeUrl, data);
-    console.log(response.data);
     getHome();
-    ShowToast("Added Successfully", true);
+    Show_Toast("Added Successfully", true);
     setData({
       name: "",
     });
@@ -84,10 +86,9 @@ function Hometype() {
       ...editedItem,
       updatedAt: editedItem.updatedAt || new Date(),
     };
-    await apiCall("put", `${homeUrl}/${editedItem.id}`, editedData);
-    await apiCall("put", `${homeUrl}/${editedItem.id}`, editedData);
+     await apiCall("put", `${homeUrl}/${editedItem.id}`, editedData);
     handleClose();
-    ShowToast("Updated Successfully", true);
+    Show_Toast("Updated Successfully", true);
     getHome();
   };
 
@@ -131,10 +132,11 @@ function Hometype() {
   };
 
   const getHome = async () => {
+    setIsLoading(true)
     const response = await apiCall("get", homeUrl, {}, params);
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
-
     setlist(docs ?? []);
+    setIsLoading(false);
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
   };
 
@@ -153,6 +155,9 @@ function Hometype() {
 
   return (
     <div>
+       {isLoading ? (
+        <Loader/>
+      ):
       <div className="col-xl-12">
         <div className="card dz-card" id="bootstrap-table11">
           <div className="card-header flex-wrap d-flex justify-content-between">
@@ -244,11 +249,7 @@ function Hometype() {
                     <tbody>
                       {!list ? (
                         <tr>
-                          <td colSpan={3} className="text-center py-4">
-                            <div className="spinner-border" role="status">
-                              <span className="sr-only">Loading...</span>
-                            </div>
-                          </td>
+                          
                         </tr>
                       ) : list?.length ? (
                         <>
@@ -396,6 +397,7 @@ function Hometype() {
           </div>
         </div>
       </div>
+}
       {/*Add data in home */}
       <Modal show={show} onHide={handleClose}>
         <div className="card">

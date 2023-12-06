@@ -9,6 +9,8 @@ import { apiCall } from "../Services/ApiCall";
 import { adminLoginUrl } from "../Services/baseUrl";
 import { ContextDatas } from "../Services/Context";
 import jwtDecode from "jwt-decode";
+import { toast } from "react-toastify";
+import { Show_Toast } from "../utils/Toast";
 
 function LoginPage() {
   const [validated, setValidated] = useState(false);
@@ -22,25 +24,24 @@ function LoginPage() {
   const login = async () => {
     try {
       const response = await apiCall("post", adminLoginUrl, data);
-      
+
       const token = response.data;
-  
+
       // Store token in localStorage
       localStorage.setItem("token", token);
-  
+
       setUser(jwtDecode(token));
-  
-      alert("Login successful!");
-  
+
+      Show_Toast("Login Successfull", true);
+
       window.location.href = "/customer";
     } catch (error) {
-
       console.error("Login failed:", error);
-  
-      alert("Login failed. Please check your credentials and try again.");
+
+      Show_Toast("Login failed. Please check your credentials and try again.");
     }
   };
-  
+
   useEffect(() => {
     if (user) {
       window.location.href = "/customer";

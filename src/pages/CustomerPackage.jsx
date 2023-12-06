@@ -5,6 +5,9 @@ import { PackageApplicationUrl } from "../Services/baseUrl";
 
 function CustomerPackage() {
   const [list, setList] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const [params, setParams] = useState({
     page: 1,
     limit: 10,
@@ -18,7 +21,9 @@ function CustomerPackage() {
 
   //-----------------------------------get packages--------------------------
   const { userId } = useParams();
+
   const getPackages = async () => {
+    setIsLoading(true)
     const response = await apiCall(
       "get",
       `${PackageApplicationUrl}/${userId}`,
@@ -27,6 +32,7 @@ function CustomerPackage() {
     console.log("result", response);
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
     setList(docs ?? []);
+    setIsLoading(false)
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
   };
 
@@ -37,6 +43,9 @@ function CustomerPackage() {
 
   return (
     <div>
+       {isLoading ? (
+        <Loader/>
+      ):
       <div className="col-xl-12">
         <div className="card dz-card" id="bootstrap-table11">
           <div className="card-header flex-wrap d-flex justify-content-between">
@@ -132,6 +141,7 @@ function CustomerPackage() {
               </div>
             </div>
           </div>
+          
 
           {/* ----------------------------------pagination---------------------------------- */}
           <div className="d-flex justify-content-end mx-4 mb-3">
@@ -154,7 +164,11 @@ function CustomerPackage() {
           {/* -------------------------------pagination ends------------------------------- */}
         </div>
       </div>
+}
     </div>
+   
+   
+  
   );
 }
 

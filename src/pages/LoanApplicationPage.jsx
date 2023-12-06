@@ -5,12 +5,16 @@ import moment from "moment/moment";
 import Modal from "react-bootstrap/Modal";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { ShowToast } from "../utils/Toast";
+import {  Show_Toast } from "../utils/Toast";
 import { Button } from "react-bootstrap";
+import Loader from "../components/Loader/Loader";
 
 function LoanApplicationPage() {
   const [loanList, setloanList] = useState();
   const [allLoans, setallLoans] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const [params, setparams] = useState({
     page: 1,
     limit: 10,
@@ -34,10 +38,12 @@ function LoanApplicationPage() {
 
   // List Loan Applications
   const listLoanApplications = async () => {
+    setIsLoading(true);
     var response = await apiCall("get", loanUrl, { params });
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
     setloanList(docs ?? []);
     setallLoans(docs ?? []);
+    setIsLoading(false);
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
   };
 
@@ -116,7 +122,7 @@ function LoanApplicationPage() {
       updatedLoanData
     );
     if (response.status) {
-      ShowToast("Updated Successfully", true);
+      Show_Toast("Updated Successfully", true);
       listLoanApplications();
       setshow(false);
       setShowRejectionForm(false);
@@ -134,238 +140,236 @@ function LoanApplicationPage() {
   };
 
   return (
-    <>
-      <div className="col-xl-12">
-        <div className="card dz-card" id="bootstrap-table11">
-          <div className="card-header flex-wrap d-flex justify-content-between">
-            <div>
-              <h4 className="card-title">Loan Application</h4>
+    <div>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div className="col-xl-12">
+          <div className="card dz-card" id="bootstrap-table11">
+            <div className="card-header flex-wrap d-flex justify-content-between">
+              <div>
+                <h4 className="card-title">Loan Application</h4>
+              </div>
+
+              <ul
+                className="nav nav-tabs dzm-tabs"
+                id="myTab-8"
+                role="tablist"
+                style={{ backgroundColor: "white" }}
+              >
+                <li className="nav-item">
+                  <div className="input-group">
+                    <select
+                      className="form-select"
+                      id="exampleFormControlSelect1"
+                      aria-label="Default select example"
+                      style={{ width: "200px" }}
+                      onChange={(e) => handleFilter(e)}
+                    >
+                      <option disabled selected value="">
+                        -- Choose status --
+                      </option>
+                      <option value="all">All</option>
+                      <option value="eligible">Eligible</option>
+                      <option value="processing">Processing</option>
+                      <option value="rejected">Rejected</option>
+                      <option value="review">Review</option>
+                      <option value="submitted">Submitted</option>
+                    </select>
+                  </div>
+                </li>
+              </ul>
             </div>
 
-            <ul
-              className="nav nav-tabs dzm-tabs"
-              id="myTab-8"
-              role="tablist"
-              style={{ backgroundColor: "white" }}
-            >
-              <li className="nav-item">
-                <div className="input-group">
-                  <select
-                    className="form-select"
-                    id="exampleFormControlSelect1"
-                    aria-label="Default select example"
-                    style={{ width: "200px" }}
-                    onChange={(e) => handleFilter(e)}
-                  >
-                    <option disabled selected value="">
-                      -- Choose status --
-                    </option>
-                    <option value="all">All</option>
-                    <option value="eligible">Eligible</option>
-                    <option value="processing">Processing</option>
-                    <option value="rejected">Rejected</option>
-                    <option value="review">Review</option>
-                    <option value="submitted">Submitted</option>
-                  </select>
-                </div>
-              </li>
-            </ul>
-          </div>
-
-          <div className="tab-content" id="myTabContent-8">
-            <div
-              className="tab-pane fade show active"
-              id="activebackground"
-              role="tabpanel"
-              aria-labelledby="home-tab-8"
-            >
-              <div className="card-body">
-                <div className="table-responsive">
-                  <table className="table header-border table-responsive-sm">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Applied Date</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {!loanList ? (
+            <div className="tab-content" id="myTabContent-8">
+              <div
+                className="tab-pane fade show active"
+                id="activebackground"
+                role="tabpanel"
+                aria-labelledby="home-tab-8"
+              >
+                <div className="card-body">
+                  <div className="table-responsive">
+                    <table className="table header-border table-responsive-sm">
+                      <thead>
                         <tr>
-                          <td colSpan={6} className="text-center py-4">
-                            <div className="spinner-border" role="status">
-                              <span className="sr-only">Loading...</span>
-                            </div>
-                          </td>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>Phone</th>
+                          <th>Applied Date</th>
+                          <th>Status</th>
+                          <th>Action</th>
                         </tr>
-                      ) : loanList?.length ? (
-                        <>
-                          {loanList.map((item, key) => (
-                            <>
-                              <tr key={item._id}>
-                                <td colSpan={1}>
-                                  <ul>
-                                    <li>
-                                      {params.page === 1
-                                        ? key + 1 > 9
-                                          ? key + 1
-                                          : "0" + (key + 1)
-                                        : params.limit * (params.page - 1) +
-                                          (key + 1 > 9
+                      </thead>
+                      <tbody>
+                        {!loanList ? (
+                          <tr></tr>
+                        ) : loanList?.length ? (
+                          <>
+                            {loanList.map((item, key) => (
+                              <>
+                                <tr key={item._id}>
+                                  <td colSpan={1}>
+                                    <ul>
+                                      <li>
+                                        {params.page === 1
+                                          ? key + 1 > 9
                                             ? key + 1
-                                            : "0" + (key + 1))}
-                                    </li>
-                                  </ul>
-                                </td>
-                                <td>{item?.user_id?.fullName ?? ""}</td>
-                                <td>{item?.user_id?.mobile ?? ""}</td>
-                                <td>
-                                  {moment(item?.createdAt ?? "").format(
-                                    "DD-MM-YYYY"
-                                  )}
-                                </td>
-                                <td>
-                                  {item?.status === "submitted" && (
-                                    <span className="badge  bg-primary px-2">
-                                      Submitted
-                                    </span>
-                                  )}
+                                            : "0" + (key + 1)
+                                          : params.limit * (params.page - 1) +
+                                            (key + 1 > 9
+                                              ? key + 1
+                                              : "0" + (key + 1))}
+                                      </li>
+                                    </ul>
+                                  </td>
+                                  <td>{item?.user_id?.fullName ?? ""}</td>
+                                  <td>{item?.user_id?.mobile ?? ""}</td>
+                                  <td>
+                                    {moment(item?.createdAt ?? "").format(
+                                      "DD-MM-YYYY"
+                                    )}
+                                  </td>
+                                  <td>
+                                    {item?.status === "submitted" && (
+                                      <span className="badge  bg-primary px-2">
+                                        Submitted
+                                      </span>
+                                    )}
 
-                                  {item?.status === "review" && (
-                                    <span className="badge  bg-info px-2">
-                                      Review
-                                    </span>
-                                  )}
+                                    {item?.status === "review" && (
+                                      <span className="badge  bg-info px-2">
+                                        Review
+                                      </span>
+                                    )}
 
-                                  {item?.status === "processing" && (
-                                    <span
-                                      className="badge rounded-pill bg-warning px-2"
-                                      style={{ fontSize: "9px" }}
-                                    >
-                                      Processing
-                                    </span>
-                                  )}
-
-                                  {item?.status === "rejected" && (
-                                    <span
-                                      className="badge rounded-pill bg-danger px-2"
-                                      style={{ fontSize: "9px" }}
-                                    >
-                                      Rejected
-                                    </span>
-                                  )}
-
-                                  {item?.status === "eligible" && (
-                                    <span
-                                      className="badge rounded-pill bg-success px-2"
-                                      style={{ fontSize: "9px" }}
-                                    >
-                                      Eligible
-                                    </span>
-                                  )}
-                                </td>
-                                <td>
-                                  <div className="dropdown">
-                                    <button
-                                      type="button"
-                                      className="btn btn-light sharp"
-                                      data-bs-toggle="dropdown"
-                                    >
-                                      <svg
-                                        width="20px"
-                                        height="20px"
-                                        viewBox="0 0 24 24"
-                                        version="1.1"
+                                    {item?.status === "processing" && (
+                                      <span
+                                        className="badge rounded-pill bg-warning px-2"
+                                        style={{ fontSize: "9px" }}
                                       >
-                                        <g
-                                          stroke="none"
-                                          strokeWidth={1}
-                                          fill="none"
-                                          fillRule="evenodd"
+                                        Processing
+                                      </span>
+                                    )}
+
+                                    {item?.status === "rejected" && (
+                                      <span
+                                        className="badge rounded-pill bg-danger px-2"
+                                        style={{ fontSize: "9px" }}
+                                      >
+                                        Rejected
+                                      </span>
+                                    )}
+
+                                    {item?.status === "eligible" && (
+                                      <span
+                                        className="badge rounded-pill bg-success px-2"
+                                        style={{ fontSize: "9px" }}
+                                      >
+                                        Eligible
+                                      </span>
+                                    )}
+                                  </td>
+                                  <td>
+                                    <div className="dropdown">
+                                      <button
+                                        type="button"
+                                        className="btn btn-light sharp"
+                                        data-bs-toggle="dropdown"
+                                      >
+                                        <svg
+                                          width="20px"
+                                          height="20px"
+                                          viewBox="0 0 24 24"
+                                          version="1.1"
                                         >
-                                          <rect
-                                            x={0}
-                                            y={0}
-                                            width={24}
-                                            height={24}
-                                          />
-                                          <circle
-                                            fill="#000000"
-                                            cx={5}
-                                            cy={12}
-                                            r={2}
-                                          />
-                                          <circle
-                                            fill="#000000"
-                                            cx={12}
-                                            cy={12}
-                                            r={2}
-                                          />
-                                          <circle
-                                            fill="#000000"
-                                            cx={19}
-                                            cy={12}
-                                            r={2}
-                                          />
-                                        </g>
-                                      </svg>
-                                    </button>
-                                    <div className="dropdown-menu">
-                                      <a
-                                        className="dropdown-item"
-                                        href="#"
-                                        onClick={() =>
-                                          loanApplicationModal(item)
-                                        }
-                                      >
-                                        View more
-                                      </a>
+                                          <g
+                                            stroke="none"
+                                            strokeWidth={1}
+                                            fill="none"
+                                            fillRule="evenodd"
+                                          >
+                                            <rect
+                                              x={0}
+                                              y={0}
+                                              width={24}
+                                              height={24}
+                                            />
+                                            <circle
+                                              fill="#000000"
+                                              cx={5}
+                                              cy={12}
+                                              r={2}
+                                            />
+                                            <circle
+                                              fill="#000000"
+                                              cx={12}
+                                              cy={12}
+                                              r={2}
+                                            />
+                                            <circle
+                                              fill="#000000"
+                                              cx={19}
+                                              cy={12}
+                                              r={2}
+                                            />
+                                          </g>
+                                        </svg>
+                                      </button>
+                                      <div className="dropdown-menu">
+                                        <a
+                                          className="dropdown-item"
+                                          href="#"
+                                          onClick={() =>
+                                            loanApplicationModal(item)
+                                          }
+                                        >
+                                          View more
+                                        </a>
+                                      </div>
                                     </div>
-                                  </div>
-                                </td>
-                              </tr>
-                            </>
-                          ))}
-                        </>
-                      ) : (
-                        <tr>
-                          <td
-                            colSpan={6}
-                            className="text-center py-4 text-primary"
-                          >
-                            <b>No data</b>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+                                  </td>
+                                </tr>
+                              </>
+                            ))}
+                          </>
+                        ) : (
+                          <tr>
+                            <td
+                              colSpan={6}
+                              className="text-center py-4 text-primary"
+                            >
+                              <b>No data</b>
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Pagination */}
-          <div className="d-flex justify-content-end mx-4 mb-3">
-            <button
-              className="btn btn-sm btn-primary"
-              disabled={pagination.hasPreviousPage == false}
-              onClick={() => setparams({ ...params, page: params.page - 1 })}
-            >
-              <i className="fa-solid fa-angle-left" />
-            </button>
-            <button
-              className="btn btn-sm btn-primary mx-1"
-              disabled={pagination.hasNextPage == false}
-              onClick={() => setparams({ ...params, page: params.page + 1 })}
-            >
-              <i className="fa-solid fa-angle-right" />
-            </button>
+            {/* Pagination */}
+            <div className="d-flex justify-content-end mx-4 mb-3">
+              <button
+                className="btn btn-sm btn-primary"
+                disabled={pagination.hasPreviousPage == false}
+                onClick={() => setparams({ ...params, page: params.page - 1 })}
+              >
+                <i className="fa-solid fa-angle-left" />
+              </button>
+              <button
+                className="btn btn-sm btn-primary mx-1"
+                disabled={pagination.hasNextPage == false}
+                onClick={() => setparams({ ...params, page: params.page + 1 })}
+              >
+                <i className="fa-solid fa-angle-right" />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <Modal
         show={show}
@@ -821,7 +825,7 @@ function LoanApplicationPage() {
           </div>
         </div>
       </Modal>
-    </>
+    </div>
   );
 }
 

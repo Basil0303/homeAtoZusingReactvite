@@ -4,7 +4,7 @@ import "react-quill/dist/quill.snow.css";
 import { AddSettingsUrl, SettingsUrl } from "../Services/baseUrl";
 import { apiCall } from "../Services/ApiCall";
 import { useNavigate } from "react-router-dom";
-import { ShowToast } from "../utils/Toast";
+import { Show_Toast } from "../utils/Toast";
 import { Button } from "react-bootstrap";
 import Loader from "../components/Loader/Loader";
 
@@ -41,14 +41,14 @@ function AddSettings() {
         );
 
         if (updatedData.status === true) {
-          ShowToast("Updated Successfully", true);
+          Show_Toast("Updated Successfully", true);
           navigate("/Settings");
         }
       } else {
         const addedData = await apiCall("post", AddSettingsUrl, settingDetail);
 
         if (addedData.status === true) {
-          ShowToast("Added Successfully", true);
+          Show_Toast("Added Successfully", true);
           navigate("/Settings");
         }
       }

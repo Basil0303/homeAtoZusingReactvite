@@ -9,10 +9,13 @@ import Col from "react-bootstrap/Col";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import { handleSubmit } from "../../utils/Fns";
-import { ShowToast } from "../../utils/Toast";
+import { Show_Toast} from "../../utils/Toast";
+import Loader from "../../components/Loader/Loader";
 
 function Materials() {
   const [validated, setValidated] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [data, setData] = useState({
     name: "",
@@ -30,7 +33,7 @@ function Materials() {
     const response = await apiCall("post", materialsUrl, data);
     console.log(response.data);
     getHome();
-    ShowToast("Added Successfully", true);
+    Show_Toast("Added Successfully", true);
     setData({
       name: "",
       description: "",
@@ -59,7 +62,7 @@ function Materials() {
     var data = editedItem;
     await apiCall("put", `${materialsUrl}/${editedItem.id}`, data);
     handleClose();
-    ShowToast("Updated Successfully", true);
+    Show_Toast("Updated Successfully", true);
     getHome();
   };
 
@@ -103,10 +106,11 @@ function Materials() {
   };
 
   const getHome = async () => {
+    setIsLoading(true);
     const response = await apiCall("get", materialsUrl, {}, params);
     const { hasNextPage, hasPreviousPage, totalDocs, docs } = response?.data;
-
     setlist(docs ?? []);
+    setIsLoading(false);
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
   };
 
@@ -127,244 +131,240 @@ function Materials() {
 
   return (
     <div>
-      <div className="col-xl-12">
-        <div className="card dz-card" id="bootstrap-table11">
-          <div className="card-header flex-wrap d-flex justify-content-between">
-            <div>
-              <h4 className="card-title">Materials Table</h4>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div className="col-xl-12">
+          <div className="card dz-card" id="bootstrap-table11">
+            <div className="card-header flex-wrap d-flex justify-content-between">
+              <div>
+                <h4 className="card-title">Materials Table</h4>
+              </div>
+
+              <ul
+                className="nav nav-tabs dzm-tabs"
+                id="myTab-8"
+                role="tablist"
+                style={{ backgroundColor: "white" }}
+              >
+                <li className="nav-item me-1" role="presentation">
+                  <div className="input-group search-area">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Search here..."
+                      value={params.query}
+                      onChange={(e) =>
+                        setparams({ ...params, query: e.target.value })
+                      }
+                    />
+
+                    <span className="input-group-text">
+                      <a href="javascript:void(0)">
+                        <svg
+                          width={24}
+                          height={24}
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g clipPath="url(#clip0_1_450)">
+                            <path
+                              opacity="0.3"
+                              d="M14.2929 16.7071C13.9024 16.3166 13.9024 15.6834 14.2929 15.2929C14.6834 14.9024 15.3166 14.9024 15.7071 15.2929L19.7071 19.2929C20.0976 19.6834 20.0976 20.3166 19.7071 20.7071C19.3166 21.0976 18.6834 21.0976 18.2929 20.7071L14.2929 16.7071Z"
+                              fill="#452B90"
+                            />
+                            <path
+                              d="M11 16C13.7614 16 16 13.7614 16 11C16 8.23859 13.7614 6.00002 11 6.00002C8.23858 6.00002 6 8.23859 6 11C6 13.7614 8.23858 16 11 16ZM11 18C7.13401 18 4 14.866 4 11C4 7.13402 7.13401 4.00002 11 4.00002C14.866 4.00002 18 7.13402 18 11C18 14.866 14.866 18 11 18Z"
+                              fill="#452B90"
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id="clip0_1_450">
+                              <rect width={24} height={24} fill="white" />
+                            </clipPath>
+                          </defs>
+                        </svg>
+                      </a>
+                    </span>
+                  </div>
+                </li>
+
+                <li className="nav-item ms-1">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setValidated(false);
+                      setShow(true);
+                    }}
+                    className="btn btn-sm btn-primary form-control"
+                  >
+                    <i className="fa fa-plus" aria-hidden="true" />
+                  </button>
+                </li>
+              </ul>
             </div>
 
-            <ul
-              className="nav nav-tabs dzm-tabs"
-              id="myTab-8"
-              role="tablist"
-              style={{ backgroundColor: "white" }}
-            >
-              <li className="nav-item me-1" role="presentation">
-                <div className="input-group search-area">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Search here..."
-                    value={params.query}
-                    onChange={(e) =>
-                      setparams({ ...params, query: e.target.value })
-                    }
-                  />
-
-                  <span className="input-group-text">
-                    <a href="javascript:void(0)">
-                      <svg
-                        width={24}
-                        height={24}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g clipPath="url(#clip0_1_450)">
-                          <path
-                            opacity="0.3"
-                            d="M14.2929 16.7071C13.9024 16.3166 13.9024 15.6834 14.2929 15.2929C14.6834 14.9024 15.3166 14.9024 15.7071 15.2929L19.7071 19.2929C20.0976 19.6834 20.0976 20.3166 19.7071 20.7071C19.3166 21.0976 18.6834 21.0976 18.2929 20.7071L14.2929 16.7071Z"
-                            fill="#452B90"
-                          />
-                          <path
-                            d="M11 16C13.7614 16 16 13.7614 16 11C16 8.23859 13.7614 6.00002 11 6.00002C8.23858 6.00002 6 8.23859 6 11C6 13.7614 8.23858 16 11 16ZM11 18C7.13401 18 4 14.866 4 11C4 7.13402 7.13401 4.00002 11 4.00002C14.866 4.00002 18 7.13402 18 11C18 14.866 14.866 18 11 18Z"
-                            fill="#452B90"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_1_450">
-                            <rect width={24} height={24} fill="white" />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </a>
-                  </span>
-                </div>
-              </li>
-
-              <li className="nav-item ms-1">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setValidated(false);
-                    setShow(true);
-                  }}
-                  className="btn btn-sm btn-primary form-control"
-                >
-                  <i className="fa fa-plus" aria-hidden="true" />
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          <div className="tab-content" id="myTabContent-8">
-            <div
-              className="tab-pane fade show active"
-              id="activebackground"
-              role="tabpanel"
-              aria-labelledby="home-tab-8"
-            >
-              <div className="card-body">
-                <div className="table-responsive">
-                  <table className="table header-border table-responsive-sm">
-                    <thead>
-                      <tr>
-                        <th>SL No</th>
-                        
-                        <th>Name</th>
-                        <th>description</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {!list ? (
+            <div className="tab-content" id="myTabContent-8">
+              <div
+                className="tab-pane fade show active"
+                id="activebackground"
+                role="tabpanel"
+                aria-labelledby="home-tab-8"
+              >
+                <div className="card-body">
+                  <div className="table-responsive">
+                    <table className="table header-border table-responsive-sm">
+                      <thead>
                         <tr>
-                          <td colSpan={5} className="text-center py-4">
-                            <div className="spinner-border" role="status">
-                              <span className="sr-only">Loading...</span>
-                            </div>
-                          </td>
-                        </tr>
-                      ) : list?.length ? (
-                        <>
-                          {list.map((item, key) => (
-                            <tr key={item._id}>
-                              <td>
-                                <ul>
-                                  <li>
-                                    {params.page === 1
-                                      ? key + 1 > 9
-                                        ? key + 1
-                                        : "0" + (key + 1)
-                                      : params.limit * (params.page - 1) +
-                                        (key + 1 > 9
-                                          ? key + 1
-                                          : "0" + (key + 1))}
-                                  </li>
-                                </ul>
-                              </td>
+                          <th>SL No</th>
 
-                            
-                              <td>{item?.name}</td>
-                              <td>{item?.description}</td>
-                              {/* <td>{item?.createdAt}</td>
+                          <th>Name</th>
+                          <th>description</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {!list ? (
+                          <tr></tr>
+                        ) : list?.length ? (
+                          <>
+                            {list.map((item, key) => (
+                              <tr key={item._id}>
+                                <td>
+                                  <ul>
+                                    <li>
+                                      {params.page === 1
+                                        ? key + 1 > 9
+                                          ? key + 1
+                                          : "0" + (key + 1)
+                                        : params.limit * (params.page - 1) +
+                                          (key + 1 > 9
+                                            ? key + 1
+                                            : "0" + (key + 1))}
+                                    </li>
+                                  </ul>
+                                </td>
+
+                                <td>{item?.name}</td>
+                                <td>{item?.description}</td>
+                                {/* <td>{item?.createdAt}</td>
                               <td>{item?.updatedAt}</td> */}
 
-                              <td>
-                                <div className="dropdown">
-                                  <button
-                                    type="button"
-                                    className="btn btn-light sharp"
-                                    data-bs-toggle="dropdown"
-                                  >
-                                    <svg
-                                      width="20px"
-                                      height="20px"
-                                      viewBox="0 0 24 24"
-                                      version="1.1"
+                                <td>
+                                  <div className="dropdown">
+                                    <button
+                                      type="button"
+                                      className="btn btn-light sharp"
+                                      data-bs-toggle="dropdown"
                                     >
-                                      <g
-                                        stroke="none"
-                                        strokeWidth={1}
-                                        fill="none"
-                                        fillRule="evenodd"
+                                      <svg
+                                        width="20px"
+                                        height="20px"
+                                        viewBox="0 0 24 24"
+                                        version="1.1"
                                       >
-                                        <rect
-                                          x={0}
-                                          y={0}
-                                          width={24}
-                                          height={24}
-                                        />
-                                        <circle
-                                          fill="#000000"
-                                          cx={5}
-                                          cy={12}
-                                          r={2}
-                                        />
-                                        <circle
-                                          fill="#000000"
-                                          cx={12}
-                                          cy={12}
-                                          r={2}
-                                        />
-                                        <circle
-                                          fill="#000000"
-                                          cx={19}
-                                          cy={12}
-                                          r={2}
-                                        />
-                                      </g>
-                                    </svg>
-                                  </button>
-                                  <div className="dropdown-menu">
-                                    <a
-                                      className="dropdown-item"
-                                      href="#"
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        EditData(item);
-                                      }}
-                                    >
-                                      Edit
-                                    </a>
-                                    <a
-                                      className="dropdown-item  text-danger"
-                                      href="#"
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        setRemove({
-                                          ...remove,
-                                          show: true,
-                                          id: item._id,
-                                        });
-                                      }}
-                                    >
-                                      Delete
-                                    </a>
+                                        <g
+                                          stroke="none"
+                                          strokeWidth={1}
+                                          fill="none"
+                                          fillRule="evenodd"
+                                        >
+                                          <rect
+                                            x={0}
+                                            y={0}
+                                            width={24}
+                                            height={24}
+                                          />
+                                          <circle
+                                            fill="#000000"
+                                            cx={5}
+                                            cy={12}
+                                            r={2}
+                                          />
+                                          <circle
+                                            fill="#000000"
+                                            cx={12}
+                                            cy={12}
+                                            r={2}
+                                          />
+                                          <circle
+                                            fill="#000000"
+                                            cx={19}
+                                            cy={12}
+                                            r={2}
+                                          />
+                                        </g>
+                                      </svg>
+                                    </button>
+                                    <div className="dropdown-menu">
+                                      <a
+                                        className="dropdown-item"
+                                        href="#"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          EditData(item);
+                                        }}
+                                      >
+                                        Edit
+                                      </a>
+                                      <a
+                                        className="dropdown-item  text-danger"
+                                        href="#"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          setRemove({
+                                            ...remove,
+                                            show: true,
+                                            id: item._id,
+                                          });
+                                        }}
+                                      >
+                                        Delete
+                                      </a>
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </>
-                      ) : (
-                        <tr>
-                          <td
-                            colSpan={5}
-                            className="text-center py-4 text-primary"
-                          >
-                            <b>No data</b>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+                                </td>
+                              </tr>
+                            ))}
+                          </>
+                        ) : (
+                          <tr>
+                            <td
+                              colSpan={5}
+                              className="text-center py-4 text-primary"
+                            >
+                              <b>No data</b>
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="d-flex justify-content-end mx-4 mb-3">
-            <button
-              className="btn btn-sm btn-primary"
-              disabled={pagination.hasPreviousPage == false}
-              onClick={() => setparams({ ...params, page: params.page - 1 })}
-            >
-              <i className="fa-solid fa-angle-left" />
-            </button>
+            <div className="d-flex justify-content-end mx-4 mb-3">
+              <button
+                className="btn btn-sm btn-primary"
+                disabled={pagination.hasPreviousPage == false}
+                onClick={() => setparams({ ...params, page: params.page - 1 })}
+              >
+                <i className="fa-solid fa-angle-left" />
+              </button>
 
-            <button
-              className="btn btn-sm btn-primary mx-1"
-              disabled={pagination.hasNextPage == false}
-              onClick={() => setparams({ ...params, page: params.page + 1 })}
-            >
-              <i className="fa-solid fa-angle-right" />
-            </button>
+              <button
+                className="btn btn-sm btn-primary mx-1"
+                disabled={pagination.hasNextPage == false}
+                onClick={() => setparams({ ...params, page: params.page + 1 })}
+              >
+                <i className="fa-solid fa-angle-right" />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-
+      )}
       {/*Add data in form */}
       <Modal show={show} onHide={handleClose}>
         <div className="card">
@@ -419,7 +419,7 @@ function Materials() {
                       backgroundColor: "grey",
                       color: "white",
                     }}
-                    size="sm" 
+                    size="sm"
                     onClick={handleClose}
                   >
                     Close
@@ -444,12 +444,12 @@ function Materials() {
               backgroundColor: "grey",
               color: "white",
             }}
-            size="sm" 
+            size="sm"
             onClick={handleCloses}
           >
             No
           </Button>
-          <Button variant="danger"  size="sm"onClick={handleDelete}>
+          <Button variant="danger" size="sm" onClick={handleDelete}>
             Yes
           </Button>
         </Modal.Footer>
@@ -503,12 +503,17 @@ function Materials() {
                       backgroundColor: "grey",
                       color: "white",
                     }}
-                    size="sm" 
+                    size="sm"
                     onClick={handleClos}
                   >
                     Close
                   </Button>
-                  <Button variant="success" size="sm" type="submit" onClick={handleClos}>
+                  <Button
+                    variant="success"
+                    size="sm"
+                    type="submit"
+                    onClick={handleClos}
+                  >
                     Save Changes
                   </Button>
                 </Modal.Footer>
