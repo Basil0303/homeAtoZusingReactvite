@@ -122,7 +122,8 @@ function Packages() {
       };
       const response = await apiCall("post", PackageUrl, dataToAdd);
       getHome();
-      ShowToast("Added Successfully", true);1111
+      ShowToast("Added Successfully", true);
+      1111;
       setData({});
       setValidated(false);
       setShow(false);
@@ -156,11 +157,11 @@ function Packages() {
       cover_image: editedItem.cover_image,
       gallery_imgs: editedItem.gallery_imgs,
     };
-    var materialsID = []
+    var materialsID = [];
     selectedOptions.forEach((element) => {
-      materialsID.push(element.value)
-    })
-    completeEditedItem.materials = materialsID
+      materialsID.push(element.value);
+    });
+    completeEditedItem.materials = materialsID;
     await apiCall("put", `${PackageUrl}/${editedItem.id}`, completeEditedItem);
     handleClos();
     ShowToast("Updated Successfully", true);
@@ -250,7 +251,7 @@ function Packages() {
       minFiles: 1,
       uploadInBackground: false,
       onUploadDone: (res) => {
-        console.log("............",res)
+        console.log("............", res);
         const uploadedImages = res.filesUploaded.map((file) => file.url);
         setData({ ...data, gallery_imgs: uploadedImages });
         setEditedItem({
@@ -346,13 +347,12 @@ function Packages() {
                     <thead>
                       <tr>
                         <th>SL No</th>
-                        <th></th>
+                        <th>Image</th>
                         <th>Name</th>
                         <th>Home Type Name</th>
                         <th>Price Per Sqft</th>
                         <th>Description</th>
-                        <th />
-                        <th />
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -406,8 +406,12 @@ function Packages() {
                               <td>{item?.name}</td>
                               <td>{item?.home_type_id?.name}</td>
                               <td>{item?.price_per_sqft}</td>
-                              <td>{item?.description}</td>
-                              <td>{item?.materials?.name}</td>
+                              <td>
+                                {item.description.length > 40
+                                  ? `${item.description.substring(0, 40)}...`
+                                  : item.description}
+                              </td>
+                              {/* <td>{item?.materials?.name}</td> */}
                               <td>
                                 <div className="dropdown">
                                   <button
@@ -466,6 +470,16 @@ function Packages() {
                                       Edit
                                     </a>
                                     <a
+                                      className="dropdown-item"
+                                      href="#"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        Viewmore(item);
+                                      }}
+                                    >
+                                      View more
+                                    </a>
+                                    <a
                                       className="dropdown-item  text-danger"
                                       href="#"
                                       onClick={(e) => {
@@ -478,16 +492,6 @@ function Packages() {
                                       }}
                                     >
                                       Delete
-                                    </a>
-                                    <a
-                                      className="dropdown-item"
-                                      href="#"
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        Viewmore(item);
-                                      }}
-                                    >
-                                      View more
                                     </a>
                                   </div>
                                 </div>
@@ -673,10 +677,10 @@ function Packages() {
                   ))}
                 </Form.Group>
                 <Modal.Footer>
-                  <Button variant="dark" onClick={handleClose}>
+                  <Button variant="dark" size="sm" onClick={handleClose}>
                     Close
                   </Button>
-                  <Button variant="success" type="submit">
+                  <Button variant="success" size="sm" type="submit">
                     Submit
                   </Button>
                 </Modal.Footer>
@@ -691,10 +695,10 @@ function Packages() {
           <p>Are you sure you want to delete? </p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="dark" onClick={handleCloses}>
+          <Button variant="dark" size="sm" onClick={handleCloses}>
             No
           </Button>
-          <Button variant="danger" onClick={handleDelete}>
+          <Button variant="danger" size="sm" onClick={handleDelete}>
             Yes
           </Button>
         </Modal.Footer>
@@ -840,10 +844,10 @@ function Packages() {
                 </Form.Group>
 
                 <Modal.Footer>
-                  <Button variant="dark" onClick={handleClos}>
+                  <Button variant="dark" size="sm" onClick={handleClos}>
                     Close
                   </Button>
-                  <Button variant="success" type="submit">
+                  <Button variant="success" size="sm" type="submit">
                     Save Changes
                   </Button>
                 </Modal.Footer>
@@ -884,7 +888,7 @@ function Packages() {
                         </div>
                       </div>
                       <hr />
-                      <div className="row profileData">
+                      {/* <div className="row profileData">
                         <label
                           className="col-sm-4 col-form-label"
                           htmlFor="basic-default-name"
@@ -925,7 +929,7 @@ function Packages() {
                           ))}
                         </div>
                       </div>
-                      <hr />
+                      <hr /> */}
                       <div className="row profileData">
                         <label
                           className="col-sm-4 col-form-label"

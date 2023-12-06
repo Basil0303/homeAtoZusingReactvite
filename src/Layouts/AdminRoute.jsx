@@ -1,8 +1,9 @@
 import React, { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { ContextDatas } from "../Services/Context";
 
 function AdminRoute() {

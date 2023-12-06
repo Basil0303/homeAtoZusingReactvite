@@ -187,6 +187,7 @@ function Materials() {
                 <button
                   onClick={(e) => {
                     e.preventDefault();
+                    setValidated(false);
                     setShow(true);
                   }}
                   className="btn btn-sm btn-primary form-control"
@@ -418,11 +419,12 @@ function Materials() {
                       backgroundColor: "grey",
                       color: "white",
                     }}
+                    size="sm" 
                     onClick={handleClose}
                   >
                     Close
                   </Button>
-                  <Button variant="success" type="submit">
+                  <Button variant="success" size="sm" type="submit">
                     Submit
                   </Button>
                 </Modal.Footer>
@@ -442,11 +444,12 @@ function Materials() {
               backgroundColor: "grey",
               color: "white",
             }}
+            size="sm" 
             onClick={handleCloses}
           >
             No
           </Button>
-          <Button variant="danger" onClick={handleDelete}>
+          <Button variant="danger"  size="sm"onClick={handleDelete}>
             Yes
           </Button>
         </Modal.Footer>
@@ -500,11 +503,12 @@ function Materials() {
                       backgroundColor: "grey",
                       color: "white",
                     }}
+                    size="sm" 
                     onClick={handleClos}
                   >
                     Close
                   </Button>
-                  <Button variant="success" type="submit" onClick={handleClos}>
+                  <Button variant="success" size="sm" type="submit" onClick={handleClos}>
                     Save Changes
                   </Button>
                 </Modal.Footer>

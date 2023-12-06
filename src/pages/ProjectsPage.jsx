@@ -12,13 +12,12 @@ import { ShowToast } from "../utils/Toast";
 
 function ProjectsPage() {
   const [validated, setValidated] = useState(false);
-  const [details, setDetails] = useState({ show: false, data: null })
-  console.log(details, 'details modal')
-
+  const [details, setDetails] = useState({ show: false, data: null });
+  console.log(details, "details modal");
 
   const [params, setparams] = useState({
     page: 1,
-    limit: 10,
+    limit: 5,
     query: "",
   });
 
@@ -181,11 +180,7 @@ function ProjectsPage() {
       plan: editedItem.plan,
     };
 
-    await apiCall(
-      "put",
-      `${ProjectUrl}/${editedItem.id}`,
-      completeEditedItem
-    );
+    await apiCall("put", `${ProjectUrl}/${editedItem.id}`, completeEditedItem);
     handleClose();
     ShowToast("Updated Successfully", true);
     getPackages();
@@ -196,8 +191,11 @@ function ProjectsPage() {
     const response = await apiCall("delete", `${ProjectUrl}/${remove.id}`, {
       data,
     });
-    setRemove({ show: false, id: null });
-    getProject();
+    if (response.status) {
+      ShowToast("successfully deletd", true);
+      setRemove({ show: false, id: null });
+      getProject();
+    }
   };
 
   //get data
@@ -208,7 +206,7 @@ function ProjectsPage() {
     setpagination({ hasNextPage, hasPreviousPage, totalDocs });
   };
 
-  const handleClose = () =>{
+  const handleClose = () => {
     setShow(false);
     setData({
       name: "",
@@ -223,14 +221,14 @@ function ProjectsPage() {
         total_Sqft: "",
       },
     });
-  } 
+  };
 
   const [remove, setRemove] = useState({
     show: false,
     id: null,
   });
 
-  const handleCloses = () => setRemove({show:false,id:null});
+  const handleCloses = () => setRemove({ show: false, id: null });
 
   //gallery images using file stack
   const client = filestack.init("AaRWObgSHSuGtGR3HqMYBz");
@@ -360,7 +358,6 @@ function ProjectsPage() {
               role="tabpanel"
               aria-labelledby="home-tab-8"
             >
-              
               <div className="card-body">
                 <div className="table-responsive">
                   <table className="table  table-responsive-sm">
@@ -370,9 +367,8 @@ function ProjectsPage() {
                         <th>Name</th>
                         <th>Location</th>
                         <th>Cover</th>
-                        <th />
+                        <th>Type </th>
                         <th>Action</th>
-                        <th />
                       </tr>
                     </thead>
                     <tbody>
@@ -396,30 +392,24 @@ function ProjectsPage() {
                                         ? key + 1
                                         : "0" + (key + 1)
                                       : params.limit * (params.page - 1) +
-                                      (key + 1 > 9
-                                        ? key + 1
-                                        : "0" + (key + 1))}
+                                        (key + 1 > 9
+                                          ? key + 1
+                                          : "0" + (key + 1))}
                                   </li>
                                 </ul>
                               </td>
                               <td>{item?.name}</td>
                               <td>{item?.location}</td>
-                              <td> <img src={item?.gallery} height={'100px'} width={'100px'} alt="" /></td>
+                              <td> <img src={item?.gallery} height={'50px'} width={'50px'} alt="" /></td>
                               <td>
                                 {item?.featured && (
-                                  <span
-                                    class="badge  bg-secondary px-2"
-                                 
-                                  >
+                                  <span class="badge  bg-secondary px-2">
                                     featured
                                   </span>
                                 )}
 
                                 {item?.popular && (
-                                  <span
-                                    class="badge  bg-success px-2 mx-1"
-                    
-                                  >
+                                  <span class="badge  bg-success px-2 mx-1">
                                     popular
                                   </span>
                                 )}
@@ -496,6 +486,13 @@ function ProjectsPage() {
                                       Edit
                                     </a>
                                     <a
+                                      className="dropdown-item"
+                                      href="#"
+                                      onClick={() => setDetails({ show: true, data: item })}
+                                    >
+                                      View more
+                                    </a>
+                                    <a
                                       className="dropdown-item  text-danger"
                                       href="#"
                                       onClick={(e) => {
@@ -509,13 +506,7 @@ function ProjectsPage() {
                                     >
                                       Delete
                                     </a>
-                                    <a
-                                      className="dropdown-item"
-                                      href="#"
-                                      onClick={() => setDetails({ show: true, data: item })}
-                                    >
-                                      View more
-                                    </a>
+                                   
                                   </div>
                                 </div>
                               </td>
@@ -559,10 +550,6 @@ function ProjectsPage() {
         </div>
       </div>
 
-
-
-
-
       {/* ------------view more modal---------------------- */}
 
       <Modal
@@ -582,8 +569,6 @@ function ProjectsPage() {
           </div>
           <div className="card-body">
             <div className="row">
-
-
               <div>
                 <h5 className="modal-title mb-3" id="exampleModalLabel3">
                   Project Details
@@ -593,8 +578,6 @@ function ProjectsPage() {
                 <div className="card mb-4">
                   <div className="card-body p-2">
                     <form style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-
-
                       <div className="row profileData">
                         <label
                           className="col-sm-4 col-form-label"
@@ -618,9 +601,7 @@ function ProjectsPage() {
                           <span>description</span>
                         </label>
                         <div className="col-sm-7 mt-2">
-                          <span>
-                            {details?.data?.description}
-                          </span>
+                          <span>{details?.data?.description}</span>
                         </div>
                       </div>
 
@@ -634,29 +615,30 @@ function ProjectsPage() {
                           <span>location</span>
                         </label>
                         <div className="col-sm-7 mt-2">
-                          <span>
-                            {details?.data?.location}
-                          </span>
+                          <span>{details?.data?.location}</span>
                         </div>
                       </div>
-
 
                       <hr />
 
                       <div className="row profileData">
                         <label
                           className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name">
+                          htmlFor="basic-default-name"
+                        >
                           <span>Gallery</span>
                         </label>
                         <div className="col-sm-7 mt-2">
-                          <img src={details?.data?.gallery} height={'100px'} width={'100px'} alt="" />
+                          <img
+                            src={details?.data?.gallery}
+                            height={"100px"}
+                            width={"100px"}
+                            alt=""
+                          />
                         </div>
                       </div>
 
-
                       <hr />
-
 
                       <div className="row profileData">
                         <label
@@ -666,7 +648,13 @@ function ProjectsPage() {
                           <span>Plan</span>
                         </label>
                         <div className="col-sm-7 mt-2">
-                          <img src={details?.data?.plan} height={'100px'} width={'100px'} alt="" />                        </div>
+                          <img
+                            src={details?.data?.plan}
+                            height={"100px"}
+                            width={"100px"}
+                            alt=""
+                          />{" "}
+                        </div>
                       </div>
 
                       <hr />
@@ -674,7 +662,8 @@ function ProjectsPage() {
                       <div className="row profileData">
                         <label
                           className="col-sm-4 col-form-label"
-                          htmlFor="basic-default-name">
+                          htmlFor="basic-default-name"
+                        >
                           <span>amnities</span>
                         </label>
                         <div className="col-sm-7 mt-2">
@@ -688,7 +677,6 @@ function ProjectsPage() {
                                 <th>storage_space</th>
                                 <th>total_Sqft</th>
                               </tr>
-
                             </thead>
                             <tbody>
                               <tr>
@@ -696,19 +684,15 @@ function ProjectsPage() {
                                 <td>{details?.data?.amnities?.kitchen}</td>
                                 <td>{details?.data?.amnities?.sofa}</td>
                                 <td>{details?.data?.amnities?.shower}</td>
-                                <td>{details?.data?.amnities?.storage_space}</td>
+                                <td>
+                                  {details?.data?.amnities?.storage_space}
+                                </td>
                                 <td>{details?.data?.amnities?.total_Sqft}</td>
                               </tr>
                             </tbody>
                           </table>
                         </div>
                       </div>
-
-
-
-
-
-
                     </form>
                   </div>
                 </div>
@@ -722,7 +706,9 @@ function ProjectsPage() {
 
       <Modal show={show} onHide={handleClose}>
         <div className="card">
-          <div className="card-header"><h5>Add Package</h5></div>
+          <div className="card-header">
+            <h5>Add Package</h5>
+          </div>
           <div className="card-body">
             <div className="basic-form">
               <Form
@@ -764,9 +750,7 @@ function ProjectsPage() {
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label className="mb-1">
-                    Enter a Description
-                  </Form.Label>
+                  <Form.Label className="mb-1">Enter a Description</Form.Label>
                   <Form.Control
                     rows={3}
                     placeholder="Enter description"
@@ -903,19 +887,17 @@ function ProjectsPage() {
                     className="btn-sm bg-info my-2 border-0 text-white "
                     multiple // Allow multiple file selection
                     onClick={openFilePicker}
-                    onChange={(e) =>
-                      setData({ ...data, plan: e.target.value })
-                    }
+                    onChange={(e) => setData({ ...data, plan: e.target.value })}
                   >
                     Choose plan Image
                   </Button>
                 </Form.Group>
 
                 <Modal.Footer>
-                  <Button variant="dark" onClick={handleClose} >
+                  <Button variant="dark" size="sm" onClick={handleClose} >
                     Close
                   </Button>
-                  <Button variant="success" type="submit">
+                  <Button variant="success" size="sm" type="submit">
                     Submit
                   </Button>
                 </Modal.Footer>
@@ -925,28 +907,27 @@ function ProjectsPage() {
         </div>
       </Modal>
       {/* delete data */}
-      <Modal show={remove.show} onHide={handleCloses}  >
-      <Modal.Header closeButton>
-        </Modal.Header>
-        <Modal.Body >
+      <Modal show={remove.show} onHide={handleCloses}>
+        <Modal.Header closeButton></Modal.Header>
+        <Modal.Body>
           <p>Are you sure to delete </p>
         </Modal.Body>
         <Modal.Footer>
-        <Button variant="dark" onClick={handleCloses}>
+        <Button variant="dark" size="sm" onClick={handleCloses}>
             No
           </Button>
-          <Button variant="danger" onClick={handleDelete}>
+          <Button variant="danger" size="sm" onClick={handleDelete}>
             Yes
           </Button>
-         
         </Modal.Footer>
       </Modal>
 
       {/* edit data in modal*/}
       <Modal show={edit} onHide={handleClos}>
         <div className="card">
-          
-          <div className="card-header"><h5>Edit Data</h5></div>
+          <div className="card-header">
+            <h5>Edit Data</h5>
+          </div>
           <div className="card-body">
             <div className="basic-form">
               <Form
@@ -981,9 +962,7 @@ function ProjectsPage() {
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label className="mb-1">
-                    Enter a Description
-                  </Form.Label>
+                  <Form.Label className="mb-1">Enter a Description</Form.Label>
                   <Form.Control
                     type="text"
                     name="description"
@@ -1118,9 +1097,7 @@ function ProjectsPage() {
                   controlId="planImage"
                 >
                   <img
-                    src={
-                      editedItem.plan ? editedItem.plan : "images/user.webp"
-                    }
+                    src={editedItem.plan ? editedItem.plan : "images/user.webp"}
                     width={64}
                     height={64}
                     alt="Plan"
@@ -1140,12 +1117,13 @@ function ProjectsPage() {
                 </Form.Group>
 
                 <Modal.Footer>
-                  <Button variant="dark" onClick={handleClos}>
+                  <Button variant="dark" size="sm" onClick={handleClos}>
                     Close
                   </Button>
                   <Button
                     variant="success"
                     type="submit"
+                    size="sm" 
                     onClick={handleClos}
                   >
                     Save Changes

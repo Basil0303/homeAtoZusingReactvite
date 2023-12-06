@@ -2499,7 +2499,7 @@ textarea.form-control-lg {
 .btn-primary {
   --bs-btn-color: #fff;
   --bs-btn-bg: #452B90;
-  --bs-btn-border-color: #452B90;
+  /* --bs-btn-border-color: #452B90; */
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #3b257a;
   --bs-btn-hover-border-color: #372273;
@@ -36559,4 +36559,42 @@ font-weight: 500;
 }
 .btn-color a:hover{
   color: #fff;
+}
+.feedback-container {
+  width: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.feedback-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  width: calc(33.33% - 20px); /* Adjust width and margin as needed */
+}
+
+.feedback-type {
+  text-align: right;
+  font-weight: bold;
+  color: #555;
+}
+
+.feedback-details {
+  margin-top: 10px;
+}
+
+.name {
+  font-weight: bold;
+}
+
+.no-data {
+  text-align: center;
+  font-weight: bold;
+  width: 100%;
+}
+
+.header-content{
+  background-color: #222B40;
+  
 }

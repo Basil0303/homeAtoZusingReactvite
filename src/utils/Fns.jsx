@@ -1,7 +1,6 @@
 export const handleSubmit = (event, setValidated, fn) => {
   const form = event.currentTarget;
   setValidated(true);
-  
 
   event.preventDefault();
 
