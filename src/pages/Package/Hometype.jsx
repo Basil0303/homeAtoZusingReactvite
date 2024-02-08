@@ -12,6 +12,7 @@ import { handleSubmit } from "../../utils/Fns";
 import { Show_Toast } from "../../utils/Toast";
 import Loader from "../../components/Loader/Loader";
 
+
 function Hometype() {
   const [validated, setValidated] = useState(false);
 

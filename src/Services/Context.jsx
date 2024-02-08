@@ -10,6 +10,7 @@ const Context = ({ children }) => {
       ? jwtDecode(localStorage.getItem("token"))
       : null
   );
+  console.log(user,"usersssss");
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 

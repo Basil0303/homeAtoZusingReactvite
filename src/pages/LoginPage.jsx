@@ -61,7 +61,6 @@ function LoginPage() {
                       <div className="text-center mb-3">
                         <a href="index.html"></a>
                       </div>
-
                       <h4 className="text-center mb-4">Sign in your account</h4>
                       <Form
                         noValidate

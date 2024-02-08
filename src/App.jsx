@@ -19,7 +19,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<AdminRoute />}>
-          {/* <Route index element={<DashboardPage />} /> */}
+          <Route index element={<DashboardPage />} />
           <Route path="/customer" element={<CustomerPage />} />
           <Route path="/loan" element={<LoanApplicationPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
